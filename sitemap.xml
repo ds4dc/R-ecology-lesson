@@ -13,7 +13,13 @@
     <loc>https://datacarpentry.org/R-ecology-lesson/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/aio.html</loc>
+  </url>
+  <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/how-r-thinks-about-data.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/images.html</loc>
   </url>
   <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/index.html</loc>
@@ -31,13 +37,25 @@
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/instructor/aio.html</loc>
+  </url>
+  <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/how-r-thinks-about-data.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/instructor/images.html</loc>
   </url>
   <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/index.html</loc>
   </url>
   <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/instructor/instructor-notes.html</loc>
+  </url>
+  <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/introduction-r-rstudio.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/instructor/key-points.html</loc>
   </url>
   <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/profiles.html</loc>
@@ -52,7 +70,13 @@
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/working-with-data.html</loc>
   </url>
   <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/instructor-notes.html</loc>
+  </url>
+  <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/introduction-r-rstudio.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/key-points.html</loc>
   </url>
   <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/profiles.html</loc>
