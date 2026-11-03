@@ -135,7 +135,7 @@ the bottom left), then press the <kbd>Enter</kbd> (Windows and Linux) or
 
 ``` r
 install.packages("tidyverse")
-pak::pak("ds4dc/plantdat"
+pak::pak("ds4dc/plantdat")
 ```
 
 Alternatively, you can install the packages using RStudio's graphical

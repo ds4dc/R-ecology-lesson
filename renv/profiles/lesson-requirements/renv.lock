@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.6.1",
+    "Version": "4.5.1",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -2411,6 +2411,32 @@
       "Encoding": "UTF-8",
       "NeedsCompilation": "no",
       "Repository": "RSPM"
+    },
+    "plantdat": {
+      "Package": "plantdat",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "Title": "What the Package Does (One Line, Title Case)",
+      "Authors@R": "person(\"First\", \"Last\", , \"first.last@example.com\", role = c(\"aut\", \"cre\"))",
+      "Description": "What the package does (one paragraph).",
+      "License": "CC BY 4.0",
+      "Encoding": "UTF-8",
+      "Roxygen": "list(markdown = TRUE)",
+      "RoxygenNote": "7.3.3",
+      "Depends": [
+        "R (>= 3.5)"
+      ],
+      "LazyData": "true",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "plantdat",
+      "RemoteUsername": "ds4dc",
+      "RemotePkgRef": "ds4dc/plantdat",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "2d57e25a0f8aec2681bbd5be1f2d822e2aac0521",
+      "NeedsCompilation": "no",
+      "Author": "First Last [aut, cre]",
+      "Maintainer": "First Last <first.last@example.com>"
     },
     "prettyunits": {
       "Package": "prettyunits",

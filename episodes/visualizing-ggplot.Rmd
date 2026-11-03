@@ -43,17 +43,13 @@ It is a good practice not to put `install.packages()` into a script. This is bec
 library(ggplot2)
 ```
 
-Later we will learn how to read data from external files into R, but for now we are going to use a clean and ready-to-use dataset that is provided by the **`ratdat`** data package. To make our dataset available, we need to load this package too.
+Later we will learn how to read data from external files into R, but for now we are going to use a clean and ready-to-use dataset that is provided by the **`plantdat`** data package. To make our dataset available, we need to load this package too.
 
 ```{r load-ratdat-package,message=FALSE}
 library(plantdat)
 ```
 
-Run this if `library(plantdat)`doesn't work:
-
-```{r}
-pak::pak("ds4dc/plantdat")
-```
+Run `pak::pak("ds4dc/plantdat")` if `library(plantdat)`doesn't work.
 
 The `plantdat` package contains data from [GBIF](https://www.gbif.org/occurrence/download/0035464-260928105237408), and contains preserved specimens of the genus *Decaspermum* from Malaysia
 

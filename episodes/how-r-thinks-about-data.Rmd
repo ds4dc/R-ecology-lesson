@@ -36,11 +36,7 @@ library(tidyverse)
 library(plantdat)
 ```
 
-Run this if `library(plantdat)`doesn't work:
-
-```{r}
-pak::pak("ds4dc/plantdat")
-```
+Run `pak::pak("ds4dc/plantdat")` if `library(plantdat)`doesn't work.
 
 ## The data.frame
 
