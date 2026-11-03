@@ -46,13 +46,18 @@ library(ggplot2)
 Later we will learn how to read data from external files into R, but for now we are going to use a clean and ready-to-use dataset that is provided by the **`ratdat`** data package. To make our dataset available, we need to load this package too.
 
 ```{r load-ratdat-package,message=FALSE}
-# pak::pak("ds4dc/plantdat") < run this if library(plantdat) doesn't work
 library(plantdat)
+```
+
+Run this if `library(plantdat)`doesn't work:
+
+```{r}
+pak::pak("ds4dc/plantdat")
 ```
 
 The `plantdat` package contains data from [GBIF](https://www.gbif.org/occurrence/download/0035464-260928105237408), and contains preserved specimens of the genus *Decaspermum* from Malaysia
 
-We will be using a dataset called `complete_old`, which contains older years of survey data. Let's try to learn a little bit about the data. We can use a `?` in front of the name of the dataset, which will bring up the help page for the data.
+We will be using a dataset called `Decaspermum`, which contains older years of survey data. Let's try to learn a little bit about the data. We can use a `?` in front of the name of the dataset, which will bring up the help page for the data.
 
 ```{r data-help}
 ?decaspermum
@@ -70,7 +75,7 @@ If you hover over the tab for the interactive `View()`, you can click the "x" th
 
 This dataset contains a lot of columns, but we will only work with a limited set in this lesson called `decaspermum_thin`
 
-```{r view-data, eval=FALSE}
+```{r view-data-thin, eval=FALSE}
 View(decaspermum_thin)
 ```
 
@@ -117,7 +122,7 @@ We get a blank plot because we haven't told `ggplot()` which variables we want t
 ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude))
 ```
 
-Now we've got a plot with x and y axes corresponding to variables from `complete_old`. However, we haven't specified how we want the data to be displayed. We do this using `geom_` functions, which specify the type of `geom`etry we want, such as points, lines, or bars. We can add a `geom_point()` layer to our plot by using the `+` sign. We indent onto a new line to make it easier to read, and we have to **end** the first line with the `+` sign.
+Now we've got a plot with x and y axes corresponding to variables from `Decaspermum`. However, we haven't specified how we want the data to be displayed. We do this using `geom_` functions, which specify the type of `geom`etry we want, such as points, lines, or bars. We can add a `geom_point()` layer to our plot by using the `+` sign. We indent onto a new line to make it easier to read, and we have to **end** the first line with the `+` sign.
 
 ```{r scatter-plot}
 ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
@@ -248,7 +253,7 @@ ggplot(data = decaspermum_thin, mapping = aes(x = species, y = elevation)) +
 
 Not bad, but the species labels at the bottom are overlapping. Let's try switching the x and y so the species labels have more space.
 
-```{r boxplot}
+```{r boxplot-flip}
 ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species)) +
   geom_boxplot()
 ```
@@ -334,7 +339,7 @@ Now we can see all the raw data and our boxplots on top.
 ::::: challenge
 ## Challenge 2: Change `geom`s
 
-Violin plots are similar to boxplots- try making one using `plot_type` and `hindfoot_length` as the x and y variables. Remember that all geom functions start with `geom_`, followed by the type of geom.
+Violin plots are similar to boxplots- try making one using `species` and `elevation` as the x and y variables. Remember that all geom functions start with `geom_`, followed by the type of geom.
 
 This might also be a place to test your search engine skills. It is often useful to search for `R package_name stuff you want to search`. So for this example we might search for `R ggplot2 violin plot`.
 
@@ -347,6 +352,8 @@ ggplot(data = decaspermum_thin,
   geom_jitter(alpha = 0.2) +
   geom_violin(fill = "white")
 ```
+:::
+
 :::::
 
 ## Changing themes
@@ -412,9 +419,11 @@ Because there are so many possible arguments to the `theme()` function, it can s
   - `text` controls all text in the whole plot
   - `axis.title` controls the text for the axis titles
   - `axis.title.x` controls the text for the x axis title
+
 :::
 
 ::: callout
+
 You may have noticed that we have used 3 different approaches to getting rid of something in `ggplot`:
 
 - `outliers = FALSE` to remove the outliers from our boxplot
