@@ -240,8 +240,6 @@
 <li><a href="#manipulating-data">Manipulating data</a></li>
 <li><a href="#the-pipe">The pipe: <code>%&gt;%</code></a></li>
 <li><a href="#making-new-columns-with-mutate">Making new columns with <code>mutate()</code></a></li>
-<li><a href="#the-split-apply-combine-approach">The split-apply-combine approach</a></li>
-<li><a href="#reshaping-data-with-tidyr">Reshaping data with <code>tidyr</code></a></li>
 <li><a href="#exporting-data">Exporting data</a></li>
         </ul></div><!--/div.accordion-body-->
     </div><!--/div.accordion-collapse-->
@@ -321,7 +319,7 @@
       </div>
     </nav><main id="main-content" class="main-content"><div class="container lesson-content">
         <h1>Working with data</h1>
-        <p>Last updated on 2026-10-08 |
+        <p>Last updated on 2026-11-05 |
 
         <a href="https://github.com/datacarpentry/R-ecology-lesson/edit/main/episodes/working-with-data.Rmd" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 
@@ -370,14 +368,14 @@ approaches.</li>
 </div>
 <section><h2 class="section-heading" id="importing-data">Importing data<a class="anchor" aria-label="anchor" href="#importing-data"></a></h2>
 <hr class="half-width"><p>Up until this point, we have been working with the
-<code>complete_old</code> dataframe contained in the <code>ratdat</code>
-package. However, you typically won’t access data from an R package; it
-is much more common to access data files stored somewhere on your
-computer. We are now going to start using the data in our
-<code>cleaned</code> directory inside the <code>data</code> directory
-that you downloaded at the beginning of the lesson (<a href="https://datacarpentry.github.io/R-ecology-lesson/introduction-r-rstudio.html#organizing-your-project-directory" class="external-link">instructions
+<code>decaspermum</code> dataframe contained in the
+<code>plantdat</code> package. However, you typically won’t access data
+from an R package; it is much more common to access data files stored
+somewhere on your computer. We are now going to start using the data in
+our <code>cleaned</code> directory inside the <code>data</code>
+directory that you downloaded at the beginning of the lesson (<a href="https://datacarpentry.github.io/R-ecology-lesson/introduction-r-rstudio.html#organizing-your-project-directory" class="external-link">instructions
 here</a>). This file is called
-<code>surveys_complete_77_89.csv</code>.</p>
+<code>Decaspermum_Malaysia.csv</code>.</p>
 <div class="section level4">
 <h4 id="file-paths">File paths<a class="anchor" aria-label="anchor" href="#file-paths"></a></h4>
 <p>When we reference other files from an R script, we need to give R
@@ -402,16 +400,18 @@ file.</p>
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/cleaned/surveys_complete_77_89.csv"</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/cleaned/Decaspermum_Malaysia.csv"</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code>Rows: 16878 Columns: 13
+<pre class="output" tabindex="0"><code>Rows: 964 Columns: 50
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
-chr (6): species_id, sex, genus, species, taxa, plot_type
-dbl (7): record_id, month, day, year, plot_id, hindfoot_length, weight
+chr  (35): datasetKey, occurrenceID, kingdom, phylum, class, order, family, ...
+dbl  (11): gbifID, individualCount, decimalLatitude, decimalLongitude, coord...
+lgl   (2): depth, depthAccuracy
+dttm  (2): dateIdentified, lastInterpreted
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
@@ -445,7 +445,7 @@ separated, a comma <code>","</code>
 </li>
 <li>a set of columns that were <strong>parsed</strong> as various vector
 types
-<ul><li>the file has 6 character columns and 7 numeric columns</li>
+<ul><li>the file has numeric columns</li>
 <li>we can see the names of the columns for each type</li>
 </ul></li>
 </ul><p>When working with the output of a new function, it’s often a good
@@ -541,25 +541,25 @@ name of the data.frame, and the rest of the arguments are
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">select</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">plot_id</span>, <span class="va">species_id</span>, <span class="va">hindfoot_length</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu">select</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">genus</span>, <span class="va">species</span>, <span class="va">year</span>, <span class="va">elevation</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 3
-   plot_id species_id hindfoot_length
-     &lt;dbl&gt; &lt;chr&gt;                &lt;dbl&gt;
- 1       2 NL                      32
- 2       3 NL                      33
- 3       2 DM                      37
- 4       7 DM                      36
- 5       3 DM                      35
- 6       1 PF                      14
- 7       2 PE                      NA
- 8       1 DM                      37
- 9       1 DM                      34
-10       6 PF                      20
-# ℹ 16,868 more rows</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 4
+   genus       species                  year elevation
+   &lt;chr&gt;       &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Decaspermum Decaspermum fruticosum   1990       75
+ 2 Decaspermum Decaspermum fruticosum   1984       25
+ 3 Decaspermum Decaspermum fruticosum   1976       NA
+ 4 Decaspermum Decaspermum fruticosum   1984      575
+ 5 Decaspermum Decaspermum vitis-idaea  1983     2025
+ 6 Decaspermum Decaspermum montanum     1975      945.
+ 7 Decaspermum Decaspermum fruticosum   1974     1180
+ 8 Decaspermum Decaspermum fruticosum   1975      732.
+ 9 Decaspermum Decaspermum fruticosum   1975      410
+10 Decaspermum Decaspermum fruticosum   1975      400
+# ℹ 954 more rows</code></pre>
 </div>
 <p>The columns are arranged in the order we specified inside
 <code>select()</code>.</p>
@@ -569,26 +569,31 @@ in front of the column you want to exclude:</p>
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">select</span><span class="op">(</span><span class="va">surveys</span>, <span class="op">-</span><span class="va">record_id</span>, <span class="op">-</span><span class="va">year</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu">select</span><span class="op">(</span><span class="va">surveys</span>, <span class="op">-</span><span class="va">elevation</span>, <span class="op">-</span><span class="va">year</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 11
-   month   day plot_id species_id sex   hindfoot_length weight genus     species
-   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;
- 1     7    16       2 NL         M                  32     NA Neotoma   albigu…
- 2     7    16       3 NL         M                  33     NA Neotoma   albigu…
- 3     7    16       2 DM         F                  37     NA Dipodomys merria…
- 4     7    16       7 DM         M                  36     NA Dipodomys merria…
- 5     7    16       3 DM         M                  35     NA Dipodomys merria…
- 6     7    16       1 PF         M                  14     NA Perognat… flavus
- 7     7    16       2 PE         F                  NA     NA Peromysc… eremic…
- 8     7    16       1 DM         M                  37     NA Dipodomys merria…
- 9     7    16       1 DM         F                  34     NA Dipodomys merria…
-10     7    16       6 PF         F                  20     NA Perognat… flavus
-# ℹ 16,868 more rows
-# ℹ 2 more variables: taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 48
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 39 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p><code>select()</code> also works with numeric vectors for the order
 of the columns. To select the 3rd, 4th, 5th, and 10th columns, we could
@@ -602,20 +607,20 @@ run the following code:</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 4
-     day  year plot_id genus
-   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;
- 1    16  1977       2 Neotoma
- 2    16  1977       3 Neotoma
- 3    16  1977       2 Dipodomys
- 4    16  1977       7 Dipodomys
- 5    16  1977       3 Dipodomys
- 6    16  1977       1 Perognathus
- 7    16  1977       2 Peromyscus
- 8    16  1977       1 Dipodomys
- 9    16  1977       1 Dipodomys
-10    16  1977       6 Perognathus
-# ℹ 16,868 more rows</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 4
+   occurrenceID                      kingdom phylum       species
+   &lt;chr&gt;                             &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
+ 1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Decaspermum fruticosum
+ 2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Decaspermum fruticosum
+ 3 urn:catalog:MO:Tropicos:105414318 Plantae Tracheophyta Decaspermum fruticosum
+ 4 urn:catalog:MO:Tropicos:105642053 Plantae Tracheophyta Decaspermum fruticosum
+ 5 urn:catalog:MO:Tropicos:105301980 Plantae Tracheophyta Decaspermum vitis-ida…
+ 6 urn:catalog:MO:Tropicos:105550279 Plantae Tracheophyta Decaspermum montanum
+ 7 urn:catalog:MO:Tropicos:105457468 Plantae Tracheophyta Decaspermum fruticosum
+ 8 urn:catalog:MO:Tropicos:105516019 Plantae Tracheophyta Decaspermum fruticosum
+ 9 urn:catalog:MO:Tropicos:105412914 Plantae Tracheophyta Decaspermum fruticosum
+10 urn:catalog:MO:Tropicos:105419266 Plantae Tracheophyta Decaspermum fruticosum
+# ℹ 954 more rows</code></pre>
 </div>
 <p>You should be careful when using this method, since you are being
 less explicit about which columns you want. However, it can be useful if
@@ -634,20 +639,23 @@ numeric columns, we can ask to <code>select</code> all the columns
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 7
-   record_id month   day  year plot_id hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1         1     7    16  1977       2              32     NA
- 2         2     7    16  1977       3              33     NA
- 3         3     7    16  1977       2              37     NA
- 4         4     7    16  1977       7              36     NA
- 5         5     7    16  1977       3              35     NA
- 6         6     7    16  1977       1              14     NA
- 7         7     7    16  1977       2              NA     NA
- 8         8     7    16  1977       1              37     NA
- 9         9     7    16  1977       1              34     NA
-10        10     7    16  1977       6              20     NA
-# ℹ 16,868 more rows</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 11
+       gbifID individualCount decimalLatitude decimalLongitude
+        &lt;dbl&gt;           &lt;dbl&gt;           &lt;dbl&gt;            &lt;dbl&gt;
+ 1 6561832516              NA            6                101.
+ 2 6561807785              NA            5.97             116.
+ 3 6561784372              NA           NA                 NA
+ 4 6561766817              NA            4.97             118.
+ 5 6561753311              NA            6.05             117.
+ 6 6561730396              NA           NA                 NA
+ 7 6561650622              NA           NA                 NA
+ 8 6561612723              NA           NA                 NA
+ 9 6561592184              NA           NA                 NA
+10 6561592042              NA           NA                 NA
+# ℹ 954 more rows
+# ℹ 7 more variables: coordinateUncertaintyInMeters &lt;dbl&gt;,
+#   coordinatePrecision &lt;dbl&gt;, elevation &lt;dbl&gt;, elevationAccuracy &lt;dbl&gt;,
+#   day &lt;dbl&gt;, month &lt;dbl&gt;, year &lt;dbl&gt;</code></pre>
 </div>
 <p>Instead of giving names or positions of columns, we instead pass the
 <code>where()</code> function with the name of another function inside
@@ -664,20 +672,26 @@ values in them:</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 7
-   species_id sex   hindfoot_length weight genus       species  taxa
-   &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;
- 1 NL         M                  32     NA Neotoma     albigula Rodent
- 2 NL         M                  33     NA Neotoma     albigula Rodent
- 3 DM         F                  37     NA Dipodomys   merriami Rodent
- 4 DM         M                  36     NA Dipodomys   merriami Rodent
- 5 DM         M                  35     NA Dipodomys   merriami Rodent
- 6 PF         M                  14     NA Perognathus flavus   Rodent
- 7 PE         F                  NA     NA Peromyscus  eremicus Rodent
- 8 DM         M                  37     NA Dipodomys   merriami Rodent
- 9 DM         F                  34     NA Dipodomys   merriami Rodent
-10 PF         F                  20     NA Perognathus flavus   Rodent
-# ℹ 16,868 more rows</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 31
+   species    infraspecificEpithet verbatimScientificNa…¹ locality stateProvince
+   &lt;chr&gt;      &lt;chr&gt;                &lt;chr&gt;                  &lt;chr&gt;    &lt;chr&gt;
+ 1 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Malay P… Kelantan
+ 2 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Borneo;… Sabah
+ 3 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Taiton … &lt;NA&gt;
+ 4 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Borneo;… Sabah
+ 5 Decasperm… &lt;NA&gt;                 Stapf                  Borneo;… Sabah
+ 6 Decasperm… &lt;NA&gt;                 Ridl.                  Gunong … Kedah
+ 7 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Arul Li… &lt;NA&gt;
+ 8 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Penang … Penang
+ 9 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Bkt. Br… &lt;NA&gt;
+10 Decasperm… &lt;NA&gt;                 J.R. Forst. &amp; G. Fors… Bukit T… Selangor
+# ℹ 954 more rows
+# ℹ abbreviated name: ¹​verbatimScientificNameAuthorship
+# ℹ 26 more variables: individualCount &lt;dbl&gt;, decimalLatitude &lt;dbl&gt;,
+#   decimalLongitude &lt;dbl&gt;, coordinateUncertaintyInMeters &lt;dbl&gt;,
+#   coordinatePrecision &lt;dbl&gt;, elevation &lt;dbl&gt;, elevationAccuracy &lt;dbl&gt;,
+#   depth &lt;lgl&gt;, depthAccuracy &lt;lgl&gt;, eventDate &lt;chr&gt;, day &lt;dbl&gt;, month &lt;dbl&gt;,
+#   year &lt;dbl&gt;, speciesKey &lt;chr&gt;, institutionCode &lt;chr&gt;, …</code></pre>
 </div>
 </div>
 <div class="section level4">
@@ -694,21 +708,35 @@ certain criteria. To get all the rows where the value of
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 1,438 × 13
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1      9790     1    19  1985      16 RM         F                  16      4
- 2      9791     1    19  1985      17 OT         F                  20     16
- 3      9792     1    19  1985       6 DO         M                  35     48
- 4      9793     1    19  1985      12 DO         F                  35     40
- 5      9794     1    19  1985      24 RM         M                  16      4
- 6      9795     1    19  1985      12 DO         M                  34     48
- 7      9796     1    19  1985       6 DM         F                  37     35
- 8      9797     1    19  1985      14 DM         M                  36     45
- 9      9798     1    19  1985       6 DM         F                  36     38
-10      9799     1    19  1985      19 RM         M                  16      4
-# ℹ 1,428 more rows
-# ℹ 4 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 19 × 50
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 4977561075 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 4858989387 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 4858973318 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 4858973304 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 4858968916 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 4850462398 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 4850461090 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 4401127340 861e6afe-f76… 6ad33d6c-36… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 4401121355 861e6afe-f76… 76a26cc9-c4… Plantae Trach… Magn… Myrt… Myrta… Deca…
+11 2516699077 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+12 2516291363 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+13 2516291190 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+14 2516276207 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+15 2516213427 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+16 2515066186 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+17 2514464455 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+18 2514427660 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+19 2514412446 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 41 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;,
+#   elevation &lt;dbl&gt;, elevationAccuracy &lt;dbl&gt;, depth &lt;lgl&gt;, …</code></pre>
 </div>
 <p>The <code>==</code> sign means “is equal to”. There are several other
 operators we can use: &gt;, &gt;=, &lt;, &lt;=, and != (not equal to).
@@ -720,26 +748,31 @@ we could run:</p>
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">filter</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">species_id</span> <span class="op">%in%</span> <span class="fu">c</span><span class="op">(</span><span class="st">"RM"</span>, <span class="st">"DO"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu">filter</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">stateProvince</span> <span class="op">%in%</span> <span class="fu">c</span><span class="op">(</span><span class="st">"Borneo"</span>, <span class="st">"Sarawak"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 2,835 × 13
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1        68     8    19  1977       8 DO         F                  32     52
- 2       292    10    17  1977       3 DO         F                  36     33
- 3       294    10    17  1977       3 DO         F                  37     50
- 4       311    10    17  1977      19 RM         M                  18     13
- 5       317    10    17  1977      17 DO         F                  32     48
- 6       323    10    17  1977      17 DO         F                  33     31
- 7       337    10    18  1977       8 DO         F                  35     41
- 8       356    11    12  1977       1 DO         F                  32     44
- 9       378    11    12  1977       1 DO         M                  33     48
-10       397    11    13  1977      17 RM         F                  16      7
-# ℹ 2,825 more rows
-# ℹ 4 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 193 × 50
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561379339 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 5956592965 cfb43618-142… 657150       Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 5956549004 cfb43618-142… 164551       Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 4906914238 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 4404057434 861e6afe-f76… 57c51ab5-94… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 4404051550 861e6afe-f76… b4550d67-e7… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 4404050440 861e6afe-f76… 6bcd9d6a-9f… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 4401132420 861e6afe-f76… fe06a857-0a… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 4401132331 861e6afe-f76… 4ef97ebf-55… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 4401132320 861e6afe-f76… 353fa595-96… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 183 more rows
+# ℹ 41 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p>We can also use multiple conditions in one <code>filter()</code>
 statement. Here we will get rows with a year less than or equal to 1988
@@ -749,26 +782,31 @@ and whose hindfoot length values are not <code>NA</code>. The
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">filter</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">year</span> <span class="op">&lt;=</span> <span class="fl">1988</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">hindfoot_length</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu">filter</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">year</span> <span class="op">&lt;=</span> <span class="fl">1988</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">elevation</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 12,779 × 13
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         8     7    16  1977       1 DM         M                  37     NA
- 8         9     7    16  1977       1 DM         F                  34     NA
- 9        10     7    16  1977       6 PF         F                  20     NA
-10        11     7    16  1977       5 DS         F                  53     NA
-# ℹ 12,769 more rows
-# ℹ 4 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 94 × 50
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561508200 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 84 more rows
+# ℹ 41 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <div id="challenge-1-filtering-and-selecting" class="callout challenge">
 <div class="callout-square">
@@ -788,7 +826,7 @@ years from 1980 to 1985.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb22">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -812,7 +850,8 @@ years from 1980 to 1985.</li>
 <div class="callout-content">
 <ol start="2" style="list-style-type: decimal"><li>Use the surveys data to make a data.frame that has only the
 following columns, in order: <code>year</code>, <code>month</code>,
-<code>species_id</code>, <code>plot_id</code>.</li>
+<code>speciesKey</code>,
+<code>coordinateUncertaintyInMeters</code>.</li>
 </ol></div>
 </div>
 </div>
@@ -821,13 +860,13 @@ following columns, in order: <code>year</code>, <code>month</code>,
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb23">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys_selected</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">species_id</span>, <span class="va">plot_id</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">surveys_selected</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">surveys</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">speciesKey</span>, <span class="va">coordinateUncertaintyInMeters</span><span class="op">)</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -848,21 +887,26 @@ could use <strong>nested</strong> functions:</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 8,244 × 12
-   record_id month  year plot_id species_id sex   hindfoot_length weight genus
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
- 1         1     7  1977       2 NL         M                  32     NA Neotoma
- 2         2     7  1977       3 NL         M                  33     NA Neotoma
- 3         3     7  1977       2 DM         F                  37     NA Dipodo…
- 4         4     7  1977       7 DM         M                  36     NA Dipodo…
- 5         5     7  1977       3 DM         M                  35     NA Dipodo…
- 6         6     7  1977       1 PF         M                  14     NA Perogn…
- 7         7     7  1977       2 PE         F                  NA     NA Peromy…
- 8         8     7  1977       1 DM         M                  37     NA Dipodo…
- 9         9     7  1977       1 DM         F                  34     NA Dipodo…
-10        10     7  1977       6 PF         F                  20     NA Perogn…
-# ℹ 8,234 more rows
-# ℹ 3 more variables: species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 371 × 49
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561491291 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561426864 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561393056 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 361 more rows
+# ℹ 40 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p>R will evaluate statements from the inside out. First,
 <code>select()</code> will operate on the <code>surveys</code>
@@ -883,21 +927,26 @@ objects:</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 8,244 × 12
-   record_id month  year plot_id species_id sex   hindfoot_length weight genus
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
- 1         1     7  1977       2 NL         M                  32     NA Neotoma
- 2         2     7  1977       3 NL         M                  33     NA Neotoma
- 3         3     7  1977       2 DM         F                  37     NA Dipodo…
- 4         4     7  1977       7 DM         M                  36     NA Dipodo…
- 5         5     7  1977       3 DM         M                  35     NA Dipodo…
- 6         6     7  1977       1 PF         M                  14     NA Perogn…
- 7         7     7  1977       2 PE         F                  NA     NA Peromy…
- 8         8     7  1977       1 DM         M                  37     NA Dipodo…
- 9         9     7  1977       1 DM         F                  34     NA Dipodo…
-10        10     7  1977       6 PF         F                  20     NA Perogn…
-# ℹ 8,234 more rows
-# ℹ 3 more variables: species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 371 × 49
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561491291 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561426864 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561393056 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 361 more rows
+# ℹ 40 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p>This approach is easier to read, since we can see the steps in order,
 but after enough steps, we are left with a cluttered mess of
@@ -918,21 +967,26 @@ select and filter in one step:</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 8,244 × 12
-   record_id month  year plot_id species_id sex   hindfoot_length weight genus
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;
- 1         1     7  1977       2 NL         M                  32     NA Neotoma
- 2         2     7  1977       3 NL         M                  33     NA Neotoma
- 3         3     7  1977       2 DM         F                  37     NA Dipodo…
- 4         4     7  1977       7 DM         M                  36     NA Dipodo…
- 5         5     7  1977       3 DM         M                  35     NA Dipodo…
- 6         6     7  1977       1 PF         M                  14     NA Perogn…
- 7         7     7  1977       2 PE         F                  NA     NA Peromy…
- 8         8     7  1977       1 DM         M                  37     NA Dipodo…
- 9         9     7  1977       1 DM         F                  34     NA Dipodo…
-10        10     7  1977       6 PF         F                  20     NA Perogn…
-# ℹ 8,234 more rows
-# ℹ 3 more variables: species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 371 × 49
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561491291 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561426864 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561393056 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 361 more rows
+# ℹ 40 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p>What it does is take the thing on the lefthand side and insert it as
 the first argument of the function on the righthand side. By putting
@@ -972,8 +1026,9 @@ readable code.</p>
 <h3 class="callout-title">Challenge 2: Using pipes</h3>
 <div class="callout-content">
 <p>Use the surveys data to make a data.frame that has the columns
-<code>record_id</code>, <code>month</code>, and <code>species_id</code>,
-with data from the year 1988. Use a pipe between the function calls.</p>
+<code>speciesKey</code>, <code>month</code>, and
+<code>coordinateUncertaintyInMeters</code>, with data from the year
+1988. Use a pipe between the function calls.</p>
 </div>
 </div>
 </div>
@@ -982,7 +1037,7 @@ with data from the year 1988. Use a pipe between the function calls.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb31">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -990,7 +1045,7 @@ with data from the year 1988. Use a pipe between the function calls.</p>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surveys_1988</span> <span class="op">&lt;-</span> <span class="va">surveys</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu">filter</span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">1988</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">record_id</span>, <span class="va">month</span>, <span class="va">species_id</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">speciesKey</span>, <span class="va">month</span>, <span class="va">coordinateUncertaintyInMeters</span><span class="op">)</span></span></code></pre>
 </div>
 <p>Make sure to <code>filter()</code> before you <code>select()</code>.
 You need to use the <code>year</code> column for filtering rows, but it
@@ -1011,59 +1066,31 @@ weight in kilograms instead of grams:</p>
 </h3>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>weight_kg <span class="op">=</span> <span class="va">weight</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu">mutate</span><span class="op">(</span>uncertainty_km <span class="op">=</span> <span class="va">coordinateUncertaintyInMeters</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">uncertainty_km</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span> <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">uncertainty_km</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 16,868 more rows
-# ℹ 5 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;,
-#   weight_kg &lt;dbl&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 1
+   uncertainty_km
+            &lt;dbl&gt;
+ 1            100
+ 2             50
+ 3             25
+ 4             25
+ 5             25
+ 6             25
+ 7             10
+ 8             10
+ 9             10
+10              2
+# ℹ 954 more rows</code></pre>
 </div>
 <p>You can create multiple columns in one <code>mutate()</code> call,
-and they will get created in the order you write them. This means you
-can even reference the first new column in the second new column:</p>
-<div class="codewrapper sourceCode" id="cb34">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>weight_kg <span class="op">=</span> <span class="va">weight</span> <span class="op">/</span> <span class="fl">1000</span>,</span>
-<span>         weight_lbs <span class="op">=</span> <span class="va">weight_kg</span> <span class="op">*</span> <span class="fl">2.2</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 15
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 16,868 more rows
-# ℹ 6 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;,
-#   weight_kg &lt;dbl&gt;, weight_lbs &lt;dbl&gt;</code></pre>
-</div>
+and they will get created in the order you write them. You can use
+<code>arrange</code> and <code>desc</code> to sort them as well.</p>
 <!-- This next part could definitely be moved to the next lesson if need be -->
 <p>We can also use multiple columns to create a single column. For
 example, it’s often good practice to keep the components of a date in
@@ -1075,7 +1102,7 @@ working in R, we can safely put together a date column.</p>
 can use the <code>paste()</code> function, which takes arguments of the
 items to paste together, as well as the argument <code>sep</code>, which
 is the character used to separate the items.</p>
-<div class="codewrapper sourceCode" id="cb36">
+<div class="codewrapper sourceCode" id="cb34">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1085,27 +1112,31 @@ is the character used to separate the items.</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 16,868 more rows
-# ℹ 5 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;,
-#   date &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 51
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 42 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p>Since our new column gets moved all the way to the end, it doesn’t
 end up printing out. We can use the <code>relocate()</code> function to
 put it after our <code>year</code> column:</p>
-<div class="codewrapper sourceCode" id="cb38">
+<div class="codewrapper sourceCode" id="cb36">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1116,22 +1147,26 @@ put it after our <code>year</code> column:</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year date     plot_id species_id sex   hindfoot_length
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;
- 1         1     7    16  1977 1977-7-…       2 NL         M                  32
- 2         2     7    16  1977 1977-7-…       3 NL         M                  33
- 3         3     7    16  1977 1977-7-…       2 DM         F                  37
- 4         4     7    16  1977 1977-7-…       7 DM         M                  36
- 5         5     7    16  1977 1977-7-…       3 DM         M                  35
- 6         6     7    16  1977 1977-7-…       1 PF         M                  14
- 7         7     7    16  1977 1977-7-…       2 PE         F                  NA
- 8         8     7    16  1977 1977-7-…       1 DM         M                  37
- 9         9     7    16  1977 1977-7-…       1 DM         F                  34
-10        10     7    16  1977 1977-7-…       6 PF         F                  20
-# ℹ 16,868 more rows
-# ℹ 5 more variables: weight &lt;dbl&gt;, genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;,
-#   plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 51
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 42 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <p>Now we can see that we have a character column that contains our date
 string. However, it’s not truly a date column. Dates are a type of
@@ -1141,7 +1176,7 @@ a proper date, we will use a function from the <code>tidyverse</code>’s
 working with dates. The function <code>ymd()</code> will parse a date
 string that has the order year-month-day. Let’s load the package and use
 <code>ymd()</code>.</p>
-<div class="codewrapper sourceCode" id="cb40">
+<div class="codewrapper sourceCode" id="cb38">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1153,26 +1188,38 @@ string that has the order year-month-day. Let’s load the package and use
 <span>  <span class="fu">relocate</span><span class="op">(</span><span class="va">date</span>, .after <span class="op">=</span> <span class="va">year</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
+<h3 class="code-label">WARNING<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="warning" tabindex="0"><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `date = ymd(date)`.
+Caused by warning:
+!  225 failed to parse.</code></pre>
+</div>
+<div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year date       plot_id species_id sex
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;
- 1         1     7    16  1977 1977-07-16       2 NL         M
- 2         2     7    16  1977 1977-07-16       3 NL         M
- 3         3     7    16  1977 1977-07-16       2 DM         F
- 4         4     7    16  1977 1977-07-16       7 DM         M
- 5         5     7    16  1977 1977-07-16       3 DM         M
- 6         6     7    16  1977 1977-07-16       1 PF         M
- 7         7     7    16  1977 1977-07-16       2 PE         F
- 8         8     7    16  1977 1977-07-16       1 DM         M
- 9         9     7    16  1977 1977-07-16       1 DM         F
-10        10     7    16  1977 1977-07-16       6 PF         F
-# ℹ 16,868 more rows
-# ℹ 6 more variables: hindfoot_length &lt;dbl&gt;, weight &lt;dbl&gt;, genus &lt;chr&gt;,
-#   species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 51
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 42 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
-<div class="codewrapper sourceCode" id="cb42">
+<div class="codewrapper sourceCode" id="cb41">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1184,29 +1231,33 @@ string that has the order year-month-day. Let’s load the package and use
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year date       plot_id species_id sex
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;
- 1         1     7    16  1977 1977-07-16       2 NL         M
- 2         2     7    16  1977 1977-07-16       3 NL         M
- 3         3     7    16  1977 1977-07-16       2 DM         F
- 4         4     7    16  1977 1977-07-16       7 DM         M
- 5         5     7    16  1977 1977-07-16       3 DM         M
- 6         6     7    16  1977 1977-07-16       1 PF         M
- 7         7     7    16  1977 1977-07-16       2 PE         F
- 8         8     7    16  1977 1977-07-16       1 DM         M
- 9         9     7    16  1977 1977-07-16       1 DM         F
-10        10     7    16  1977 1977-07-16       6 PF         F
-# ℹ 16,868 more rows
-# ℹ 6 more variables: hindfoot_length &lt;dbl&gt;, weight &lt;dbl&gt;, genus &lt;chr&gt;,
-#   species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 51
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 42 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <!-- This isn't strictly necessary to show, but I think it's good to reenforce what a pipe is really doing, and it's actually a useful approach with more complex mutates -->
 <p>Now we can see that our <code>date</code> column has the type
 <code>date</code> as well. In this example, we created our column with
 two separate lines in <code>mutate()</code>, but we can combine them
 into one:</p>
-<div class="codewrapper sourceCode" id="cb44">
+<div class="codewrapper sourceCode" id="cb43">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1216,24 +1267,36 @@ into one:</p>
 <span>  <span class="fu">relocate</span><span class="op">(</span><span class="va">date</span>, .after <span class="op">=</span> <span class="va">year</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
+<h3 class="code-label">WARNING<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="warning" tabindex="0"><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `date = ymd(paste(year, month, day, sep = "-"))`.
+Caused by warning:
+!  225 failed to parse.</code></pre>
+</div>
+<div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year date       plot_id species_id sex
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;
- 1         1     7    16  1977 1977-07-16       2 NL         M
- 2         2     7    16  1977 1977-07-16       3 NL         M
- 3         3     7    16  1977 1977-07-16       2 DM         F
- 4         4     7    16  1977 1977-07-16       7 DM         M
- 5         5     7    16  1977 1977-07-16       3 DM         M
- 6         6     7    16  1977 1977-07-16       1 PF         M
- 7         7     7    16  1977 1977-07-16       2 PE         F
- 8         8     7    16  1977 1977-07-16       1 DM         M
- 9         9     7    16  1977 1977-07-16       1 DM         F
-10        10     7    16  1977 1977-07-16       6 PF         F
-# ℹ 16,868 more rows
-# ℹ 6 more variables: hindfoot_length &lt;dbl&gt;, weight &lt;dbl&gt;, genus &lt;chr&gt;,
-#   species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 51
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 42 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <div class="codewrapper sourceCode" id="cb46">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1246,24 +1309,36 @@ into one:</p>
 <span>  <span class="fu">relocate</span><span class="op">(</span><span class="va">date</span>, .after <span class="op">=</span> <span class="va">year</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
+<h3 class="code-label">WARNING<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="warning" tabindex="0"><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `date = paste(year, month, day, sep = "-") %&gt;% ymd()`.
+Caused by warning:
+!  225 failed to parse.</code></pre>
+</div>
+<div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 14
-   record_id month   day  year date       plot_id species_id sex
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;
- 1         1     7    16  1977 1977-07-16       2 NL         M
- 2         2     7    16  1977 1977-07-16       3 NL         M
- 3         3     7    16  1977 1977-07-16       2 DM         F
- 4         4     7    16  1977 1977-07-16       7 DM         M
- 5         5     7    16  1977 1977-07-16       3 DM         M
- 6         6     7    16  1977 1977-07-16       1 PF         M
- 7         7     7    16  1977 1977-07-16       2 PE         F
- 8         8     7    16  1977 1977-07-16       1 DM         M
- 9         9     7    16  1977 1977-07-16       1 DM         F
-10        10     7    16  1977 1977-07-16       6 PF         F
-# ℹ 16,868 more rows
-# ℹ 6 more variables: hindfoot_length &lt;dbl&gt;, weight &lt;dbl&gt;, genus &lt;chr&gt;,
-#   species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
+<pre class="output" tabindex="0"><code># A tibble: 964 × 51
+       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
+        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;
+ 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+ 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# ℹ 954 more rows
+# ℹ 42 more variables: species &lt;chr&gt;, infraspecificEpithet &lt;chr&gt;,
+#   taxonRank &lt;chr&gt;, scientificName &lt;chr&gt;, verbatimScientificName &lt;chr&gt;,
+#   verbatimScientificNameAuthorship &lt;chr&gt;, countryCode &lt;chr&gt;, locality &lt;chr&gt;,
+#   stateProvince &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, individualCount &lt;dbl&gt;,
+#   publishingOrgKey &lt;chr&gt;, decimalLatitude &lt;dbl&gt;, decimalLongitude &lt;dbl&gt;,
+#   coordinateUncertaintyInMeters &lt;dbl&gt;, coordinatePrecision &lt;dbl&gt;, …</code></pre>
 </div>
 <div id="challenge-3-plotting-date" class="callout challenge">
 <div class="callout-square">
@@ -1285,21 +1360,29 @@ column and plots weight across date.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
 <div class="accordion-body">
-<div class="codewrapper sourceCode" id="cb48">
+<div class="codewrapper sourceCode" id="cb49">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>date <span class="op">=</span> <span class="fu">ymd</span><span class="op">(</span><span class="fu">paste</span><span class="op">(</span><span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">elevation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_jitter</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="codewrapper">
 <h3 class="code-label">WARNING<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="warning" tabindex="0"><code>Warning: Removed 1692 rows containing missing values or values outside the scale range
+<pre class="warning" tabindex="0"><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `date = ymd(paste(year, month, day, sep = "-"))`.
+Caused by warning:
+!  225 failed to parse.</code></pre>
+</div>
+<div class="codewrapper">
+<h3 class="code-label">WARNING<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="warning" tabindex="0"><code>Warning: Removed 852 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
 </div>
 <figure><img src="fig/working-with-data-rendered-date-plot-challenge-answer-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" class="figure mx-auto d-block"></figure><p>This isn’t necessarily the most useful plot, but we will learn some
@@ -1308,828 +1391,20 @@ techniques that will help produce nice time series plots</p>
 </div>
 </div>
 </div>
-</section><section><h2 class="section-heading" id="the-split-apply-combine-approach">The split-apply-combine approach<a class="anchor" aria-label="anchor" href="#the-split-apply-combine-approach"></a></h2>
-<hr class="half-width"><p>Many data analysis tasks can be achieved using the
-split-apply-combine approach: you split the data into groups, apply some
-analysis to each group, and combine the results in some way.
-<code>dplyr</code> has a few convenient functions to enable this
-approach, the main two being <code>group_by()</code> and
-<code>summarize()</code>.</p>
-<p><code>group_by()</code> takes a data.frame and the name of one or
-more columns with categorical values that define the groups.
-<code>summarize()</code> then collapses each group into a one-row
-summary of the group, giving you back a data.frame with one row per
-group. The syntax for <code>summarize()</code> is similar to
-<code>mutate()</code>, where you define new columns based on values of
-other columns. Let’s try calculating the mean weight of all our animals
-by sex.</p>
-<div class="codewrapper sourceCode" id="cb50">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 3 × 2
-  sex   mean_weight
-  &lt;chr&gt;       &lt;dbl&gt;
-1 F            53.1
-2 M            53.2
-3 &lt;NA&gt;         74.0</code></pre>
-</div>
-<p>You can see that the mean weight for males is slightly higher than
-for females, but that animals whose sex is unknown have much higher
-weights. This is probably due to small sample size, but we should check
-to be sure. Like <code>mutate()</code>, we can define multiple columns
-in one <code>summarize()</code> call. The function <code>n()</code> will
-count the number of rows in each group.</p>
-<div class="codewrapper sourceCode" id="cb52">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>,</span>
-<span>            n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 3 × 3
-  sex   mean_weight     n
-  &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;
-1 F            53.1  7318
-2 M            53.2  8260
-3 &lt;NA&gt;         74.0  1300</code></pre>
-</div>
-<p>You will often want to create groups based on multiple columns. For
-example, we might be interested in the mean weight of every species +
-sex combination. All we have to do is add another column to our
-<code>group_by()</code> call.</p>
-<div class="codewrapper sourceCode" id="cb54">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>,</span>
-<span>            n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by species_id and sex.
-ℹ Output is grouped by species_id.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(species_id, sex))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 67 × 4
-# Groups:   species_id [36]
-   species_id sex   mean_weight     n
-   &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;
- 1 AB         &lt;NA&gt;        NaN     223
- 2 AH         &lt;NA&gt;        NaN     136
- 3 BA         M             7       3
- 4 CB         &lt;NA&gt;        NaN      23
- 5 CM         &lt;NA&gt;        NaN      13
- 6 CQ         &lt;NA&gt;        NaN      16
- 7 CS         &lt;NA&gt;        NaN       1
- 8 CV         &lt;NA&gt;        NaN       1
- 9 DM         F            40.7  2522
-10 DM         M            44.0  3108
-# ℹ 57 more rows</code></pre>
-</div>
-<p>Our resulting data.frame is much larger, since we have a greater
-number of groups. We also see a strange value showing up in our
-<code>mean_weight</code> column: <code>NaN</code>. This stands for “Not
-a Number”, and it often results from trying to do an operation a vector
-with zero entries. How can a vector have zero entries? Well, if a
-particular group (like the AB species ID + <code>NA</code> sex group)
-has <strong>only</strong> <code>NA</code> values for weight, then the
-<code>na.rm = T</code> argument in <code>mean()</code> will remove
-<strong>all</strong> the values prior to calculating the mean. The
-result will be a value of <code>NaN</code>. Since we are not
-particularly interested in these values, let’s add a step to our
-pipeline to remove rows where weight is <code>NA</code>
-<strong>before</strong> doing any other steps. This means that any
-groups with only <code>NA</code> values will disappear from our
-data.frame before we formally create the groups with
-<code>group_by()</code>.</p>
-<div class="codewrapper sourceCode" id="cb57">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span>,</span>
-<span>            n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by species_id and sex.
-ℹ Output is grouped by species_id.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(species_id, sex))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 46 × 4
-# Groups:   species_id [18]
-   species_id sex   mean_weight     n
-   &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;
- 1 BA         M             7       3
- 2 DM         F            40.7  2460
- 3 DM         M            44.0  3013
- 4 DM         &lt;NA&gt;         37       8
- 5 DO         F            48.4   679
- 6 DO         M            49.3   748
- 7 DO         &lt;NA&gt;         44       1
- 8 DS         F           118.   1055
- 9 DS         M           123.   1184
-10 DS         &lt;NA&gt;        121.     16
-# ℹ 36 more rows</code></pre>
-</div>
-<p>That looks better! It’s often useful to take a look at the results in
-some order, like the lowest mean weight to highest. We can use the
-<code>arrange()</code> function for that:</p>
-<div class="codewrapper sourceCode" id="cb60">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span>,</span>
-<span>            n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">mean_weight</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by species_id and sex.
-ℹ Output is grouped by species_id.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(species_id, sex))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 46 × 4
-# Groups:   species_id [18]
-   species_id sex   mean_weight     n
-   &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;
- 1 PF         &lt;NA&gt;         6        2
- 2 BA         M            7        3
- 3 PF         F            7.09   215
- 4 PF         M            7.10   296
- 5 RM         M            9.92   678
- 6 RM         &lt;NA&gt;        10.4      7
- 7 RM         F           10.7    629
- 8 RF         M           12.4     16
- 9 RF         F           13.7     46
-10 PP         &lt;NA&gt;        15        2
-# ℹ 36 more rows</code></pre>
-</div>
-<p>If we want to reverse the order, we can wrap the column name in
-<code>desc()</code>:</p>
-<div class="codewrapper sourceCode" id="cb63">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span>,</span>
-<span>            n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">mean_weight</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by species_id and sex.
-ℹ Output is grouped by species_id.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(species_id, sex))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 46 × 4
-# Groups:   species_id [18]
-   species_id sex   mean_weight     n
-   &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;
- 1 NL         M           168.    355
- 2 NL         &lt;NA&gt;        164.      9
- 3 NL         F           151.    460
- 4 SS         M           130       1
- 5 DS         M           123.   1184
- 6 DS         &lt;NA&gt;        121.     16
- 7 DS         F           118.   1055
- 8 SH         F            79.2    61
- 9 SH         M            67.6    34
-10 SF         F            58.3     3
-# ℹ 36 more rows</code></pre>
-</div>
-<p>You may have seen several messages saying
-<code>summarise() has grouped output by 'species_id'. You can override using the .groups argument.</code>
-These are warning you that your resulting data.frame has retained some
-group structure, which means any subsequent operations on that
-data.frame will happen at the group level. If you look at the resulting
-data.frame printed out in your console, you will see these lines:</p>
-<pre><code><span><span class="co"># A tibble: 46 × 4</span></span>
-<span><span class="co"># Groups:   species_id [18]</span></span></code></pre>
-<p>They tell us we have a data.frame with 46 rows, 4 columns, and a
-group variable <code>species_id</code>, for which there are 18 groups.
-We will see something similar if we use <code>group_by()</code>
-alone:</p>
-<div class="codewrapper sourceCode" id="cb67">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 16,878 × 13
-# Groups:   species_id, sex [67]
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 16,868 more rows
-# ℹ 4 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;</code></pre>
-</div>
-<p>What we get back is the entire <code>surveys</code> data.frame, but
-with the grouping variables added: 67 groups of <code>species_id</code>
-+ <code>sex</code> combinations. Groups are often maintained throughout
-a pipeline, and if you assign the resulting data.frame to a new object,
-it will also have those groups. This can lead to confusing results if
-you forget about the grouping and want to carry out operations on the
-whole data.frame, not by group. Therefore, it is a good habit to remove
-the groups at the end of a pipeline containing
-<code>group_by()</code>:</p>
-<div class="codewrapper sourceCode" id="cb69">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span>,</span>
-<span>            n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">mean_weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by species_id and sex.
-ℹ Output is grouped by species_id.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(species_id, sex))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 46 × 4
-   species_id sex   mean_weight     n
-   &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;
- 1 NL         M           168.    355
- 2 NL         &lt;NA&gt;        164.      9
- 3 NL         F           151.    460
- 4 SS         M           130       1
- 5 DS         M           123.   1184
- 6 DS         &lt;NA&gt;        121.     16
- 7 DS         F           118.   1055
- 8 SH         F            79.2    61
- 9 SH         M            67.6    34
-10 SF         F            58.3     3
-# ℹ 36 more rows</code></pre>
-</div>
-<p>Now our data.frame just says <code># A tibble: 46 × 4</code> at the
-top, with no groups.</p>
-<p>While it is common that you will want to get the one-row-per-group
-summary that <code>summarise()</code> provides, there are times where
-you want to calculate a per-group value but keep all the rows in your
-data.frame. For example, we might want to know the mean weight for each
-species ID + sex combination, and then we might want to know how far
-from that mean value each observation in the group is. For this, we can
-use <code>group_by()</code> and <code>mutate()</code> together:</p>
-<div class="codewrapper sourceCode" id="cb72">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span>,</span>
-<span>            weight_diff <span class="op">=</span> <span class="va">weight</span> <span class="op">-</span> <span class="va">mean_weight</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 15,186 × 15
-# Groups:   species_id, sex [46]
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
- 1        63     8    19  1977       3 DM         M                  35     40
- 2        64     8    19  1977       7 DM         M                  37     48
- 3        65     8    19  1977       4 DM         F                  34     29
- 4        66     8    19  1977       4 DM         F                  35     46
- 5        67     8    19  1977       7 DM         M                  35     36
- 6        68     8    19  1977       8 DO         F                  32     52
- 7        69     8    19  1977       2 PF         M                  15      8
- 8        70     8    19  1977       3 OX         F                  21     22
- 9        71     8    19  1977       7 DM         F                  36     35
-10        74     8    19  1977       8 PF         M                  12      7
-# ℹ 15,176 more rows
-# ℹ 6 more variables: genus &lt;chr&gt;, species &lt;chr&gt;, taxa &lt;chr&gt;, plot_type &lt;chr&gt;,
-#   mean_weight &lt;dbl&gt;, weight_diff &lt;dbl&gt;</code></pre>
-</div>
-<p>Since we get all our columns back, the new columns are at the very
-end and don’t print out in the console. Let’s use <code>select()</code>
-to just look at the columns of interest. Inside <code>select()</code> we
-can use the <code>contains()</code> function to get any column
-containing the word “weight” in the name:</p>
-<div class="codewrapper sourceCode" id="cb74">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span>,</span>
-<span>            weight_diff <span class="op">=</span> <span class="va">weight</span> <span class="op">-</span> <span class="va">mean_weight</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">sex</span>, <span class="fu">contains</span><span class="op">(</span><span class="st">"weight"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 15,186 × 5
-# Groups:   species_id, sex [46]
-   species_id sex   weight mean_weight weight_diff
-   &lt;chr&gt;      &lt;chr&gt;  &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
- 1 DM         M         40       44.0      -4.00
- 2 DM         M         48       44.0       4.00
- 3 DM         F         29       40.7     -11.7
- 4 DM         F         46       40.7       5.28
- 5 DM         M         36       44.0      -8.00
- 6 DO         F         52       48.4       3.63
- 7 PF         M          8        7.10      0.902
- 8 OX         F         22       21         1
- 9 DM         F         35       40.7      -5.72
-10 PF         M          7        7.10     -0.0980
-# ℹ 15,176 more rows</code></pre>
-</div>
-<p>What happens with the <code>group_by()</code> + <code>mutate()</code>
-combination is similar to using <code>summarize()</code>: for each
-group, the mean weight is calculated. However, instead of reporting only
-one row per group, the mean weight for each group is added to each row
-in that group. For each row in a group (like DM species ID + M sex), you
-will see the same value in <code>mean_weight</code>.</p>
-<div id="challenge-4-making-a-time-series" class="callout challenge">
-<div class="callout-square">
-<i class="callout-icon" data-feather="zap"></i>
-</div>
-<span class="callout-header">Challenge</span>
-<div id="challenge-4-making-a-time-series" class="callout-inner">
-<h3 class="callout-title">Challenge 4: Making a time series</h3>
-<div class="callout-content">
-<ol style="list-style-type: decimal"><li>Use the split-apply-combine approach to make a
-<code>data.frame</code> that counts the total number of animals of each
-sex caught on each day in the <code>surveys</code> data.</li>
-</ol></div>
-</div>
-</div>
-<div id="accordionSolution5" class="accordion challenge-accordion accordion-flush">
-<div class="accordion-item">
-<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
-  <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
-</button>
-<div id="collapseSolution5" class="accordion-collapse collapse" data-bs-parent="#accordionSolution5" aria-labelledby="headingSolution5">
-<div class="accordion-body">
-<div class="codewrapper sourceCode" id="cb76">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys_daily_counts</span> <span class="op">&lt;-</span> <span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>date <span class="op">=</span> <span class="fu">ymd</span><span class="op">(</span><span class="fu">paste</span><span class="op">(</span><span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">date</span>, <span class="va">sex</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarize</span><span class="op">(</span>n <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by date and sex.
-ℹ Output is grouped by date.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(date, sex))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper sourceCode" id="cb78">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># shorter approach using count()</span></span>
-<span><span class="va">surveys_daily_counts</span> <span class="op">&lt;-</span> <span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">mutate</span><span class="op">(</span>date <span class="op">=</span> <span class="fu">ymd</span><span class="op">(</span><span class="fu">paste</span><span class="op">(</span><span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, sep <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">count</span><span class="op">(</span><span class="va">date</span>, <span class="va">sex</span><span class="op">)</span></span></code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div id="challenge-4-making-a-time-series" class="callout challenge">
-<div class="callout-square">
-<i class="callout-icon" data-feather="zap"></i>
-</div>
-<span class="callout-header">Challenge</span>
-<div id="challenge-4-making-a-time-series" class="callout-inner">
-<h3 class="callout-title">Challenge 4: Making a time series<em>
-(continued)</em>
-</h3>
-<div class="callout-content">
-<ol start="2" style="list-style-type: decimal"><li>Now use the data.frame you just made to plot the daily number of
-animals of each sex caught over time. It’s up to you what
-<code>geom</code> to use, but a <code>line</code> plot might be a good
-choice. You should also think about how to differentiate which data
-corresponds to which sex.</li>
-</ol></div>
-</div>
-</div>
-<div id="accordionSolution6" class="accordion challenge-accordion accordion-flush">
-<div class="accordion-item">
-<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution6" aria-expanded="false" aria-controls="collapseSolution6">
-  <h4 class="accordion-header" id="headingSolution6"> Show me the solution </h4>
-</button>
-<div id="collapseSolution6" class="accordion-collapse collapse" data-bs-parent="#accordionSolution6" aria-labelledby="headingSolution6">
-<div class="accordion-body">
-<div class="codewrapper sourceCode" id="cb79">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys_daily_counts</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">n</span>, color <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span></span></code></pre>
-</div>
-<figure><img src="fig/working-with-data-rendered-time-series-challenge-answer-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" class="figure mx-auto d-block"></figure></div>
-</div>
-</div>
-</div>
-</section><section><h2 class="section-heading" id="reshaping-data-with-tidyr">Reshaping data with <code>tidyr</code>
-<a class="anchor" aria-label="anchor" href="#reshaping-data-with-tidyr"></a></h2>
-<hr class="half-width"><p>Let’s say we are interested in comparing the mean weights of each
-species across our different plots. We can begin this process using the
-<code>group_by()</code> + <code>summarize()</code> approach:</p>
-<div class="codewrapper sourceCode" id="cb80">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot</span> <span class="op">&lt;-</span> <span class="va">surveys</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">plot_id</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">summarise</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu">mean</span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">species_id</span>, <span class="va">plot_id</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code>`summarise()` has regrouped the output.
-ℹ Summaries were computed grouped by species_id and plot_id.
-ℹ Output is grouped by species_id.
-ℹ Use `summarise(.groups = "drop_last")` to silence this message.
-ℹ Use `summarise(.by = c(species_id, plot_id))` for per-operation grouping
-  (`?dplyr::dplyr_by`) instead.</code></pre>
-</div>
-<div class="codewrapper sourceCode" id="cb82">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 300 × 3
-# Groups:   species_id [18]
-   species_id plot_id mean_weight
-   &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;
- 1 BA               3         8
- 2 BA              21         6.5
- 3 DM               1        42.7
- 4 DM               2        42.6
- 5 DM               3        41.2
- 6 DM               4        41.9
- 7 DM               5        42.6
- 8 DM               6        42.1
- 9 DM               7        43.2
-10 DM               8        43.4
-# ℹ 290 more rows</code></pre>
-</div>
-<p>That looks great, but it is a bit difficult to compare values across
-plots. It would be nice if we could reshape this data.frame to make
-those comparisons easier. Well, the <code>tidyr</code> package from the
-<code>tidyverse</code> has a pair of functions that allow you to reshape
-data by pivoting it: <code>pivot_wider()</code> and
-<code>pivot_longer()</code>. <code>pivot_wider()</code> will make the
-data wider, which means increasing the number of columns and reducing
-the number of rows. <code>pivot_longer()</code> will do the opposite,
-reducing the number of columns and increasing the number of rows.</p>
-<p>In this case, it might be nice to create a data.frame where each
-species has its own row, and each plot has its own column containing the
-mean weight for a given species. We will use <code>pivot_wider()</code>
-to reshape our data in this way. It takes 3 arguments:</p>
-<ol style="list-style-type: decimal"><li>the name of the data.frame</li>
-<li>
-<code>names_from</code>: which column should be used to generate the
-names of the new columns?</li>
-<li>
-<code>values_from</code>: which column should be used to fill in the
-values of the new columns?</li>
-</ol><p>Any columns not used for <code>names_from</code> or
-<code>values_from</code> will not be pivoted.</p>
-<figure><img src="fig/pivot_wider.png" alt="Diagram depicting the behavior of `pivot_wider()` on a small tabular dataset." class="figure mx-auto d-block"></figure><p>In our case, we want the new columns to be named from our
-<code>plot_id</code> column, with the values coming from the
-<code>mean_weight</code> column. We can pipe our data.frame right into
-<code>pivot_wider()</code> and add those two arguments:</p>
-<div class="codewrapper sourceCode" id="cb84">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot_wide</span> <span class="op">&lt;-</span> <span class="va">sp_by_plot</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">plot_id</span>, </span>
-<span>              values_from <span class="op">=</span> <span class="va">mean_weight</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sp_by_plot_wide</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 18 × 25
-# Groups:   species_id [18]
-   species_id    `3`   `21`    `1`    `2`    `4`   `5`    `6`   `7`    `8`
-   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
- 1 BA           8      6.5   NA     NA     NA     NA    NA     NA    NA
- 2 DM          41.2   41.5   42.7   42.6   41.9   42.6  42.1   43.2  43.4
- 3 DO          42.7   NA     50.1   50.3   46.8   50.4  49.0   52    49.2
- 4 DS         128.    NA    129.   125.   118.   111.  114.   126.  128.
- 5 NL         171.   136.   154.   171.   164.   192.  176.   170.  134.
- 6 OL          32.1   28.6   35.5   34     33.0   32.6  31.8   NA    30.3
- 7 OT          24.1   24.1   23.7   24.9   26.5   23.6  23.5   22    24.1
- 8 OX          22     NA     NA     22     NA     20    NA     NA    NA
- 9 PE          22.7   19.6   21.6   22.0   NA     21    21.6   22.8  19.4
-10 PF           7.12   7.23   6.57   6.89   6.75   7.5   7.54   7     6.78
-11 PH          28     31     NA     NA     NA     29    NA     NA    NA
-12 PM          20.1   23.6   23.7   23.9   NA     23.7  22.3   23.4  23
-13 PP          17.1   13.6   14.3   16.4   14.8   19.8  16.8   NA    13.9
-14 RF          14.8   17     NA     16     NA     14    12.1   13    NA
-15 RM          10.3    9.89  10.9   10.6   10.4   10.8  10.6   10.7   9
-16 SF          NA     49     NA     NA     NA     NA    NA     NA    NA
-17 SH          76.0   79.9   NA     88     NA     82.7  NA     NA    NA
-18 SS          NA     NA     NA     NA     NA     NA    NA     NA    NA
-# ℹ 15 more variables: `9` &lt;dbl&gt;, `10` &lt;dbl&gt;, `11` &lt;dbl&gt;, `12` &lt;dbl&gt;,
-#   `13` &lt;dbl&gt;, `14` &lt;dbl&gt;, `15` &lt;dbl&gt;, `16` &lt;dbl&gt;, `17` &lt;dbl&gt;, `18` &lt;dbl&gt;,
-#   `19` &lt;dbl&gt;, `20` &lt;dbl&gt;, `22` &lt;dbl&gt;, `23` &lt;dbl&gt;, `24` &lt;dbl&gt;</code></pre>
-</div>
-<p>Now we’ve got our reshaped data.frame. There are a few things to
-notice. First, we have a new column for each <code>plot_id</code> value.
-There is one old column left in the data.frame: <code>species_id</code>.
-It wasn’t used in <code>pivot_wider()</code>, so it stays, and now
-contains a single entry for each unique <code>species_id</code>
-value.</p>
-<p>Finally, a lot of <code>NA</code>s have appeared. Some species aren’t
-found in every plot, but because a data.frame has to have a value in
-every row and every column, an <code>NA</code> is inserted. We can
-double-check this to verify what is going on.</p>
-<p>Looking in our new pivoted data.frame, we can see that there is an
-<code>NA</code> value for the species <code>BA</code> in plot
-<code>1</code>. Let’s take our <code>sp_by_plot</code> data.frame and
-look for the <code>mean_weight</code> of that species + plot
-combination.</p>
-<div class="codewrapper sourceCode" id="cb86">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="va">species_id</span> <span class="op">==</span> <span class="st">"BA"</span> <span class="op">&amp;</span> <span class="va">plot_id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code><span><span class="co"># A tibble: 0 × 3</span></span>
-<span><span class="co"># Groups:   species_id [0]</span></span>
-<span><span class="co"># ℹ 3 variables: species_id &lt;chr&gt;, plot_id &lt;dbl&gt;, mean_weight &lt;dbl&gt;</span></span></code></pre>
-</div>
-<p>We get back 0 rows. There is no <code>mean_weight</code> for the
-species <code>BA</code> in plot <code>1</code>. This either happened
-because no <code>BA</code> were ever caught in plot <code>1</code>, or
-because every <code>BA</code> caught in plot <code>1</code> had an
-<code>NA</code> weight value and all the rows got removed when we used
-<code>filter(!is.na(weight))</code> in the process of making
-<code>sp_by_plot</code>. Because there are no rows with that species +
-plot combination, in our pivoted data.frame, the value gets filled with
-<code>NA</code>.</p>
-<p>There is another <code>pivot_</code> function that does the opposite,
-moving data from a wide to long format, called
-<code>pivot_longer()</code>. It takes 3 arguments: <code>cols</code> for
-the columns you want to pivot, <code>names_to</code> for the name of the
-new column which will contain the old column names, and
-<code>values_to</code> for the name of the new column which will contain
-the old values.</p>
-<figure><img src="fig/pivot_longer.png" alt="Diagram depicting the behavior of `pivot_longer()` on a small tabular dataset." class="figure mx-auto d-block"></figure><p>We can pivot our new wide data.frame to a long format using
-<code>pivot_longer()</code>. We want to pivot all the columns except
-<code>species_id</code>, and we will use <code>PLOT</code> for the new
-column of plot IDs, and <code>MEAN_WT</code> for the new column of mean
-weight values.</p>
-<div class="codewrapper sourceCode" id="cb88">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot_wide</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="va">species_id</span>, names_to <span class="op">=</span> <span class="st">"PLOT"</span>, values_to <span class="op">=</span> <span class="st">"MEAN_WT"</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 432 × 3
-# Groups:   species_id [18]
-   species_id PLOT  MEAN_WT
-   &lt;chr&gt;      &lt;chr&gt;   &lt;dbl&gt;
- 1 BA         3         8
- 2 BA         21        6.5
- 3 BA         1        NA
- 4 BA         2        NA
- 5 BA         4        NA
- 6 BA         5        NA
- 7 BA         6        NA
- 8 BA         7        NA
- 9 BA         8        NA
-10 BA         9        NA
-# ℹ 422 more rows</code></pre>
-</div>
-<p>One thing you will notice is that all those <code>NA</code> values
-that got generated when we pivoted wider. However, we can filter those
-out, which gets us back to the same data as <code>sp_by_plot</code>,
-before we pivoted it wider.</p>
-<div class="codewrapper sourceCode" id="cb90">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot_wide</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="op">-</span><span class="va">species_id</span>, names_to <span class="op">=</span> <span class="st">"PLOT"</span>, values_to <span class="op">=</span> <span class="st">"MEAN_WT"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">filter</span><span class="op">(</span><span class="op">!</span><span class="fu">is.na</span><span class="op">(</span><span class="va">MEAN_WT</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 300 × 3
-# Groups:   species_id [18]
-   species_id PLOT  MEAN_WT
-   &lt;chr&gt;      &lt;chr&gt;   &lt;dbl&gt;
- 1 BA         3         8
- 2 BA         21        6.5
- 3 DM         3        41.2
- 4 DM         21       41.5
- 5 DM         1        42.7
- 6 DM         2        42.6
- 7 DM         4        41.9
- 8 DM         5        42.6
- 9 DM         6        42.1
-10 DM         7        43.2
-# ℹ 290 more rows</code></pre>
-</div>
-<p>Data are often recorded in spreadsheets in a wider format, but lots
-of <code>tidyverse</code> tools, especially <code>ggplot2</code>, like
-data in a longer format, so <code>pivot_longer()</code> is often very
-useful.</p>
 </section><section><h2 class="section-heading" id="exporting-data">Exporting data<a class="anchor" aria-label="anchor" href="#exporting-data"></a></h2>
-<hr class="half-width"><p>Let’s say we want to send the wide version of our
-<code>sb_by_plot</code> data.frame to a colleague who doesn’t use R. In
-this case, we might want to save it as a CSV file.</p>
-<p>First, we might want to modify the names of the columns, since right
-now they are bare numbers, which aren’t very informative. Luckily,
-<code>pivot_wider()</code> has an argument <code>names_prefix</code>
-which will allow us to add “plot_” to the start of each column.</p>
-<div class="codewrapper sourceCode" id="cb92">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp_by_plot</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">plot_id</span>, values_from <span class="op">=</span> <span class="va">mean_weight</span>,</span>
-<span>              names_prefix <span class="op">=</span> <span class="st">"plot_"</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 18 × 25
-# Groups:   species_id [18]
-   species_id plot_3 plot_21 plot_1 plot_2 plot_4 plot_5 plot_6 plot_7 plot_8
-   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
- 1 BA           8       6.5   NA     NA     NA      NA    NA      NA    NA
- 2 DM          41.2    41.5   42.7   42.6   41.9    42.6  42.1    43.2  43.4
- 3 DO          42.7    NA     50.1   50.3   46.8    50.4  49.0    52    49.2
- 4 DS         128.     NA    129.   125.   118.    111.  114.    126.  128.
- 5 NL         171.    136.   154.   171.   164.    192.  176.    170.  134.
- 6 OL          32.1    28.6   35.5   34     33.0    32.6  31.8    NA    30.3
- 7 OT          24.1    24.1   23.7   24.9   26.5    23.6  23.5    22    24.1
- 8 OX          22      NA     NA     22     NA      20    NA      NA    NA
- 9 PE          22.7    19.6   21.6   22.0   NA      21    21.6    22.8  19.4
-10 PF           7.12    7.23   6.57   6.89   6.75    7.5   7.54    7     6.78
-11 PH          28      31     NA     NA     NA      29    NA      NA    NA
-12 PM          20.1    23.6   23.7   23.9   NA      23.7  22.3    23.4  23
-13 PP          17.1    13.6   14.3   16.4   14.8    19.8  16.8    NA    13.9
-14 RF          14.8    17     NA     16     NA      14    12.1    13    NA
-15 RM          10.3     9.89  10.9   10.6   10.4    10.8  10.6    10.7   9
-16 SF          NA      49     NA     NA     NA      NA    NA      NA    NA
-17 SH          76.0    79.9   NA     88     NA      82.7  NA      NA    NA
-18 SS          NA      NA     NA     NA     NA      NA    NA      NA    NA
-# ℹ 15 more variables: plot_9 &lt;dbl&gt;, plot_10 &lt;dbl&gt;, plot_11 &lt;dbl&gt;,
-#   plot_12 &lt;dbl&gt;, plot_13 &lt;dbl&gt;, plot_14 &lt;dbl&gt;, plot_15 &lt;dbl&gt;, plot_16 &lt;dbl&gt;,
-#   plot_17 &lt;dbl&gt;, plot_18 &lt;dbl&gt;, plot_19 &lt;dbl&gt;, plot_20 &lt;dbl&gt;, plot_22 &lt;dbl&gt;,
-#   plot_23 &lt;dbl&gt;, plot_24 &lt;dbl&gt;</code></pre>
-</div>
-<p>That looks better! Let’s save this data.frame as a new object.</p>
-<div class="codewrapper sourceCode" id="cb94">
-<h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">surveys_sp</span> <span class="op">&lt;-</span> <span class="va">sp_by_plot</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">plot_id</span>, values_from <span class="op">=</span> <span class="va">mean_weight</span>,</span>
-<span>              names_prefix <span class="op">=</span> <span class="st">"plot_"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">surveys_sp</span></span></code></pre>
-</div>
-<div class="codewrapper">
-<h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="output" tabindex="0"><code># A tibble: 18 × 25
-# Groups:   species_id [18]
-   species_id plot_3 plot_21 plot_1 plot_2 plot_4 plot_5 plot_6 plot_7 plot_8
-   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
- 1 BA           8       6.5   NA     NA     NA      NA    NA      NA    NA
- 2 DM          41.2    41.5   42.7   42.6   41.9    42.6  42.1    43.2  43.4
- 3 DO          42.7    NA     50.1   50.3   46.8    50.4  49.0    52    49.2
- 4 DS         128.     NA    129.   125.   118.    111.  114.    126.  128.
- 5 NL         171.    136.   154.   171.   164.    192.  176.    170.  134.
- 6 OL          32.1    28.6   35.5   34     33.0    32.6  31.8    NA    30.3
- 7 OT          24.1    24.1   23.7   24.9   26.5    23.6  23.5    22    24.1
- 8 OX          22      NA     NA     22     NA      20    NA      NA    NA
- 9 PE          22.7    19.6   21.6   22.0   NA      21    21.6    22.8  19.4
-10 PF           7.12    7.23   6.57   6.89   6.75    7.5   7.54    7     6.78
-11 PH          28      31     NA     NA     NA      29    NA      NA    NA
-12 PM          20.1    23.6   23.7   23.9   NA      23.7  22.3    23.4  23
-13 PP          17.1    13.6   14.3   16.4   14.8    19.8  16.8    NA    13.9
-14 RF          14.8    17     NA     16     NA      14    12.1    13    NA
-15 RM          10.3     9.89  10.9   10.6   10.4    10.8  10.6    10.7   9
-16 SF          NA      49     NA     NA     NA      NA    NA      NA    NA
-17 SH          76.0    79.9   NA     88     NA      82.7  NA      NA    NA
-18 SS          NA      NA     NA     NA     NA      NA    NA      NA    NA
-# ℹ 15 more variables: plot_9 &lt;dbl&gt;, plot_10 &lt;dbl&gt;, plot_11 &lt;dbl&gt;,
-#   plot_12 &lt;dbl&gt;, plot_13 &lt;dbl&gt;, plot_14 &lt;dbl&gt;, plot_15 &lt;dbl&gt;, plot_16 &lt;dbl&gt;,
-#   plot_17 &lt;dbl&gt;, plot_18 &lt;dbl&gt;, plot_19 &lt;dbl&gt;, plot_20 &lt;dbl&gt;, plot_22 &lt;dbl&gt;,
-#   plot_23 &lt;dbl&gt;, plot_24 &lt;dbl&gt;</code></pre>
-</div>
+<hr class="half-width"><p>Let’s say we want to send a filtered version of our data
+e.g. <code>surveys_1988</code> data.frame to a colleague who doesn’t use
+R. In this case, we might want to save it as a CSV file.</p>
 <p>Now we can save this data.frame to a CSV using the
 <code>write_csv()</code> function from the <code>readr</code> package.
 The first argument is the name of the data.frame, and the second is the
 path to the new file we want to create, including the file extension
 <code>.csv</code>.</p>
-<div class="codewrapper sourceCode" id="cb96">
+<div class="codewrapper sourceCode" id="cb52">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">write_csv</span><span class="op">(</span><span class="va">surveys_sp</span>, <span class="st">"data/cleaned/surveys_meanweight_species_plot.csv"</span><span class="op">)</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu">write_csv</span><span class="op">(</span><span class="va">surveys_1988</span>, <span class="st">"data/cleaned/surveys_1988.csv"</span><span class="op">)</span></span></code></pre>
 </div>
 <p>If we go look into our <code>data/cleaned_data</code> folder, we will
 see this new CSV file.</p>
@@ -2217,8 +1492,8 @@ thoughtfully</li>
   "url": "https://datacarpentry.org/R-ecology-lesson/working-with-data.html",
   "identifier": "https://datacarpentry.org/R-ecology-lesson/working-with-data.html",
   "dateCreated": "2015-04-02",
-  "dateModified": "2026-10-08",
-  "datePublished": "2026-11-03"
+  "dateModified": "2026-11-05",
+  "datePublished": "2026-11-05"
 }
 
   </script><script>
