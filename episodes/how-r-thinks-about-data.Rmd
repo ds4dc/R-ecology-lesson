@@ -31,7 +31,7 @@ exercises: 0
 knitr::opts_chunk$set(dpi = 200, out.height = 600, out.width = 600, R.options = list(max.print = 100))
 ```
 
-```{r load-packages, message=FALSE}
+```{r load-packages, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(plantdat)
 ```
@@ -40,19 +40,19 @@ Run `pak::pak("ds4dc/plantdat")` if `library(plantdat)`doesn't work.
 
 ## The data.frame
 
-We just spent quite a bit of time learning how to create visualizations from the `decaspermum` data, but we did not talk much about **what** this `decaspermum` thing is. It's important to understand how R thinks about, represents, and stores data in order for us to have a productive working relationship with R.
+We just spent quite a bit of time learning how to create visualizations from the `decaspermum_thin` data, but we did not talk much about **what** this `decaspermum_thin` thing is. It's important to understand how R thinks about, represents, and stores data in order for us to have a productive working relationship with R.
 
-The `decaspermum` data is stored in R as a **data.frame**, which is the most common way that R represents tabular data (data that can be stored in a table format, like a spreadsheet). We can check what `decaspermum` is by using the `class()` function:
+The `decaspermum_thin` data is stored in R as a **data.frame**, which is the most common way that R represents tabular data (data that can be stored in a table format, like a spreadsheet). We can check what `decaspermum_thin` is by using the `class()` function:
 
 ```{r class}
-class(decaspermum)
+class(decaspermum_thin)
 ```
 
 We can view the first few rows with the `head()` function, and the last few rows with the `tail()` function:
 
 ```{r head}
-head(decaspermum)
-tail(decaspermum)
+head(decaspermum_thin)
+tail(decaspermum_thin)
 ```
 
 We used these functions with just one argument, the object `decaspermum`, and we didn't give the argument a name, like we often did with `ggplot2`. In R, a function's arguments come in a particular order, and if you put them in the correct order, you don't need to name them. In this case, the name of the argument is `x`, so we can name it if we want, but since we know it's the first argument, we don't need to.
@@ -306,7 +306,7 @@ quantile(decaspermum$elevation, probs = 0.25, na.rm = TRUE)
 Now we get back the 25% quantile value for weights. However, we often want to know more than one quantile. Luckily, the `probs` argument is **vectorized**, meaning it can take a whole vector of values. Let's try getting the 25%, 50% (median), and 75% quantiles all at once.
 
 ```{r multi-quantile}
-quantile(complete_old$weight, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+quantile(decaspermum$elevation, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
 ```
 
 While the `c()` function is very flexible, it doesn't necessarily scale well. If you want to generate a long vector from scratch, you probably don't want to type everything out manually. There are a few functions that can help generate vectors.

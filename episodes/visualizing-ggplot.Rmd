@@ -39,7 +39,7 @@ If you do not have `ggplot2` installed, you can run `install.packages("ggplot2")
 It is a good practice not to put `install.packages()` into a script. This is because every time you run that whole script, the package will be reinstalled, which is typically unnecessary. You want to install the package to your computer once, and then load it with `library()` in each script where you need to use it.
 :::
 
-```{r load-tidyverse-package, message=FALSE}
+```{r load-tidyverse-package, message=FALSE, warning=FALSE}
 library(ggplot2)
 ```
 
@@ -53,7 +53,7 @@ Run `pak::pak("ds4dc/plantdat")` if `library(plantdat)`doesn't work.
 
 The `plantdat` package contains data from [GBIF](https://www.gbif.org/occurrence/download/0035464-260928105237408), and contains preserved specimens of the genus *Decaspermum* from Malaysia
 
-We will be using a dataset called `Decaspermum`, which contains older years of survey data. Let's try to learn a little bit about the data. We can use a `?` in front of the name of the dataset, which will bring up the help page for the data.
+We will be using a dataset called `decaspermum`, which contains older years of survey data. Let's try to learn a little bit about the data. We can use a `?` in front of the name of the dataset, which will bring up the help page for the data.
 
 ```{r data-help}
 ?decaspermum
@@ -254,7 +254,7 @@ ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species)) +
   geom_boxplot()
 ```
 
-Just as we colored the points before, we can color our boxplot by `plot_type` as well:
+Just as we colored the points before, we can color our boxplot by `species` as well:
 
 ```{r boxplot-color, warning=FALSE}
 ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species, color = species)) +
@@ -314,7 +314,7 @@ ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species, color 
   geom_jitter(aes(color = species), alpha = 0.2)
 ```
 
-Now our points are colored according to `plot_type`, but the boxplots are all the same color. One thing you might notice is that even with `alpha = 0.2`, the points obscure parts of the boxplot. This is because the `geom_point()` layer comes after the `geom_boxplot()` layer, which means the points are plotted on top of the boxes. To put the boxplots on top, we switch the order of the layers:
+Now our points are colored according to `species`, but the boxplots are all the same color. One thing you might notice is that even with `alpha = 0.2`, the points obscure parts of the boxplot. This is because the `geom_point()` layer comes after the `geom_boxplot()` layer, which means the points are plotted on top of the boxes. To put the boxplots on top, we switch the order of the layers:
 
 ```{r reverse-layers, warning=FALSE}
 ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species)) +
@@ -507,7 +507,7 @@ Faceting comes in handy in many scenarios. It can be useful when:
 Once we are happy with our final plot, we can assign the whole thing to a new object, which we can call `finalplot`.
 
 ```{r assign-finalplot}
-myplot +
+finalplot <- myplot +
   theme_bw() +
   theme(axis.title = element_text(size = 14), 
         panel.grid.major.x = element_blank(),
@@ -521,10 +521,10 @@ myplot +
   facet_wrap(vars(license), ncol = 1)
 ```
 
-After this, we can run `ggsave()` to save our plot. The first argument we give is the path to the file we want to save, including the correct file extension. This code will make an image called `rodent_size_plots.jpg` in the `images/` folder of our current project. We are making a `.jpg`, but you can save `.pdf`, `.tiff`, and other file formats. Next, we tell it the name of the plot object we want to save. We can also specify things like the width and height of the plot in inches.
+After this, we can run `ggsave()` to save our plot. The first argument we give is the path to the file we want to save, including the correct file extension. This code will make an image called `decaspermum_plot.jpg` in the `images/` folder of our current project. We are making a `.jpg`, but you can save `.pdf`, `.tiff`, and other file formats. Next, we tell it the name of the plot object we want to save. We can also specify things like the width and height of the plot in inches.
 
 ```{r save-plot, eval=FALSE}
-ggsave(filename = "images/decaspermum_plots.jpg", plot = finalplot,
+ggsave(filename = "images/decaspermum_plot.jpg", plot = finalplot,
        height = 6, width = 8)
 ```
 
