@@ -6,6 +6,11 @@ on:
     types:
       - completed
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  
 jobs:
   # Pull requests are valid if:
   #  - they match the sha of the workflow run head commit
