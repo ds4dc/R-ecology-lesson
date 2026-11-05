@@ -32,133 +32,262 @@ exercises: 0
 
 ``` r
 library(tidyverse)
-library(ratdat)
+library(plantdat)
 ```
+
+Run `pak::pak("ds4dc/plantdat")` if `library(plantdat)`doesn't work.
 
 ## The data.frame
 
-We just spent quite a bit of time learning how to create visualizations from the `complete_old` data, but we did not talk much about **what** this `complete_old` thing is. It's important to understand how R thinks about, represents, and stores data in order for us to have a productive working relationship with R.
+We just spent quite a bit of time learning how to create visualizations from the `decaspermum_thin` data, but we did not talk much about **what** this `decaspermum_thin` thing is. It's important to understand how R thinks about, represents, and stores data in order for us to have a productive working relationship with R.
 
-The `complete_old` data is stored in R as a **data.frame**, which is the most common way that R represents tabular data (data that can be stored in a table format, like a spreadsheet). We can check what `complete_old` is by using the `class()` function:
+The `decaspermum_thin` data is stored in R as a **data.frame**, which is the most common way that R represents tabular data (data that can be stored in a table format, like a spreadsheet). We can check what `decaspermum_thin` is by using the `class()` function:
 
 
 ``` r
-class(complete_old)
+class(decaspermum_thin)
 ```
 
 ``` output
-[1] "tbl_df"     "tbl"        "data.frame"
+[1] "data.frame"
 ```
 
 We can view the first few rows with the `head()` function, and the last few rows with the `tail()` function:
 
 
 ``` r
-head(complete_old)
+head(decaspermum_thin)
 ```
 
 ``` output
-# A tibble: 6 × 13
-  record_id month   day  year plot_id species_id sex   hindfoot_length weight
-      <int> <int> <int> <int>   <int> <chr>      <chr>           <int>  <int>
-1         1     7    16  1977       2 NL         M                  32     NA
-2         2     7    16  1977       3 NL         M                  33     NA
-3         3     7    16  1977       2 DM         F                  37     NA
-4         4     7    16  1977       7 DM         M                  36     NA
-5         5     7    16  1977       3 DM         M                  35     NA
-6         6     7    16  1977       1 PF         M                  14     NA
-# ℹ 4 more variables: genus <chr>, species <chr>, taxa <chr>, plot_type <chr>
+      gbifID                 species    family stateProvince decimalLatitude
+1 6561832516  Decaspermum fruticosum Myrtaceae      Kelantan        6.000000
+2 6561807785  Decaspermum fruticosum Myrtaceae         Sabah        5.966667
+3 6561784372  Decaspermum fruticosum Myrtaceae                            NA
+4 6561766817  Decaspermum fruticosum Myrtaceae         Sabah        4.966667
+5 6561753311 Decaspermum vitis-idaea Myrtaceae         Sabah        6.050000
+6 6561730396    Decaspermum montanum Myrtaceae         Kedah              NA
+  decimalLongitude elevation year month      basisOfRecord institutionCode
+1         101.4167     75.00 1990     3 PRESERVED_SPECIMEN              MO
+2         116.1000     25.00 1984     8 PRESERVED_SPECIMEN              MO
+3               NA        NA 1976     5 PRESERVED_SPECIMEN              MO
+4         118.1667    575.00 1984     6 PRESERVED_SPECIMEN              MO
+5         116.6000   2025.00 1983    12 PRESERVED_SPECIMEN              MO
+6               NA    944.88 1975    11 PRESERVED_SPECIMEN              MO
+                                                      recordedBy
+1                                     Engkik Soepadmo;M. Suhaimi
+2                               John H. Beaman;Teofila E. Beaman
+3                                          James D. Mamit;et al.
+4   John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker
+5 John H. Beaman;Reed S. Beaman;K. Medley;T. Lawrence Mellichamp
+6                                                       S. Ahmad
 ```
 
 ``` r
-tail(complete_old)
+tail(decaspermum_thin)
 ```
 
 ``` output
-# A tibble: 6 × 13
-  record_id month   day  year plot_id species_id sex   hindfoot_length weight
-      <int> <int> <int> <int>   <int> <chr>      <chr>           <int>  <int>
-1     16873    12     5  1989       8 DO         M                  37     51
-2     16874    12     5  1989      16 RM         F                  18     15
-3     16875    12     5  1989       5 RM         M                  17      9
-4     16876    12     5  1989       4 DM         M                  37     31
-5     16877    12     5  1989      11 DM         M                  37     50
-6     16878    12     5  1989       8 DM         F                  37     42
-# ℹ 4 more variables: genus <chr>, species <chr>, taxa <chr>, plot_type <chr>
+       gbifID                 species    family stateProvince decimalLatitude
+959 574900546 Decaspermum parviflorum Myrtaceae                            NA
+960 574894717  Decaspermum fruticosum Myrtaceae         Sabah              NA
+961 574849033  Decaspermum fruticosum Myrtaceae                            NA
+962 574688283                         Myrtaceae         Sabah              NA
+963 295125349                         Myrtaceae         Sabah              NA
+964  47754151  Decaspermum fruticosum Myrtaceae       Sarawak           3.666
+    decimalLongitude elevation year month      basisOfRecord institutionCode
+959               NA        NA   NA    NA PRESERVED_SPECIMEN            RBGE
+960               NA        NA 1993     8 PRESERVED_SPECIMEN            RBGE
+961               NA        NA 1986     5 PRESERVED_SPECIMEN            RBGE
+962               NA        NA 1992     2 PRESERVED_SPECIMEN            RBGE
+963               NA        NA 1968    12 PRESERVED_SPECIMEN             OSA
+964          115.833      1000 1992    11 PRESERVED_SPECIMEN              AU
+          recordedBy
+959                 
+960  Sumbing, Jampin
+961                 
+962                 
+963                 
+964 H.M. Christensen
 ```
 
-We used these functions with just one argument, the object `complete_old`, and we didn't give the argument a name, like we often did with `ggplot2`. In R, a function's arguments come in a particular order, and if you put them in the correct order, you don't need to name them. In this case, the name of the argument is `x`, so we can name it if we want, but since we know it's the first argument, we don't need to.
+We used these functions with just one argument, the object `decaspermum`, and we didn't give the argument a name, like we often did with `ggplot2`. In R, a function's arguments come in a particular order, and if you put them in the correct order, you don't need to name them. In this case, the name of the argument is `x`, so we can name it if we want, but since we know it's the first argument, we don't need to.
 
 Some arguments are optional. For example, the `n` argument in `head()` specifies the number of rows to print. It defaults to 6, but we can override that by specifying a different number:
 
 
 ``` r
-head(complete_old, n = 10)
+head(decaspermum, n = 10)
 ```
 
 ``` output
-# A tibble: 10 × 13
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       <int> <int> <int> <int>   <int> <chr>      <chr>           <int>  <int>
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 4 more variables: genus <chr>, species <chr>, taxa <chr>, plot_type <chr>
+      gbifID                           datasetKey
+1 6561832516 7bd65a7a-f762-11e1-a439-00145eb45e9a
+2 6561807785 7bd65a7a-f762-11e1-a439-00145eb45e9a
+                       occurrenceID kingdom       phylum         class    order
+1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Magnoliopsida Myrtales
+2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Magnoliopsida Myrtales
+     family       genus                species infraspecificEpithet taxonRank
+1 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
+2 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
+                                scientificName
+1 Decaspermum fruticosum J.R.Forst. & G.Forst.
+2 Decaspermum fruticosum J.R.Forst. & G.Forst.
+                          verbatimScientificName
+1 Decaspermum fruticosum J.R. Forst. & G. Forst.
+2 Decaspermum fruticosum J.R. Forst. & G. Forst.
+  verbatimScientificNameAuthorship countryCode
+1          J.R. Forst. & G. Forst.          MY
+2          J.R. Forst. & G. Forst.          MY
+                                                                                          locality
+1                                                                       Malay Peninsula, Pasir Mas
+2 Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus.
+  stateProvince occurrenceStatus individualCount
+1      Kelantan          PRESENT              NA
+2         Sabah          PRESENT              NA
+                      publishingOrgKey decimalLatitude decimalLongitude
+1 90fd6680-349f-11d8-aa2d-b8a03c50a862        6.000000         101.4167
+2 90fd6680-349f-11d8-aa2d-b8a03c50a862        5.966667         116.1000
+  coordinateUncertaintyInMeters coordinatePrecision elevation elevationAccuracy
+1                            NA                  NA        75                NA
+2                            NA                  NA        25                 5
+  depth depthAccuracy  eventDate day month year taxonKey speciesKey
+1    NA            NA 1990-03-01   1     3 1990    6CFN2      6CFN2
+2    NA            NA 1984-08-04   4     8 1984    6CFN2      6CFN2
+       basisOfRecord institutionCode collectionCode catalogNumber recordNumber
+1 PRESERVED_SPECIMEN              MO       Tropicos     105482819         s136
+2 PRESERVED_SPECIMEN              MO       Tropicos     105427229        10824
+  identifiedBy      dateIdentified   license              rightsHolder
+1                                  CC_BY_4_0 Missouri Botanical Garden
+2              1987-01-01T00:00:00 CC_BY_4_0 Missouri Botanical Garden
+                        recordedBy typeStatus establishmentMeans
+1       Engkik Soepadmo;M. Suhaimi                              
+2 John H. Beaman;Teofila E. Beaman                              
+           lastInterpreted  mediaType
+1 2026-10-14T03:16:39.777Z StillImage
+2 2026-10-14T03:16:04.863Z StillImage
+                                                                                                                                                               issue
+1 COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
+2                                                   COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
+ [ reached 'max' / getOption("max.print") -- omitted 8 rows ]
 ```
 
 If we order them correctly, we don't have to name either:
 
 
 ``` r
-head(complete_old, 10)
+head(decaspermum, 10)
 ```
 
 ``` output
-# A tibble: 10 × 13
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       <int> <int> <int> <int>   <int> <chr>      <chr>           <int>  <int>
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 4 more variables: genus <chr>, species <chr>, taxa <chr>, plot_type <chr>
+      gbifID                           datasetKey
+1 6561832516 7bd65a7a-f762-11e1-a439-00145eb45e9a
+2 6561807785 7bd65a7a-f762-11e1-a439-00145eb45e9a
+                       occurrenceID kingdom       phylum         class    order
+1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Magnoliopsida Myrtales
+2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Magnoliopsida Myrtales
+     family       genus                species infraspecificEpithet taxonRank
+1 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
+2 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
+                                scientificName
+1 Decaspermum fruticosum J.R.Forst. & G.Forst.
+2 Decaspermum fruticosum J.R.Forst. & G.Forst.
+                          verbatimScientificName
+1 Decaspermum fruticosum J.R. Forst. & G. Forst.
+2 Decaspermum fruticosum J.R. Forst. & G. Forst.
+  verbatimScientificNameAuthorship countryCode
+1          J.R. Forst. & G. Forst.          MY
+2          J.R. Forst. & G. Forst.          MY
+                                                                                          locality
+1                                                                       Malay Peninsula, Pasir Mas
+2 Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus.
+  stateProvince occurrenceStatus individualCount
+1      Kelantan          PRESENT              NA
+2         Sabah          PRESENT              NA
+                      publishingOrgKey decimalLatitude decimalLongitude
+1 90fd6680-349f-11d8-aa2d-b8a03c50a862        6.000000         101.4167
+2 90fd6680-349f-11d8-aa2d-b8a03c50a862        5.966667         116.1000
+  coordinateUncertaintyInMeters coordinatePrecision elevation elevationAccuracy
+1                            NA                  NA        75                NA
+2                            NA                  NA        25                 5
+  depth depthAccuracy  eventDate day month year taxonKey speciesKey
+1    NA            NA 1990-03-01   1     3 1990    6CFN2      6CFN2
+2    NA            NA 1984-08-04   4     8 1984    6CFN2      6CFN2
+       basisOfRecord institutionCode collectionCode catalogNumber recordNumber
+1 PRESERVED_SPECIMEN              MO       Tropicos     105482819         s136
+2 PRESERVED_SPECIMEN              MO       Tropicos     105427229        10824
+  identifiedBy      dateIdentified   license              rightsHolder
+1                                  CC_BY_4_0 Missouri Botanical Garden
+2              1987-01-01T00:00:00 CC_BY_4_0 Missouri Botanical Garden
+                        recordedBy typeStatus establishmentMeans
+1       Engkik Soepadmo;M. Suhaimi                              
+2 John H. Beaman;Teofila E. Beaman                              
+           lastInterpreted  mediaType
+1 2026-10-14T03:16:39.777Z StillImage
+2 2026-10-14T03:16:04.863Z StillImage
+                                                                                                                                                               issue
+1 COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
+2                                                   COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
+ [ reached 'max' / getOption("max.print") -- omitted 8 rows ]
 ```
 
 Additionally, if we name them, we can put them in any order we want:
 
 
 ``` r
-head(n = 10, x = complete_old)
+head(n = 10, x = decaspermum)
 ```
 
 ``` output
-# A tibble: 10 × 13
-   record_id month   day  year plot_id species_id sex   hindfoot_length weight
-       <int> <int> <int> <int>   <int> <chr>      <chr>           <int>  <int>
- 1         1     7    16  1977       2 NL         M                  32     NA
- 2         2     7    16  1977       3 NL         M                  33     NA
- 3         3     7    16  1977       2 DM         F                  37     NA
- 4         4     7    16  1977       7 DM         M                  36     NA
- 5         5     7    16  1977       3 DM         M                  35     NA
- 6         6     7    16  1977       1 PF         M                  14     NA
- 7         7     7    16  1977       2 PE         F                  NA     NA
- 8         8     7    16  1977       1 DM         M                  37     NA
- 9         9     7    16  1977       1 DM         F                  34     NA
-10        10     7    16  1977       6 PF         F                  20     NA
-# ℹ 4 more variables: genus <chr>, species <chr>, taxa <chr>, plot_type <chr>
+      gbifID                           datasetKey
+1 6561832516 7bd65a7a-f762-11e1-a439-00145eb45e9a
+2 6561807785 7bd65a7a-f762-11e1-a439-00145eb45e9a
+                       occurrenceID kingdom       phylum         class    order
+1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Magnoliopsida Myrtales
+2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Magnoliopsida Myrtales
+     family       genus                species infraspecificEpithet taxonRank
+1 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
+2 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
+                                scientificName
+1 Decaspermum fruticosum J.R.Forst. & G.Forst.
+2 Decaspermum fruticosum J.R.Forst. & G.Forst.
+                          verbatimScientificName
+1 Decaspermum fruticosum J.R. Forst. & G. Forst.
+2 Decaspermum fruticosum J.R. Forst. & G. Forst.
+  verbatimScientificNameAuthorship countryCode
+1          J.R. Forst. & G. Forst.          MY
+2          J.R. Forst. & G. Forst.          MY
+                                                                                          locality
+1                                                                       Malay Peninsula, Pasir Mas
+2 Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus.
+  stateProvince occurrenceStatus individualCount
+1      Kelantan          PRESENT              NA
+2         Sabah          PRESENT              NA
+                      publishingOrgKey decimalLatitude decimalLongitude
+1 90fd6680-349f-11d8-aa2d-b8a03c50a862        6.000000         101.4167
+2 90fd6680-349f-11d8-aa2d-b8a03c50a862        5.966667         116.1000
+  coordinateUncertaintyInMeters coordinatePrecision elevation elevationAccuracy
+1                            NA                  NA        75                NA
+2                            NA                  NA        25                 5
+  depth depthAccuracy  eventDate day month year taxonKey speciesKey
+1    NA            NA 1990-03-01   1     3 1990    6CFN2      6CFN2
+2    NA            NA 1984-08-04   4     8 1984    6CFN2      6CFN2
+       basisOfRecord institutionCode collectionCode catalogNumber recordNumber
+1 PRESERVED_SPECIMEN              MO       Tropicos     105482819         s136
+2 PRESERVED_SPECIMEN              MO       Tropicos     105427229        10824
+  identifiedBy      dateIdentified   license              rightsHolder
+1                                  CC_BY_4_0 Missouri Botanical Garden
+2              1987-01-01T00:00:00 CC_BY_4_0 Missouri Botanical Garden
+                        recordedBy typeStatus establishmentMeans
+1       Engkik Soepadmo;M. Suhaimi                              
+2 John H. Beaman;Teofila E. Beaman                              
+           lastInterpreted  mediaType
+1 2026-10-14T03:16:39.777Z StillImage
+2 2026-10-14T03:16:04.863Z StillImage
+                                                                                                                                                               issue
+1 COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
+2                                                   COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
+ [ reached 'max' / getOption("max.print") -- omitted 8 rows ]
 ```
 
 Generally, it's good practice to start with the required arguments, like the data.frame whose rows you want to see, and then to name the optional arguments. If you are ever unsure, it never hurts to explicitly name an argument.
@@ -224,99 +353,152 @@ Other ethical concerns have also been raised, such as reports that workers were 
 
 ### Knowing more about our data.frame
 
-Let's get back to investigating our `complete_old` data.frame. We can get some useful summaries of each variable using the `summary()` function:
+Let's get back to investigating our `decaspermum` data.frame. We can get some useful summaries of each variable using the `summary()` function:
 
 
 ``` r
-summary(complete_old)
+summary(decaspermum)
 ```
 
 ``` output
-   record_id         month             day            year         plot_id     
- Min.   :    1   Min.   : 1.000   Min.   : 1.0   Min.   :1977   Min.   : 1.00  
- 1st Qu.: 4220   1st Qu.: 3.000   1st Qu.: 9.0   1st Qu.:1981   1st Qu.: 5.00  
- Median : 8440   Median : 6.000   Median :15.0   Median :1983   Median :11.00  
- Mean   : 8440   Mean   : 6.382   Mean   :15.6   Mean   :1984   Mean   :11.47  
- 3rd Qu.:12659   3rd Qu.: 9.000   3rd Qu.:23.0   3rd Qu.:1987   3rd Qu.:17.00  
- Max.   :16878   Max.   :12.000   Max.   :31.0   Max.   :1989   Max.   :24.00  
-                                                                               
-     species_id           sex        hindfoot_length     weight      
- Length   :16878   Length   :16878   Min.   : 6.00   Min.   :  4.00  
- N.unique :   36   N.unique :    3   1st Qu.:21.00   1st Qu.: 24.00  
- N.blank  :  357   N.blank  : 1300   Median :35.00   Median : 42.00  
- Min.nchar:    0   Min.nchar:    0   Mean   :31.98   Mean   : 53.22  
- Max.nchar:    2   Max.nchar:    1   3rd Qu.:37.00   3rd Qu.: 53.00  
-                                     Max.   :70.00   Max.   :278.00  
-                                     NAs    :2733    NAs    :1692    
-       genus            species             taxa           plot_type    
- Length   :16878   Length   :16878   Length   :16878   Length   :16878  
- N.unique :   23   N.unique :   30   N.unique :    4   N.unique :    5  
- N.blank  :    0   N.blank  :    0   N.blank  :    0   N.blank  :    0  
- Min.nchar:    6   Min.nchar:    3   Min.nchar:    4   Min.nchar:    7  
- Max.nchar:   16   Max.nchar:   15   Max.nchar:    7   Max.nchar:   25  
- NAs      :  357   NAs      :  357   NAs      :  357                    
-                                                                        
+     gbifID              datasetKey     occurrenceID      kingdom   
+ Min.   :4.775e+07   Length   :964   Length   :964   Length   :964  
+ 1st Qu.:2.516e+09   N.unique : 35   N.unique :964   N.unique :  1  
+       phylum          class           order           family   
+ Length   :964   Length   :964   Length   :964   Length   :964  
+ N.unique :  1   N.unique :  1   N.unique :  1   N.unique :  1  
+       genus          species    infraspecificEpithet     taxonRank  
+ Length   :964   Length   :964   Length   :964        Length   :964  
+ N.unique :  1   N.unique : 10   N.unique :  2        N.unique :  3  
+   scientificName verbatimScientificName verbatimScientificNameAuthorship
+ Length   :964    Length   :964          Length   :964                   
+ N.unique : 14    N.unique : 35          N.unique : 21                   
+    countryCode       locality     stateProvince  occurrenceStatus
+ Length   :964   Length   :964   Length   :964   Length   :964    
+ N.unique :  1   N.unique :796   N.unique : 17   N.unique :  1    
+ individualCount  publishingOrgKey decimalLatitude decimalLongitude
+ Min.   :1       Length   :964     Min.   :1.167   Min.   :100.2   
+ 1st Qu.:1       N.unique : 34     1st Qu.:4.138   1st Qu.:115.5   
+ coordinateUncertaintyInMeters coordinatePrecision   elevation     
+ Min.   :   323.8              Min.   :0.01667     Min.   :   0.0  
+ 1st Qu.:  1250.0              1st Qu.:0.01667     1st Qu.: 100.0  
+ elevationAccuracy  depth         depthAccuracy      eventDate  
+ Min.   :  0.00    Mode:logical   Mode:logical   Length   :964  
+ 1st Qu.:  5.00    NAs :964       NAs :964       N.unique :625  
+      day            month             year           taxonKey  
+ Min.   : 1.00   Min.   : 1.000   Min.   :1822   Length   :964  
+ 1st Qu.: 8.00   1st Qu.: 3.000   1st Qu.:1955   N.unique : 14  
+     speciesKey    basisOfRecord  institutionCode   collectionCode
+ Length   :964   Length   :964   Length   :964    Length   :964   
+ N.unique : 10   N.unique :  1   N.unique : 34    N.unique : 29   
+   catalogNumber    recordNumber    identifiedBy   dateIdentified
+ Length   :964   Length   :964   Length   :964   Length   :964   
+ N.unique :964   N.unique :742   N.unique : 32   N.unique : 35   
+      license       rightsHolder     recordedBy      typeStatus 
+ Length   :964   Length   :964   Length   :964   Length   :964  
+ N.unique :  3   N.unique : 15   N.unique :574   N.unique :  6  
+ establishmentMeans  lastInterpreted     mediaType         issue    
+ Length   :964      Length   :964    Length   :964   Length   :964  
+ N.unique :  2      N.unique :955    N.unique :  3   N.unique : 49  
+ [ reached 'max' / getOption("max.print") -- omitted 5 rows ]
 ```
 
 And, as we have already done, we can use `str()` to look at the structure of an object:
 
 
 ``` r
-str(complete_old)
+str(decaspermum)
 ```
 
 ``` output
-tibble [16,878 × 13] (S3: tbl_df/tbl/data.frame)
- $ record_id      : int [1:16878] 1 2 3 4 5 6 7 8 9 10 ...
- $ month          : int [1:16878] 7 7 7 7 7 7 7 7 7 7 ...
- $ day            : int [1:16878] 16 16 16 16 16 16 16 16 16 16 ...
- $ year           : int [1:16878] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 ...
- $ plot_id        : int [1:16878] 2 3 2 7 3 1 2 1 1 6 ...
- $ species_id     : chr [1:16878] "NL" "NL" "DM" "DM" ...
- $ sex            : chr [1:16878] "M" "M" "F" "M" ...
- $ hindfoot_length: int [1:16878] 32 33 37 36 35 14 NA 37 34 20 ...
- $ weight         : int [1:16878] NA NA NA NA NA NA NA NA NA NA ...
- $ genus          : chr [1:16878] "Neotoma" "Neotoma" "Dipodomys" "Dipodomys" ...
- $ species        : chr [1:16878] "albigula" "albigula" "merriami" "merriami" ...
- $ taxa           : chr [1:16878] "Rodent" "Rodent" "Rodent" "Rodent" ...
- $ plot_type      : chr [1:16878] "Control" "Long-term Krat Exclosure" "Control" "Rodent Exclosure" ...
+'data.frame':	964 obs. of  50 variables:
+ $ gbifID                          : num  6.56e+09 6.56e+09 6.56e+09 6.56e+09 6.56e+09 ...
+ $ datasetKey                      : chr  "7bd65a7a-f762-11e1-a439-00145eb45e9a" "7bd65a7a-f762-11e1-a439-00145eb45e9a" "7bd65a7a-f762-11e1-a439-00145eb45e9a" "7bd65a7a-f762-11e1-a439-00145eb45e9a" ...
+ $ occurrenceID                    : chr  "urn:catalog:MO:Tropicos:105482819" "urn:catalog:MO:Tropicos:105427229" "urn:catalog:MO:Tropicos:105414318" "urn:catalog:MO:Tropicos:105642053" ...
+ $ kingdom                         : chr  "Plantae" "Plantae" "Plantae" "Plantae" ...
+ $ phylum                          : chr  "Tracheophyta" "Tracheophyta" "Tracheophyta" "Tracheophyta" ...
+ $ class                           : chr  "Magnoliopsida" "Magnoliopsida" "Magnoliopsida" "Magnoliopsida" ...
+ $ order                           : chr  "Myrtales" "Myrtales" "Myrtales" "Myrtales" ...
+ $ family                          : chr  "Myrtaceae" "Myrtaceae" "Myrtaceae" "Myrtaceae" ...
+ $ genus                           : chr  "Decaspermum" "Decaspermum" "Decaspermum" "Decaspermum" ...
+ $ species                         : chr  "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" ...
+ $ infraspecificEpithet            : chr  "" "" "" "" ...
+ $ taxonRank                       : chr  "SPECIES" "SPECIES" "SPECIES" "SPECIES" ...
+ $ scientificName                  : chr  "Decaspermum fruticosum J.R.Forst. & G.Forst." "Decaspermum fruticosum J.R.Forst. & G.Forst." "Decaspermum fruticosum J.R.Forst. & G.Forst." "Decaspermum fruticosum J.R.Forst. & G.Forst." ...
+ $ verbatimScientificName          : chr  "Decaspermum fruticosum J.R. Forst. & G. Forst." "Decaspermum fruticosum J.R. Forst. & G. Forst." "Decaspermum fruticosum J.R. Forst. & G. Forst." "Decaspermum fruticosum J.R. Forst. & G. Forst." ...
+ $ verbatimScientificNameAuthorship: chr  "J.R. Forst. & G. Forst." "J.R. Forst. & G. Forst." "J.R. Forst. & G. Forst." "J.R. Forst. & G. Forst." ...
+ $ countryCode                     : chr  "MY" "MY" "MY" "MY" ...
+ $ locality                        : chr  "Malay Peninsula, Pasir Mas" "Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus." "Taiton Gold Mine, Bau, 1st Division." "Borneo; Lahad Datu District: Gunung Silam, just below Telecom tower." ...
+ $ stateProvince                   : chr  "Kelantan" "Sabah" "" "Sabah" ...
+ $ occurrenceStatus                : chr  "PRESENT" "PRESENT" "PRESENT" "PRESENT" ...
+ $ individualCount                 : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ publishingOrgKey                : chr  "90fd6680-349f-11d8-aa2d-b8a03c50a862" "90fd6680-349f-11d8-aa2d-b8a03c50a862" "90fd6680-349f-11d8-aa2d-b8a03c50a862" "90fd6680-349f-11d8-aa2d-b8a03c50a862" ...
+ $ decimalLatitude                 : num  6 5.97 NA 4.97 6.05 ...
+ $ decimalLongitude                : num  101 116 NA 118 117 ...
+ $ coordinateUncertaintyInMeters   : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ coordinatePrecision             : num  NA NA NA NA NA NA NA NA NA NA ...
+ $ elevation                       : num  75 25 NA 575 2025 ...
+ $ elevationAccuracy               : num  NA 5 NA 75 75 ...
+ $ depth                           : logi  NA NA NA NA NA NA ...
+ $ depthAccuracy                   : logi  NA NA NA NA NA NA ...
+ $ eventDate                       : chr  "1990-03-01" "1984-08-04" "1976-05-25" "1984-06-10" ...
+ $ day                             : int  1 4 25 10 30 12 15 15 8 29 ...
+ $ month                           : int  3 8 5 6 12 11 11 11 5 6 ...
+ $ year                            : int  1990 1984 1976 1984 1983 1975 1974 1975 1975 1975 ...
+ $ taxonKey                        : chr  "6CFN2" "6CFN2" "6CFN2" "6CFN2" ...
+ $ speciesKey                      : chr  "6CFN2" "6CFN2" "6CFN2" "6CFN2" ...
+ $ basisOfRecord                   : chr  "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" ...
+ $ institutionCode                 : chr  "MO" "MO" "MO" "MO" ...
+ $ collectionCode                  : chr  "Tropicos" "Tropicos" "Tropicos" "Tropicos" ...
+ $ catalogNumber                   : chr  "105482819" "105427229" "105414318" "105642053" ...
+ $ recordNumber                    : chr  "s136" "10824" "S37197" "10029" ...
+ $ identifiedBy                    : chr  "" "" "" "" ...
+ $ dateIdentified                  : chr  "" "1987-01-01T00:00:00" "1977-01-01T00:00:00" "1987-01-01T00:00:00" ...
+ $ license                         : chr  "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" ...
+ $ rightsHolder                    : chr  "Missouri Botanical Garden" "Missouri Botanical Garden" "Missouri Botanical Garden" "Missouri Botanical Garden" ...
+ $ recordedBy                      : chr  "Engkik Soepadmo;M. Suhaimi" "John H. Beaman;Teofila E. Beaman" "James D. Mamit;et al." "John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker" ...
+ $ typeStatus                      : chr  "" "" "" "" ...
+ $ establishmentMeans              : chr  "" "" "" "" ...
+ $ lastInterpreted                 : chr  "2026-10-14T03:16:39.777Z" "2026-10-14T03:16:04.863Z" "2026-10-14T03:16:04.955Z" "2026-10-14T03:15:22.202Z" ...
+ $ mediaType                       : chr  "StillImage" "StillImage" "StillImage" "StillImage" ...
+ $ issue                           : chr  "COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MA"| __truncated__ "COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND" "COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND" "COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND" ...
 ```
 
-We get quite a bit of useful information here. First, we are told that we have a data.frame of 16878 observations, or rows, and 13 variables, or columns.
+We get quite a bit of useful information here. First, we are told that we have a data.frame of 964 observations, or rows, and 50 variables, or columns.
 
 Next, we get a bit of information on each variable, including its type (`int` or `chr`) and a quick peek at the first 10 values. You might ask why there is a `$` in front of each variable. This is because the `$` is an operator that allows us to select individual columns from a data.frame.
 
-The `$` operator also allows you to use tab-completion to quickly select which variable you want from a given data.frame. For example, to get the `year` variable, we can type `complete_old$` and then hit <kbd>Tab</kbd>. We get a list of the variables that we can move through with up and down arrow keys. Hit <kbd>Enter</kbd> when you reach `year`, which should finish this code:
+The `$` operator also allows you to use tab-completion to quickly select which variable you want from a given data.frame. For example, to get the `year` variable, we can type `decaspermum$` and then hit <kbd>Tab</kbd>. We get a list of the variables that we can move through with up and down arrow keys. Hit <kbd>Enter</kbd> when you reach `year`, which should finish this code:
 
 
 ``` r
-complete_old$year
+decaspermum$year
 ```
 
 ``` output
-  [1] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [16] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [31] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [46] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [61] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [76] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [91] 1977 1977 1977 1977 1977 1977 1977 1977 1977 1977
- [ reached 'max' / getOption("max.print") -- omitted 16778 entries ]
+  [1] 1990 1984 1976 1984 1983 1975 1974 1975 1975 1975 1987 1984 1984 1985 1977
+ [16] 1974 1992 1922 1984 1954 1996 1999 1986   NA 1966 1983 1935 1984 1984 1984
+ [31] 1984 1984   NA 1922 1965 1963 1929 1966 1969 1964 1964 1965 1963 1963 1964
+ [46] 1966 1996 2015   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA 2015 1865
+ [61] 1933 1964 1983 1983 1984 1964 1933 1933 1995 1964 1984 1963 2003 1845 1917
+ [76] 1993 1841   NA   NA 1883   NA 1983 1867 1967 1940   NA 1922 1865 1898 1969
+ [91] 1849   NA   NA 1965   NA   NA   NA 1969   NA   NA
+ [ reached 'max' / getOption("max.print") -- omitted 864 entries ]
 ```
 
 What we get back is a whole bunch of numbers, the entries in the `year` column printed out in order.
 
 ## Vectors: the building block of data
 
-You might have noticed that our last result looked different from when we printed out the `complete_old` data.frame itself. That's because it is not a data.frame, it is a **vector**. A vector is a 1-dimensional series of values, in this case a vector of numbers representing years.
+You might have noticed that our last result looked different from when we printed out the `decaspermum` data.frame itself. That's because it is not a data.frame, it is a **vector**. A vector is a 1-dimensional series of values, in this case a vector of numbers representing years.
 
 Data.frames are made up of vectors; each column in a data.frame is a vector. Vectors are the basic building blocks of all data in R. Basically, everything in R is a vector, a bunch of vectors stitched together in some way, or a function. Understanding how vectors work is crucial to understanding how R treats data, so we will spend some time learning about them.
 
 There are 4 main types of vectors (also known as *atomic vectors*):
 
-1. `"character"` for strings of characters, like our `genus` or `sex` columns. Each entry in a character vector is wrapped in quotes. In other programming languages, this type of data may be referred to as "strings".
+1. `"character"` for strings of characters, like our `genus` or `taxonRank` columns. Each entry in a character vector is wrapped in quotes. In other programming languages, this type of data may be referred to as "strings".
 
-2. `"integer"` for integers. All the numeric values in `complete_old` are integers. You may sometimes see integers represented like `2L` or `20L`. The `L` indicates to R that it is an integer, instead of the next data type, `"numeric"`.
+2. `"integer"` for integers. All the numeric values in `decaspermum` are integers. You may sometimes see integers represented like `2L` or `20L`. The `L` indicates to R that it is an integer, instead of the next data type, `"numeric"`.
 
 3. `"numeric"`, aka `"double"`, vectors can contain numbers including decimals. Other languages may refer to these as "float" or "floating point" numbers.
 
@@ -335,7 +517,7 @@ c(1, 2, 5, 12, 4)
 [1]  1  2  5 12  4
 ```
 
-As you can see, those values get printed out in the console, just like with `complete_old$year`. To store this vector so we can continue to work with it, we need to assign it to an object.
+As you can see, those values get printed out in the console, just like with `decaspermum$year`. To store this vector so we can continue to work with it, we need to assign it to an object.
 
 
 ``` r
@@ -518,24 +700,24 @@ A common reason to create a vector from scratch is to use in a function argument
 
 
 ``` r
-quantile(complete_old$weight, probs = 0.25, na.rm = TRUE)
+quantile(decaspermum$elevation, probs = 0.25, na.rm = TRUE)
 ```
 
 ``` output
 25% 
- 24 
+100 
 ```
 
 Now we get back the 25% quantile value for weights. However, we often want to know more than one quantile. Luckily, the `probs` argument is **vectorized**, meaning it can take a whole vector of values. Let's try getting the 25%, 50% (median), and 75% quantiles all at once.
 
 
 ``` r
-quantile(complete_old$weight, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+quantile(decaspermum$elevation, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
 ```
 
 ``` output
-25% 50% 75% 
- 24  42  53 
+ 25%  50%  75% 
+ 100  520 1000 
 ```
 
 While the `c()` function is very flexible, it doesn't necessarily scale well. If you want to generate a long vector from scratch, you probably don't want to type everything out manually. There are a few functions that can help generate vectors.
@@ -665,25 +847,6 @@ rep(my_seq, 3)
 
 ::::::::::::::::::::::::
 
-2. Calculate the quantiles for the `complete_old` hindfoot lengths at every 5% level (0%, 5%, 10%, 15%, etc.)
-
-:::::::::::::::::::::::: solution 
-
-
-``` r
-quantile(complete_old$hindfoot_length, 
-         probs = seq(from = 0, to = 1, by = 0.05),
-         na.rm = T)
-```
-
-``` output
-  0%   5%  10%  15%  20%  25%  30%  35%  40%  45%  50%  55%  60%  65%  70%  75% 
-   6   16   17   19   20   21   22   31   33   34   35   35   36   36   36   37 
- 80%  85%  90%  95% 100% 
-  37   39   49   51   70 
-```
-
-::::::::::::::::::::::::
 ::::::::::::::::::::::::::::::::::::::::::::::::
 
 
