@@ -89,13 +89,11 @@ surveys <- read_csv("data/cleaned/Decaspermum_Malaysia.csv")
 ```
 
 ``` output
-Rows: 964 Columns: 50
+Rows: 964 Columns: 13
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
-chr  (35): datasetKey, occurrenceID, kingdom, phylum, class, order, family, ...
-dbl  (11): gbifID, individualCount, decimalLatitude, decimalLongitude, coord...
-lgl   (2): depth, depthAccuracy
-dttm  (2): dateIdentified, lastInterpreted
+chr (7): species, family, stateProvince, basisOfRecord, institutionCode, rec...
+dbl (6): gbifID, decimalLatitude, decimalLongitude, elevation, year, month
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -134,7 +132,7 @@ Whoa! What is this thing? It has multiple classes? Well, it's called a `tibble`,
 
 As we begin to delve more deeply into the `tidyverse`, we should briefly pause to mention some of the reasons for focusing on the `tidyverse` set of tools. In R, there are often many ways to get a job done, and there are other approaches that can accomplish tasks similar to the `tidyverse`.
 
-The phrase **base R** is used to refer to approaches that utilize functions contained in R's default packages. We have already used some base R functions, such as `str()`, `head()`, and `mean()`, and we will be using more scattered throughout this lesson. However, there are some key base R approaches we will not be teaching. These include square bracket subsetting and base plotting. You may come across code written by other people that looks like `surveys[1:10, 2]` or `plot(surveys$weight, surveys$hindfoot_length)`, which are base R commands. If you're interested in learning more about these approaches, you can check out other Carpentries lessons like the [Software Carpentry Programming with R](https://swcarpentry.github.io/r-novice-inflammation/) lesson.
+The phrase **base R** is used to refer to approaches that utilize functions contained in R's default packages. We have already used some base R functions, such as `str()`, `head()`, and `mean()`, and we will be using more scattered throughout this lesson. However, there are some key base R approaches we will not be teaching. These include square bracket subsetting and base plotting. You may come across code written by other people that looks like `surveys[1:10, 2]` or `plot(surveys$year, surveys$elevation)`, which are base R commands. If you're interested in learning more about these approaches, you can check out other Carpentries lessons like the [Software Carpentry Programming with R](https://swcarpentry.github.io/r-novice-inflammation/) lesson.
 
 We choose to teach the `tidyverse` set of packages because they share a similar syntax and philosophy, making them consistent and producing highly readable code. They are also very flexible and powerful, with a growing number of packages designed according to similar principles and to work well with the rest of the packages. The `tidyverse` packages tend to have very clear documentation and wide array of learning materials that tend to be written with novice users in mind. Finally, the `tidyverse` has only continued to grow, and has strong support from RStudio, which implies that these approaches will be relevant into the future.
 
@@ -161,21 +159,10 @@ To use the `select()` function, the first argument is the name of the data.frame
 select(surveys, genus, species, year, elevation)
 ```
 
-``` output
-# A tibble: 964 × 4
-   genus       species                  year elevation
-   <chr>       <chr>                   <dbl>     <dbl>
- 1 Decaspermum Decaspermum fruticosum   1990       75 
- 2 Decaspermum Decaspermum fruticosum   1984       25 
- 3 Decaspermum Decaspermum fruticosum   1976       NA 
- 4 Decaspermum Decaspermum fruticosum   1984      575 
- 5 Decaspermum Decaspermum vitis-idaea  1983     2025 
- 6 Decaspermum Decaspermum montanum     1975      945.
- 7 Decaspermum Decaspermum fruticosum   1974     1180 
- 8 Decaspermum Decaspermum fruticosum   1975      732.
- 9 Decaspermum Decaspermum fruticosum   1975      410 
-10 Decaspermum Decaspermum fruticosum   1975      400 
-# ℹ 954 more rows
+``` error
+Error in `select()`:
+! Can't select columns that don't exist.
+✖ Column `genus` doesn't exist.
 ```
 
 The columns are arranged in the order we specified inside `select()`.
@@ -188,26 +175,22 @@ select(surveys, -elevation, -year)
 ```
 
 ``` output
-# A tibble: 964 × 48
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# A tibble: 964 × 11
+      gbifID species family stateProvince decimalLatitude decimalLongitude month
+       <dbl> <chr>   <chr>  <chr>                   <dbl>            <dbl> <dbl>
+ 1    6.56e9 Decasp… Myrta… Kelantan                 6                101.     3
+ 2    6.56e9 Decasp… Myrta… Sabah                    5.97             116.     8
+ 3    6.56e9 Decasp… Myrta… <NA>                    NA                 NA      5
+ 4    6.56e9 Decasp… Myrta… Sabah                    4.97             118.     6
+ 5    6.56e9 Decasp… Myrta… Sabah                    6.05             117.    12
+ 6    6.56e9 Decasp… Myrta… Kedah                   NA                 NA     11
+ 7    6.56e9 Decasp… Myrta… <NA>                    NA                 NA     11
+ 8    6.56e9 Decasp… Myrta… Penang                  NA                 NA     11
+ 9    6.56e9 Decasp… Myrta… <NA>                    NA                 NA      5
+10    6.56e9 Decasp… Myrta… Selangor                NA                 NA      6
 # ℹ 954 more rows
-# ℹ 39 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+# ℹ 4 more variables: basisOfRecord <chr>, institutionCode <chr>,
+#   recordedBy <chr>, license <chr>
 ```
 
 `select()` also works with numeric vectors for the order of the columns. To select the 3rd, 4th, 5th, and 10th columns, we could run the following code:
@@ -219,18 +202,18 @@ select(surveys, c(3:5, 10))
 
 ``` output
 # A tibble: 964 × 4
-   occurrenceID                      kingdom phylum       species               
-   <chr>                             <chr>   <chr>        <chr>                 
- 1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Decaspermum fruticosum
- 2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Decaspermum fruticosum
- 3 urn:catalog:MO:Tropicos:105414318 Plantae Tracheophyta Decaspermum fruticosum
- 4 urn:catalog:MO:Tropicos:105642053 Plantae Tracheophyta Decaspermum fruticosum
- 5 urn:catalog:MO:Tropicos:105301980 Plantae Tracheophyta Decaspermum vitis-ida…
- 6 urn:catalog:MO:Tropicos:105550279 Plantae Tracheophyta Decaspermum montanum  
- 7 urn:catalog:MO:Tropicos:105457468 Plantae Tracheophyta Decaspermum fruticosum
- 8 urn:catalog:MO:Tropicos:105516019 Plantae Tracheophyta Decaspermum fruticosum
- 9 urn:catalog:MO:Tropicos:105412914 Plantae Tracheophyta Decaspermum fruticosum
-10 urn:catalog:MO:Tropicos:105419266 Plantae Tracheophyta Decaspermum fruticosum
+   family    stateProvince decimalLatitude basisOfRecord     
+   <chr>     <chr>                   <dbl> <chr>             
+ 1 Myrtaceae Kelantan                 6    PRESERVED_SPECIMEN
+ 2 Myrtaceae Sabah                    5.97 PRESERVED_SPECIMEN
+ 3 Myrtaceae <NA>                    NA    PRESERVED_SPECIMEN
+ 4 Myrtaceae Sabah                    4.97 PRESERVED_SPECIMEN
+ 5 Myrtaceae Sabah                    6.05 PRESERVED_SPECIMEN
+ 6 Myrtaceae Kedah                   NA    PRESERVED_SPECIMEN
+ 7 Myrtaceae <NA>                    NA    PRESERVED_SPECIMEN
+ 8 Myrtaceae Penang                  NA    PRESERVED_SPECIMEN
+ 9 Myrtaceae <NA>                    NA    PRESERVED_SPECIMEN
+10 Myrtaceae Selangor                NA    PRESERVED_SPECIMEN
 # ℹ 954 more rows
 ```
 
@@ -244,23 +227,20 @@ select(surveys, where(is.numeric))
 ```
 
 ``` output
-# A tibble: 964 × 11
-       gbifID individualCount decimalLatitude decimalLongitude
-        <dbl>           <dbl>           <dbl>            <dbl>
- 1 6561832516              NA            6                101.
- 2 6561807785              NA            5.97             116.
- 3 6561784372              NA           NA                 NA 
- 4 6561766817              NA            4.97             118.
- 5 6561753311              NA            6.05             117.
- 6 6561730396              NA           NA                 NA 
- 7 6561650622              NA           NA                 NA 
- 8 6561612723              NA           NA                 NA 
- 9 6561592184              NA           NA                 NA 
-10 6561592042              NA           NA                 NA 
+# A tibble: 964 × 6
+       gbifID decimalLatitude decimalLongitude elevation  year month
+        <dbl>           <dbl>            <dbl>     <dbl> <dbl> <dbl>
+ 1 6561832516            6                101.       75   1990     3
+ 2 6561807785            5.97             116.       25   1984     8
+ 3 6561784372           NA                 NA        NA   1976     5
+ 4 6561766817            4.97             118.      575   1984     6
+ 5 6561753311            6.05             117.     2025   1983    12
+ 6 6561730396           NA                 NA       945.  1975    11
+ 7 6561650622           NA                 NA      1180   1974    11
+ 8 6561612723           NA                 NA       732.  1975    11
+ 9 6561592184           NA                 NA       410   1975     5
+10 6561592042           NA                 NA       400   1975     6
 # ℹ 954 more rows
-# ℹ 7 more variables: coordinateUncertaintyInMeters <dbl>,
-#   coordinatePrecision <dbl>, elevation <dbl>, elevationAccuracy <dbl>,
-#   day <dbl>, month <dbl>, year <dbl>
 ```
 
 Instead of giving names or positions of columns, we instead pass the `where()` function with the name of another function inside it, in this case `is.numeric()`, and we get all the columns for which that function returns `TRUE`.
@@ -273,26 +253,21 @@ select(surveys, where(anyNA))
 ```
 
 ``` output
-# A tibble: 964 × 31
-   species    infraspecificEpithet verbatimScientificNa…¹ locality stateProvince
-   <chr>      <chr>                <chr>                  <chr>    <chr>        
- 1 Decasperm… <NA>                 J.R. Forst. & G. Fors… Malay P… Kelantan     
- 2 Decasperm… <NA>                 J.R. Forst. & G. Fors… Borneo;… Sabah        
- 3 Decasperm… <NA>                 J.R. Forst. & G. Fors… Taiton … <NA>         
- 4 Decasperm… <NA>                 J.R. Forst. & G. Fors… Borneo;… Sabah        
- 5 Decasperm… <NA>                 Stapf                  Borneo;… Sabah        
- 6 Decasperm… <NA>                 Ridl.                  Gunong … Kedah        
- 7 Decasperm… <NA>                 J.R. Forst. & G. Fors… Arul Li… <NA>         
- 8 Decasperm… <NA>                 J.R. Forst. & G. Fors… Penang … Penang       
- 9 Decasperm… <NA>                 J.R. Forst. & G. Fors… Bkt. Br… <NA>         
-10 Decasperm… <NA>                 J.R. Forst. & G. Fors… Bukit T… Selangor     
+# A tibble: 964 × 9
+   species  stateProvince decimalLatitude decimalLongitude elevation  year month
+   <chr>    <chr>                   <dbl>            <dbl>     <dbl> <dbl> <dbl>
+ 1 Decaspe… Kelantan                 6                101.       75   1990     3
+ 2 Decaspe… Sabah                    5.97             116.       25   1984     8
+ 3 Decaspe… <NA>                    NA                 NA        NA   1976     5
+ 4 Decaspe… Sabah                    4.97             118.      575   1984     6
+ 5 Decaspe… Sabah                    6.05             117.     2025   1983    12
+ 6 Decaspe… Kedah                   NA                 NA       945.  1975    11
+ 7 Decaspe… <NA>                    NA                 NA      1180   1974    11
+ 8 Decaspe… Penang                  NA                 NA       732.  1975    11
+ 9 Decaspe… <NA>                    NA                 NA       410   1975     5
+10 Decaspe… Selangor                NA                 NA       400   1975     6
 # ℹ 954 more rows
-# ℹ abbreviated name: ¹​verbatimScientificNameAuthorship
-# ℹ 26 more variables: individualCount <dbl>, decimalLatitude <dbl>,
-#   decimalLongitude <dbl>, coordinateUncertaintyInMeters <dbl>,
-#   coordinatePrecision <dbl>, elevation <dbl>, elevationAccuracy <dbl>,
-#   depth <lgl>, depthAccuracy <lgl>, eventDate <chr>, day <dbl>, month <dbl>,
-#   year <dbl>, speciesKey <chr>, institutionCode <chr>, …
+# ℹ 2 more variables: institutionCode <chr>, recordedBy <chr>
 ```
 
 #### `filter()`
@@ -305,35 +280,30 @@ filter(surveys, year == 1985)
 ```
 
 ``` output
-# A tibble: 19 × 50
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 4977561075 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 4858989387 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 4858973318 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 4858973304 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 4858968916 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 4850462398 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 4850461090 cd6e21c8-9e8… http://spec… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 4401127340 861e6afe-f76… 6ad33d6c-36… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 4401121355 861e6afe-f76… 76a26cc9-c4… Plantae Trach… Magn… Myrt… Myrta… Deca…
-11 2516699077 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-12 2516291363 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-13 2516291190 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-14 2516276207 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-15 2516213427 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-16 2515066186 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-17 2514464455 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-18 2514427660 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-19 2514412446 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 41 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>,
-#   elevation <dbl>, elevationAccuracy <dbl>, depth <lgl>, …
+# A tibble: 19 × 13
+       gbifID species      family stateProvince decimalLatitude decimalLongitude
+        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
+ 1 6561429663 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 2 4977561075 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 3 4858989387 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 4 4858973318 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 5 4858973304 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 6 4858968916 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 7 4850462398 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 8 4850461090 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 9 4401127340 Decaspermum… Myrta… Sabah                   NA                 NA 
+10 4401121355 Decaspermum… Myrta… Sabah                   NA                 NA 
+11 2516699077 Decaspermum… Myrta… <NA>                    NA                 NA 
+12 2516291363 Decaspermum… Myrta… Borneo                   3.75             115.
+13 2516291190 Decaspermum… Myrta… Borneo                   5.57             116.
+14 2516276207 Decaspermum… Myrta… Borneo                   1.42             110.
+15 2516213427 Decaspermum… Myrta… Borneo                   6.23             117.
+16 2515066186 Decaspermum… Myrta… <NA>                    NA                 NA 
+17 2514464455 Decaspermum… Myrta… Borneo                   5.53             117.
+18 2514427660 Decaspermum… Myrta… Borneo                   1.4              110.
+19 2514412446 Decaspermum… Myrta… Borneo                   5.9              116.
+# ℹ 7 more variables: elevation <dbl>, year <dbl>, month <dbl>,
+#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 The `==` sign means "is equal to". There are several other operators we can use: >, >=, <, <=, and != (not equal to). Another useful operator is `%in%`, which asks if the value on the lefthand side is found anywhere in the vector on the righthand side. For example, to get rows with specific `species_id` values, we could run:
@@ -344,29 +314,25 @@ filter(surveys, stateProvince %in% c("Borneo", "Sarawak"))
 ```
 
 ``` output
-# A tibble: 193 × 50
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561379339 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 5956592965 cfb43618-142… 657150       Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 5956549004 cfb43618-142… 164551       Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 4906914238 15f819bd-661… https://dat… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 4404057434 861e6afe-f76… 57c51ab5-94… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 4404051550 861e6afe-f76… b4550d67-e7… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 4404050440 861e6afe-f76… 6bcd9d6a-9f… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 4401132420 861e6afe-f76… fe06a857-0a… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 4401132331 861e6afe-f76… 4ef97ebf-55… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 4401132320 861e6afe-f76… 353fa595-96… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# A tibble: 193 × 13
+       gbifID species      family stateProvince decimalLatitude decimalLongitude
+        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
+ 1 6561379339 Decaspermum… Myrta… Sarawak                  3.67             116.
+ 2 5956592965 Decaspermum… Myrta… Sarawak                 NA                 NA 
+ 3 5956549004 Decaspermum… Myrta… Sarawak                 NA                 NA 
+ 4 4906914238 <NA>         Myrta… Borneo                   1.4              110.
+ 5 4404057434 Decaspermum… Myrta… Sarawak                 NA                 NA 
+ 6 4404051550 Decaspermum… Myrta… Sarawak                 NA                 NA 
+ 7 4404050440 Decaspermum… Myrta… Sarawak                 NA                 NA 
+ 8 4401132420 Decaspermum… Myrta… Sarawak                 NA                 NA 
+ 9 4401132331 Decaspermum… Myrta… Sarawak                 NA                 NA 
+10 4401132320 Decaspermum… Myrta… Sarawak                 NA                 NA 
 # ℹ 183 more rows
-# ℹ 41 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+# ℹ 7 more variables: elevation <dbl>, year <dbl>, month <dbl>,
+#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
-We can also use multiple conditions in one `filter()` statement. Here we will get rows with a year less than or equal to 1988 and whose hindfoot length values are not `NA`. The `!` before the `is.na()` function means "not".
+We can also use multiple conditions in one `filter()` statement. Here we will get rows with a year less than or equal to 1988 and whose elevation values are not `NA`. The `!` before the `is.na()` function means "not".
 
 
 ``` r
@@ -374,26 +340,22 @@ filter(surveys, year <= 1988 & !is.na(elevation))
 ```
 
 ``` output
-# A tibble: 94 × 50
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561508200 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
+# A tibble: 94 × 13
+       gbifID species      family stateProvince decimalLatitude decimalLongitude
+        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
+ 1 6561807785 Decaspermum… Myrta… Sabah                    5.97             116.
+ 2 6561766817 Decaspermum… Myrta… Sabah                    4.97             118.
+ 3 6561753311 Decaspermum… Myrta… Sabah                    6.05             117.
+ 4 6561730396 Decaspermum… Myrta… Kedah                   NA                 NA 
+ 5 6561650622 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 6 6561612723 Decaspermum… Myrta… Penang                  NA                 NA 
+ 7 6561592184 Decaspermum… Myrta… <NA>                    NA                 NA 
+ 8 6561592042 Decaspermum… Myrta… Selangor                NA                 NA 
+ 9 6561582852 Decaspermum… Myrta… Sabah                   NA                 NA 
+10 6561508200 Decaspermum… Myrta… Sabah                    6.05             117.
 # ℹ 84 more rows
-# ℹ 41 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+# ℹ 7 more variables: elevation <dbl>, year <dbl>, month <dbl>,
+#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 
@@ -421,6 +383,12 @@ surveys_filtered <- filter(surveys, year >= 1980 & year <= 1985)
 surveys_selected <- select(surveys, year, month, speciesKey, coordinateUncertaintyInMeters)
 ```
 
+``` error
+Error in `select()`:
+! Can't select columns that don't exist.
+✖ Column `speciesKey` doesn't exist.
+```
+
 ::::::::::::::::::::::::
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
@@ -434,27 +402,10 @@ What happens if we want to both `select()` and `filter()` our data? We have a co
 filter(select(surveys, -day), month >= 7)
 ```
 
-``` output
-# A tibble: 371 × 49
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561491291 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561426864 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561393056 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 361 more rows
-# ℹ 40 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error in `select()` at dplyr/R/filter.R:219:3:
+! Can't select columns that don't exist.
+✖ Column `day` doesn't exist.
 ```
 
 R will evaluate statements from the inside out. First, `select()` will operate on the `surveys` data.frame, removing the column `day`. The resulting data.frame is then used as the first argument for `filter()`, which selects rows with a month greater than or equal to 7.
@@ -464,30 +415,21 @@ Nested functions can be very difficult to read with only a few functions, and ne
 
 ``` r
 surveys_noday <- select(surveys, -day)
+```
+
+``` error
+Error in `select()`:
+! Can't select columns that don't exist.
+✖ Column `day` doesn't exist.
+```
+
+``` r
 filter(surveys_noday, month >= 7)
 ```
 
-``` output
-# A tibble: 371 × 49
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561491291 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561426864 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561393056 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 361 more rows
-# ℹ 40 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error:
+! object 'surveys_noday' not found
 ```
 
 This approach is easier to read, since we can see the steps in order, but after enough steps, we are left with a cluttered mess of intermediate objects, often with confusing names.
@@ -501,27 +443,10 @@ surveys %>%
   filter(month >= 7)
 ```
 
-``` output
-# A tibble: 371 × 49
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561582852 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561491291 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561429663 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561426864 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561393056 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 361 more rows
-# ℹ 40 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error in `select()` at dplyr/R/filter.R:219:3:
+! Can't select columns that don't exist.
+✖ Column `day` doesn't exist.
 ```
 
 What it does is take the thing on the lefthand side and insert it as the first argument of the function on the righthand side. By putting each of our functions onto a new line, we can build a nice, readable **pipeline**. It can be useful to think of this as a little assembly line for our data. It starts at the top and gets piped into a `select()` function, and it comes out modified somewhat. It then gets sent into the `filter()` function, where it is further modified, and then the final product gets printed out to our console. It can also be helpful to think of `%>%` as meaning "and then". Since many `tidyverse` functions have verbs for names, a pipeline can be read like a sentence.
@@ -542,6 +467,12 @@ surveys_sub <- surveys %>%
   filter(month >= 7)
 ```
 
+``` error
+Error in `select()` at dplyr/R/filter.R:219:3:
+! Can't select columns that don't exist.
+✖ Column `day` doesn't exist.
+```
+
 A good approach is to build a pipeline step by step prior to assignment. You add functions to the pipeline as you go, with the results printing in the console for you to view. Once you're satisfied with your final result, go back and add the assignment arrow statement at the start. This approach is very interactive, allowing you to see the results of each step as you build the pipeline, and produces nicely readable code.
 
 ::::::::::::::::::::::::::::::::::::: challenge
@@ -557,6 +488,12 @@ Use the surveys data to make a data.frame that has the columns `speciesKey`, `mo
 surveys_1988 <- surveys %>%
   filter(year == 1988) %>%
   select(speciesKey, month, coordinateUncertaintyInMeters)
+```
+
+``` error
+Error in `select()` at magrittr/R/pipe.R:136:3:
+! Can't select columns that don't exist.
+✖ Column `speciesKey` doesn't exist.
 ```
 
 Make sure to `filter()` before you `select()`. You need to use the `year` column for filtering rows, but it is discarded in the `select()` step. You also need to make sure to use `==` instead of `=` when you are filtering rows where `year` is equal to 1988.
@@ -577,21 +514,11 @@ surveys %>%
  arrange(desc(uncertainty_km))
 ```
 
-``` output
-# A tibble: 964 × 1
-   uncertainty_km
-            <dbl>
- 1            100
- 2             50
- 3             25
- 4             25
- 5             25
- 6             25
- 7             10
- 8             10
- 9             10
-10              2
-# ℹ 954 more rows
+``` error
+Error in `mutate()` at dplyr/R/select.R:54:3:
+ℹ In argument: `uncertainty_km = coordinateUncertaintyInMeters/1000`.
+Caused by error:
+! object 'coordinateUncertaintyInMeters' not found
 ```
 
 You can create multiple columns in one `mutate()` call, and they will get created in the order you write them. You can use `arrange` and `desc` to sort them as well.
@@ -609,27 +536,11 @@ surveys %>%
   mutate(date = paste(year, month, day, sep = "-"))
 ```
 
-``` output
-# A tibble: 964 × 51
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 954 more rows
-# ℹ 42 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error in `mutate()` at magrittr/R/pipe.R:136:3:
+ℹ In argument: `date = paste(year, month, day, sep = "-")`.
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
 
 Since our new column gets moved all the way to the end, it doesn't end up printing out. We can use the `relocate()` function to put it after our `year` column:
@@ -641,27 +552,11 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` output
-# A tibble: 964 × 51
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 954 more rows
-# ℹ 42 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error in `mutate()` at dplyr/R/relocate.R:50:3:
+ℹ In argument: `date = paste(year, month, day, sep = "-")`.
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
 
 Now we can see that we have a character column that contains our date string. However, it's not truly a date column. Dates are a type of numeric variable with a defined, ordered scale. To turn this column into a proper date, we will use a function from the `tidyverse`'s `lubridate` package, which has lots of useful functions for working with dates. The function `ymd()` will parse a date string that has the order year-month-day. Let's load the package and use `ymd()`.
@@ -676,34 +571,11 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` warning
-Warning: There was 1 warning in `mutate()`.
-ℹ In argument: `date = ymd(date)`.
-Caused by warning:
-!  225 failed to parse.
-```
-
-``` output
-# A tibble: 964 × 51
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 954 more rows
-# ℹ 42 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error in `mutate()` at dplyr/R/relocate.R:50:3:
+ℹ In argument: `date = paste(year, month, day, sep = "-")`.
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
 
 ``` r
@@ -713,27 +585,11 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` output
-# A tibble: 964 × 51
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 954 more rows
-# ℹ 42 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+``` error
+Error in `mutate()` at dplyr/R/relocate.R:50:3:
+ℹ In argument: `date = paste(year, month, day, sep = "-")`.
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
 
 <!-- This isn't strictly necessary to show, but I think it's good to reenforce what a pipe is really doing, and it's actually a useful approach with more complex mutates -->
@@ -748,34 +604,11 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` warning
-Warning: There was 1 warning in `mutate()`.
+``` error
+Error in `mutate()` at dplyr/R/relocate.R:50:3:
 ℹ In argument: `date = ymd(paste(year, month, day, sep = "-"))`.
-Caused by warning:
-!  225 failed to parse.
-```
-
-``` output
-# A tibble: 964 × 51
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 954 more rows
-# ℹ 42 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
 
 ``` r
@@ -786,34 +619,11 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` warning
-Warning: There was 1 warning in `mutate()`.
+``` error
+Error in `mutate()` at dplyr/R/relocate.R:50:3:
 ℹ In argument: `date = paste(year, month, day, sep = "-") %>% ymd()`.
-Caused by warning:
-!  225 failed to parse.
-```
-
-``` output
-# A tibble: 964 × 51
-       gbifID datasetKey    occurrenceID kingdom phylum class order family genus
-        <dbl> <chr>         <chr>        <chr>   <chr>  <chr> <chr> <chr>  <chr>
- 1 6561832516 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 2 6561807785 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 3 6561784372 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 4 6561766817 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 5 6561753311 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 6 6561730396 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 7 6561650622 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 8 6561612723 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
- 9 6561592184 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-10 6561592042 7bd65a7a-f76… urn:catalog… Plantae Trach… Magn… Myrt… Myrta… Deca…
-# ℹ 954 more rows
-# ℹ 42 more variables: species <chr>, infraspecificEpithet <chr>,
-#   taxonRank <chr>, scientificName <chr>, verbatimScientificName <chr>,
-#   verbatimScientificNameAuthorship <chr>, countryCode <chr>, locality <chr>,
-#   stateProvince <chr>, occurrenceStatus <chr>, individualCount <dbl>,
-#   publishingOrgKey <chr>, decimalLatitude <dbl>, decimalLongitude <dbl>,
-#   coordinateUncertaintyInMeters <dbl>, coordinatePrecision <dbl>, …
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
 
 ::::::::::::::::::::::::::::::::::::: challenge 
@@ -832,19 +642,12 @@ surveys %>%
   geom_jitter(alpha = 0.1)
 ```
 
-``` warning
-Warning: There was 1 warning in `mutate()`.
+``` error
+Error in `mutate()` at ggplot2/R/plot.R:112:3:
 ℹ In argument: `date = ymd(paste(year, month, day, sep = "-"))`.
-Caused by warning:
-!  225 failed to parse.
+Caused by error in `paste()`:
+! cannot coerce type 'closure' to vector of type 'character'
 ```
-
-``` warning
-Warning: Removed 852 rows containing missing values or values outside the scale range
-(`geom_point()`).
-```
-
-<img src="fig/working-with-data-rendered-date-plot-challenge-answer-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
 
 This isn't necessarily the most useful plot, but we will learn some techniques that will help produce nice time series plots
 
@@ -862,6 +665,11 @@ Now we can save this data.frame to a CSV using the `write_csv()` function from t
 
 ``` r
 write_csv(surveys_1988, "data/cleaned/surveys_1988.csv")
+```
+
+``` error
+Error:
+! object 'surveys_1988' not found
 ```
 
 If we go look into our `data/cleaned_data` folder, we will see this new CSV file.

@@ -136,6 +136,7 @@ the bottom left), then press the <kbd>Enter</kbd> (Windows and Linux) or
 ``` r
 install.packages("tidyverse")
 pak::pak("ds4dc/plantdat")
+install.packages(c("sf", "rnaturalearth", "rnaturalearthdata", "leaflet"))
 ```
 
 Alternatively, you can install the packages using RStudio's graphical
@@ -150,6 +151,10 @@ pasting the following code into the console:
 ``` r
 library(tidyverse)
 library(plantdat)
+library(sf)
+library(rnaturalearthdata)
+library(leaflet)
+library(rnaturalearth)
 ```
 
 If you do not see an error like `there is no package called ‘...’` you

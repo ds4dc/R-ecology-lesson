@@ -49,7 +49,7 @@ class(decaspermum_thin)
 ```
 
 ``` output
-[1] "data.frame"
+[1] "tbl_df"     "tbl"        "data.frame"
 ```
 
 We can view the first few rows with the `head()` function, and the last few rows with the `tail()` function:
@@ -60,27 +60,17 @@ head(decaspermum_thin)
 ```
 
 ``` output
-      gbifID                 species    family stateProvince decimalLatitude
-1 6561832516  Decaspermum fruticosum Myrtaceae      Kelantan        6.000000
-2 6561807785  Decaspermum fruticosum Myrtaceae         Sabah        5.966667
-3 6561784372  Decaspermum fruticosum Myrtaceae                            NA
-4 6561766817  Decaspermum fruticosum Myrtaceae         Sabah        4.966667
-5 6561753311 Decaspermum vitis-idaea Myrtaceae         Sabah        6.050000
-6 6561730396    Decaspermum montanum Myrtaceae         Kedah              NA
-  decimalLongitude elevation year month      basisOfRecord institutionCode
-1         101.4167     75.00 1990     3 PRESERVED_SPECIMEN              MO
-2         116.1000     25.00 1984     8 PRESERVED_SPECIMEN              MO
-3               NA        NA 1976     5 PRESERVED_SPECIMEN              MO
-4         118.1667    575.00 1984     6 PRESERVED_SPECIMEN              MO
-5         116.6000   2025.00 1983    12 PRESERVED_SPECIMEN              MO
-6               NA    944.88 1975    11 PRESERVED_SPECIMEN              MO
-                                                      recordedBy
-1                                     Engkik Soepadmo;M. Suhaimi
-2                               John H. Beaman;Teofila E. Beaman
-3                                          James D. Mamit;et al.
-4   John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker
-5 John H. Beaman;Reed S. Beaman;K. Medley;T. Lawrence Mellichamp
-6                                                       S. Ahmad
+# A tibble: 6 × 13
+  gbifID species family stateProvince decimalLatitude decimalLongitude elevation
+   <dbl> <chr>   <chr>  <chr>                   <dbl>            <dbl>     <dbl>
+1 6.56e9 Decasp… Myrta… "Kelantan"               6                101.       75 
+2 6.56e9 Decasp… Myrta… "Sabah"                  5.97             116.       25 
+3 6.56e9 Decasp… Myrta… ""                      NA                 NA        NA 
+4 6.56e9 Decasp… Myrta… "Sabah"                  4.97             118.      575 
+5 6.56e9 Decasp… Myrta… "Sabah"                  6.05             117.     2025 
+6 6.56e9 Decasp… Myrta… "Kedah"                 NA                 NA       945.
+# ℹ 6 more variables: year <int>, month <int>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 ``` r
@@ -88,27 +78,17 @@ tail(decaspermum_thin)
 ```
 
 ``` output
-       gbifID                 species    family stateProvince decimalLatitude
-959 574900546 Decaspermum parviflorum Myrtaceae                            NA
-960 574894717  Decaspermum fruticosum Myrtaceae         Sabah              NA
-961 574849033  Decaspermum fruticosum Myrtaceae                            NA
-962 574688283                         Myrtaceae         Sabah              NA
-963 295125349                         Myrtaceae         Sabah              NA
-964  47754151  Decaspermum fruticosum Myrtaceae       Sarawak           3.666
-    decimalLongitude elevation year month      basisOfRecord institutionCode
-959               NA        NA   NA    NA PRESERVED_SPECIMEN            RBGE
-960               NA        NA 1993     8 PRESERVED_SPECIMEN            RBGE
-961               NA        NA 1986     5 PRESERVED_SPECIMEN            RBGE
-962               NA        NA 1992     2 PRESERVED_SPECIMEN            RBGE
-963               NA        NA 1968    12 PRESERVED_SPECIMEN             OSA
-964          115.833      1000 1992    11 PRESERVED_SPECIMEN              AU
-          recordedBy
-959                 
-960  Sumbing, Jampin
-961                 
-962                 
-963                 
-964 H.M. Christensen
+# A tibble: 6 × 13
+  gbifID species family stateProvince decimalLatitude decimalLongitude elevation
+   <dbl> <chr>   <chr>  <chr>                   <dbl>            <dbl>     <dbl>
+1 5.75e8 "Decas… Myrta… ""                      NA                 NA         NA
+2 5.75e8 "Decas… Myrta… "Sabah"                 NA                 NA         NA
+3 5.75e8 "Decas… Myrta… ""                      NA                 NA         NA
+4 5.75e8 ""      Myrta… "Sabah"                 NA                 NA         NA
+5 2.95e8 ""      Myrta… "Sabah"                 NA                 NA         NA
+6 4.78e7 "Decas… Myrta… "Sarawak"                3.67             116.      1000
+# ℹ 6 more variables: year <int>, month <int>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 We used these functions with just one argument, the object `decaspermum`, and we didn't give the argument a name, like we often did with `ggplot2`. In R, a function's arguments come in a particular order, and if you put them in the correct order, you don't need to name them. In this case, the name of the argument is `x`, so we can name it if we want, but since we know it's the first argument, we don't need to.
@@ -117,177 +97,75 @@ Some arguments are optional. For example, the `n` argument in `head()` specifies
 
 
 ``` r
-head(decaspermum, n = 10)
+head(decaspermum_thin, n = 10)
 ```
 
 ``` output
-      gbifID                           datasetKey
-1 6561832516 7bd65a7a-f762-11e1-a439-00145eb45e9a
-2 6561807785 7bd65a7a-f762-11e1-a439-00145eb45e9a
-                       occurrenceID kingdom       phylum         class    order
-1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Magnoliopsida Myrtales
-2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Magnoliopsida Myrtales
-     family       genus                species infraspecificEpithet taxonRank
-1 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
-2 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
-                                scientificName
-1 Decaspermum fruticosum J.R.Forst. & G.Forst.
-2 Decaspermum fruticosum J.R.Forst. & G.Forst.
-                          verbatimScientificName
-1 Decaspermum fruticosum J.R. Forst. & G. Forst.
-2 Decaspermum fruticosum J.R. Forst. & G. Forst.
-  verbatimScientificNameAuthorship countryCode
-1          J.R. Forst. & G. Forst.          MY
-2          J.R. Forst. & G. Forst.          MY
-                                                                                          locality
-1                                                                       Malay Peninsula, Pasir Mas
-2 Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus.
-  stateProvince occurrenceStatus individualCount
-1      Kelantan          PRESENT              NA
-2         Sabah          PRESENT              NA
-                      publishingOrgKey decimalLatitude decimalLongitude
-1 90fd6680-349f-11d8-aa2d-b8a03c50a862        6.000000         101.4167
-2 90fd6680-349f-11d8-aa2d-b8a03c50a862        5.966667         116.1000
-  coordinateUncertaintyInMeters coordinatePrecision elevation elevationAccuracy
-1                            NA                  NA        75                NA
-2                            NA                  NA        25                 5
-  depth depthAccuracy  eventDate day month year taxonKey speciesKey
-1    NA            NA 1990-03-01   1     3 1990    6CFN2      6CFN2
-2    NA            NA 1984-08-04   4     8 1984    6CFN2      6CFN2
-       basisOfRecord institutionCode collectionCode catalogNumber recordNumber
-1 PRESERVED_SPECIMEN              MO       Tropicos     105482819         s136
-2 PRESERVED_SPECIMEN              MO       Tropicos     105427229        10824
-  identifiedBy      dateIdentified   license              rightsHolder
-1                                  CC_BY_4_0 Missouri Botanical Garden
-2              1987-01-01T00:00:00 CC_BY_4_0 Missouri Botanical Garden
-                        recordedBy typeStatus establishmentMeans
-1       Engkik Soepadmo;M. Suhaimi                              
-2 John H. Beaman;Teofila E. Beaman                              
-           lastInterpreted  mediaType
-1 2026-10-14T03:16:39.777Z StillImage
-2 2026-10-14T03:16:04.863Z StillImage
-                                                                                                                                                               issue
-1 COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
-2                                                   COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
- [ reached 'max' / getOption("max.print") -- omitted 8 rows ]
+# A tibble: 10 × 13
+       gbifID species      family stateProvince decimalLatitude decimalLongitude
+        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
+ 1 6561832516 Decaspermum… Myrta… "Kelantan"               6                101.
+ 2 6561807785 Decaspermum… Myrta… "Sabah"                  5.97             116.
+ 3 6561784372 Decaspermum… Myrta… ""                      NA                 NA 
+ 4 6561766817 Decaspermum… Myrta… "Sabah"                  4.97             118.
+ 5 6561753311 Decaspermum… Myrta… "Sabah"                  6.05             117.
+ 6 6561730396 Decaspermum… Myrta… "Kedah"                 NA                 NA 
+ 7 6561650622 Decaspermum… Myrta… ""                      NA                 NA 
+ 8 6561612723 Decaspermum… Myrta… "Penang"                NA                 NA 
+ 9 6561592184 Decaspermum… Myrta… ""                      NA                 NA 
+10 6561592042 Decaspermum… Myrta… "Selangor"              NA                 NA 
+# ℹ 7 more variables: elevation <dbl>, year <int>, month <int>,
+#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 If we order them correctly, we don't have to name either:
 
 
 ``` r
-head(decaspermum, 10)
+head(decaspermum_thin, 10)
 ```
 
 ``` output
-      gbifID                           datasetKey
-1 6561832516 7bd65a7a-f762-11e1-a439-00145eb45e9a
-2 6561807785 7bd65a7a-f762-11e1-a439-00145eb45e9a
-                       occurrenceID kingdom       phylum         class    order
-1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Magnoliopsida Myrtales
-2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Magnoliopsida Myrtales
-     family       genus                species infraspecificEpithet taxonRank
-1 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
-2 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
-                                scientificName
-1 Decaspermum fruticosum J.R.Forst. & G.Forst.
-2 Decaspermum fruticosum J.R.Forst. & G.Forst.
-                          verbatimScientificName
-1 Decaspermum fruticosum J.R. Forst. & G. Forst.
-2 Decaspermum fruticosum J.R. Forst. & G. Forst.
-  verbatimScientificNameAuthorship countryCode
-1          J.R. Forst. & G. Forst.          MY
-2          J.R. Forst. & G. Forst.          MY
-                                                                                          locality
-1                                                                       Malay Peninsula, Pasir Mas
-2 Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus.
-  stateProvince occurrenceStatus individualCount
-1      Kelantan          PRESENT              NA
-2         Sabah          PRESENT              NA
-                      publishingOrgKey decimalLatitude decimalLongitude
-1 90fd6680-349f-11d8-aa2d-b8a03c50a862        6.000000         101.4167
-2 90fd6680-349f-11d8-aa2d-b8a03c50a862        5.966667         116.1000
-  coordinateUncertaintyInMeters coordinatePrecision elevation elevationAccuracy
-1                            NA                  NA        75                NA
-2                            NA                  NA        25                 5
-  depth depthAccuracy  eventDate day month year taxonKey speciesKey
-1    NA            NA 1990-03-01   1     3 1990    6CFN2      6CFN2
-2    NA            NA 1984-08-04   4     8 1984    6CFN2      6CFN2
-       basisOfRecord institutionCode collectionCode catalogNumber recordNumber
-1 PRESERVED_SPECIMEN              MO       Tropicos     105482819         s136
-2 PRESERVED_SPECIMEN              MO       Tropicos     105427229        10824
-  identifiedBy      dateIdentified   license              rightsHolder
-1                                  CC_BY_4_0 Missouri Botanical Garden
-2              1987-01-01T00:00:00 CC_BY_4_0 Missouri Botanical Garden
-                        recordedBy typeStatus establishmentMeans
-1       Engkik Soepadmo;M. Suhaimi                              
-2 John H. Beaman;Teofila E. Beaman                              
-           lastInterpreted  mediaType
-1 2026-10-14T03:16:39.777Z StillImage
-2 2026-10-14T03:16:04.863Z StillImage
-                                                                                                                                                               issue
-1 COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
-2                                                   COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
- [ reached 'max' / getOption("max.print") -- omitted 8 rows ]
+# A tibble: 10 × 13
+       gbifID species      family stateProvince decimalLatitude decimalLongitude
+        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
+ 1 6561832516 Decaspermum… Myrta… "Kelantan"               6                101.
+ 2 6561807785 Decaspermum… Myrta… "Sabah"                  5.97             116.
+ 3 6561784372 Decaspermum… Myrta… ""                      NA                 NA 
+ 4 6561766817 Decaspermum… Myrta… "Sabah"                  4.97             118.
+ 5 6561753311 Decaspermum… Myrta… "Sabah"                  6.05             117.
+ 6 6561730396 Decaspermum… Myrta… "Kedah"                 NA                 NA 
+ 7 6561650622 Decaspermum… Myrta… ""                      NA                 NA 
+ 8 6561612723 Decaspermum… Myrta… "Penang"                NA                 NA 
+ 9 6561592184 Decaspermum… Myrta… ""                      NA                 NA 
+10 6561592042 Decaspermum… Myrta… "Selangor"              NA                 NA 
+# ℹ 7 more variables: elevation <dbl>, year <int>, month <int>,
+#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 Additionally, if we name them, we can put them in any order we want:
 
 
 ``` r
-head(n = 10, x = decaspermum)
+head(n = 10, x = decaspermum_thin)
 ```
 
 ``` output
-      gbifID                           datasetKey
-1 6561832516 7bd65a7a-f762-11e1-a439-00145eb45e9a
-2 6561807785 7bd65a7a-f762-11e1-a439-00145eb45e9a
-                       occurrenceID kingdom       phylum         class    order
-1 urn:catalog:MO:Tropicos:105482819 Plantae Tracheophyta Magnoliopsida Myrtales
-2 urn:catalog:MO:Tropicos:105427229 Plantae Tracheophyta Magnoliopsida Myrtales
-     family       genus                species infraspecificEpithet taxonRank
-1 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
-2 Myrtaceae Decaspermum Decaspermum fruticosum                        SPECIES
-                                scientificName
-1 Decaspermum fruticosum J.R.Forst. & G.Forst.
-2 Decaspermum fruticosum J.R.Forst. & G.Forst.
-                          verbatimScientificName
-1 Decaspermum fruticosum J.R. Forst. & G. Forst.
-2 Decaspermum fruticosum J.R. Forst. & G. Forst.
-  verbatimScientificNameAuthorship countryCode
-1          J.R. Forst. & G. Forst.          MY
-2          J.R. Forst. & G. Forst.          MY
-                                                                                          locality
-1                                                                       Malay Peninsula, Pasir Mas
-2 Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus.
-  stateProvince occurrenceStatus individualCount
-1      Kelantan          PRESENT              NA
-2         Sabah          PRESENT              NA
-                      publishingOrgKey decimalLatitude decimalLongitude
-1 90fd6680-349f-11d8-aa2d-b8a03c50a862        6.000000         101.4167
-2 90fd6680-349f-11d8-aa2d-b8a03c50a862        5.966667         116.1000
-  coordinateUncertaintyInMeters coordinatePrecision elevation elevationAccuracy
-1                            NA                  NA        75                NA
-2                            NA                  NA        25                 5
-  depth depthAccuracy  eventDate day month year taxonKey speciesKey
-1    NA            NA 1990-03-01   1     3 1990    6CFN2      6CFN2
-2    NA            NA 1984-08-04   4     8 1984    6CFN2      6CFN2
-       basisOfRecord institutionCode collectionCode catalogNumber recordNumber
-1 PRESERVED_SPECIMEN              MO       Tropicos     105482819         s136
-2 PRESERVED_SPECIMEN              MO       Tropicos     105427229        10824
-  identifiedBy      dateIdentified   license              rightsHolder
-1                                  CC_BY_4_0 Missouri Botanical Garden
-2              1987-01-01T00:00:00 CC_BY_4_0 Missouri Botanical Garden
-                        recordedBy typeStatus establishmentMeans
-1       Engkik Soepadmo;M. Suhaimi                              
-2 John H. Beaman;Teofila E. Beaman                              
-           lastInterpreted  mediaType
-1 2026-10-14T03:16:39.777Z StillImage
-2 2026-10-14T03:16:04.863Z StillImage
-                                                                                                                                                               issue
-1 COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
-2                                                   COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND
- [ reached 'max' / getOption("max.print") -- omitted 8 rows ]
+# A tibble: 10 × 13
+       gbifID species      family stateProvince decimalLatitude decimalLongitude
+        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
+ 1 6561832516 Decaspermum… Myrta… "Kelantan"               6                101.
+ 2 6561807785 Decaspermum… Myrta… "Sabah"                  5.97             116.
+ 3 6561784372 Decaspermum… Myrta… ""                      NA                 NA 
+ 4 6561766817 Decaspermum… Myrta… "Sabah"                  4.97             118.
+ 5 6561753311 Decaspermum… Myrta… "Sabah"                  6.05             117.
+ 6 6561730396 Decaspermum… Myrta… "Kedah"                 NA                 NA 
+ 7 6561650622 Decaspermum… Myrta… ""                      NA                 NA 
+ 8 6561612723 Decaspermum… Myrta… "Penang"                NA                 NA 
+ 9 6561592184 Decaspermum… Myrta… ""                      NA                 NA 
+10 6561592042 Decaspermum… Myrta… "Selangor"              NA                 NA 
+# ℹ 7 more variables: elevation <dbl>, year <int>, month <int>,
+#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 Generally, it's good practice to start with the required arguments, like the data.frame whose rows you want to see, and then to name the optional arguments. If you are ever unsure, it never hurts to explicitly name an argument.
@@ -353,126 +231,81 @@ Other ethical concerns have also been raised, such as reports that workers were 
 
 ### Knowing more about our data.frame
 
-Let's get back to investigating our `decaspermum` data.frame. We can get some useful summaries of each variable using the `summary()` function:
+Let's get back to investigating our `decaspermum_thin` data.frame. We can get some useful summaries of each variable using the `summary()` function:
 
 
 ``` r
-summary(decaspermum)
+summary(decaspermum_thin)
 ```
 
 ``` output
-     gbifID              datasetKey     occurrenceID      kingdom   
+     gbifID               species          family      stateProvince
  Min.   :4.775e+07   Length   :964   Length   :964   Length   :964  
- 1st Qu.:2.516e+09   N.unique : 35   N.unique :964   N.unique :  1  
-       phylum          class           order           family   
- Length   :964   Length   :964   Length   :964   Length   :964  
- N.unique :  1   N.unique :  1   N.unique :  1   N.unique :  1  
-       genus          species    infraspecificEpithet     taxonRank  
- Length   :964   Length   :964   Length   :964        Length   :964  
- N.unique :  1   N.unique : 10   N.unique :  2        N.unique :  3  
-   scientificName verbatimScientificName verbatimScientificNameAuthorship
- Length   :964    Length   :964          Length   :964                   
- N.unique : 14    N.unique : 35          N.unique : 21                   
-    countryCode       locality     stateProvince  occurrenceStatus
- Length   :964   Length   :964   Length   :964   Length   :964    
- N.unique :  1   N.unique :796   N.unique : 17   N.unique :  1    
- individualCount  publishingOrgKey decimalLatitude decimalLongitude
- Min.   :1       Length   :964     Min.   :1.167   Min.   :100.2   
- 1st Qu.:1       N.unique : 34     1st Qu.:4.138   1st Qu.:115.5   
- coordinateUncertaintyInMeters coordinatePrecision   elevation     
- Min.   :   323.8              Min.   :0.01667     Min.   :   0.0  
- 1st Qu.:  1250.0              1st Qu.:0.01667     1st Qu.: 100.0  
- elevationAccuracy  depth         depthAccuracy      eventDate  
- Min.   :  0.00    Mode:logical   Mode:logical   Length   :964  
- 1st Qu.:  5.00    NAs :964       NAs :964       N.unique :625  
-      day            month             year           taxonKey  
- Min.   : 1.00   Min.   : 1.000   Min.   :1822   Length   :964  
- 1st Qu.: 8.00   1st Qu.: 3.000   1st Qu.:1955   N.unique : 14  
-     speciesKey    basisOfRecord  institutionCode   collectionCode
- Length   :964   Length   :964   Length   :964    Length   :964   
- N.unique : 10   N.unique :  1   N.unique : 34    N.unique : 29   
-   catalogNumber    recordNumber    identifiedBy   dateIdentified
- Length   :964   Length   :964   Length   :964   Length   :964   
- N.unique :964   N.unique :742   N.unique : 32   N.unique : 35   
-      license       rightsHolder     recordedBy      typeStatus 
- Length   :964   Length   :964   Length   :964   Length   :964  
- N.unique :  3   N.unique : 15   N.unique :574   N.unique :  6  
- establishmentMeans  lastInterpreted     mediaType         issue    
- Length   :964      Length   :964    Length   :964   Length   :964  
- N.unique :  2      N.unique :955    N.unique :  3   N.unique : 49  
- [ reached 'max' / getOption("max.print") -- omitted 5 rows ]
+ 1st Qu.:2.516e+09   N.unique : 10   N.unique :  1   N.unique : 17  
+ Median :4.401e+09   N.blank  :167   N.blank  :  0   N.blank  :591  
+ Mean   :3.840e+09   Min.nchar:  0   Min.nchar:  9   Min.nchar:  0  
+ 3rd Qu.:4.859e+09   Max.nchar: 23   Max.nchar:  9   Max.nchar: 19  
+ Max.   :6.562e+09                                                  
+                                                                    
+ decimalLatitude decimalLongitude   elevation           year     
+ Min.   :1.167   Min.   :100.2    Min.   :   0.0   Min.   :1822  
+ 1st Qu.:4.138   1st Qu.:115.5    1st Qu.: 100.0   1st Qu.:1955  
+ Median :5.550   Median :116.3    Median : 520.0   Median :1971  
+ Mean   :4.815   Mean   :114.5    Mean   : 687.3   Mean   :1964  
+ 3rd Qu.:5.996   3rd Qu.:116.7    3rd Qu.:1000.0   3rd Qu.:1986  
+ Max.   :6.883   Max.   :118.5    Max.   :2300.0   Max.   :2015  
+ NAs    :738     NAs    :738      NAs    :825      NAs    :154   
+     month          basisOfRecord  institutionCode     recordedBy 
+ Min.   : 1.000   Length   :964   Length   :964    Length   :964  
+ 1st Qu.: 3.000   N.unique :  1   N.unique : 34    N.unique :574  
+ Median : 6.000   N.blank  :  0   N.blank  :287    N.blank  : 14  
+ Mean   : 6.256   Min.nchar: 18   Min.nchar:  0    Min.nchar:  0  
+ 3rd Qu.: 9.000   Max.nchar: 18   Max.nchar:  7    Max.nchar: 94  
+ Max.   :12.000                                                   
+ NAs    :202                                                      
+      license   
+ Length   :964  
+ N.unique :  3  
+ N.blank  :  0  
+ Min.nchar:  7  
+ Max.nchar: 12  
+                
+                
 ```
 
 And, as we have already done, we can use `str()` to look at the structure of an object:
 
 
 ``` r
-str(decaspermum)
+str(decaspermum_thin)
 ```
 
 ``` output
-'data.frame':	964 obs. of  50 variables:
- $ gbifID                          : num  6.56e+09 6.56e+09 6.56e+09 6.56e+09 6.56e+09 ...
- $ datasetKey                      : chr  "7bd65a7a-f762-11e1-a439-00145eb45e9a" "7bd65a7a-f762-11e1-a439-00145eb45e9a" "7bd65a7a-f762-11e1-a439-00145eb45e9a" "7bd65a7a-f762-11e1-a439-00145eb45e9a" ...
- $ occurrenceID                    : chr  "urn:catalog:MO:Tropicos:105482819" "urn:catalog:MO:Tropicos:105427229" "urn:catalog:MO:Tropicos:105414318" "urn:catalog:MO:Tropicos:105642053" ...
- $ kingdom                         : chr  "Plantae" "Plantae" "Plantae" "Plantae" ...
- $ phylum                          : chr  "Tracheophyta" "Tracheophyta" "Tracheophyta" "Tracheophyta" ...
- $ class                           : chr  "Magnoliopsida" "Magnoliopsida" "Magnoliopsida" "Magnoliopsida" ...
- $ order                           : chr  "Myrtales" "Myrtales" "Myrtales" "Myrtales" ...
- $ family                          : chr  "Myrtaceae" "Myrtaceae" "Myrtaceae" "Myrtaceae" ...
- $ genus                           : chr  "Decaspermum" "Decaspermum" "Decaspermum" "Decaspermum" ...
- $ species                         : chr  "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" ...
- $ infraspecificEpithet            : chr  "" "" "" "" ...
- $ taxonRank                       : chr  "SPECIES" "SPECIES" "SPECIES" "SPECIES" ...
- $ scientificName                  : chr  "Decaspermum fruticosum J.R.Forst. & G.Forst." "Decaspermum fruticosum J.R.Forst. & G.Forst." "Decaspermum fruticosum J.R.Forst. & G.Forst." "Decaspermum fruticosum J.R.Forst. & G.Forst." ...
- $ verbatimScientificName          : chr  "Decaspermum fruticosum J.R. Forst. & G. Forst." "Decaspermum fruticosum J.R. Forst. & G. Forst." "Decaspermum fruticosum J.R. Forst. & G. Forst." "Decaspermum fruticosum J.R. Forst. & G. Forst." ...
- $ verbatimScientificNameAuthorship: chr  "J.R. Forst. & G. Forst." "J.R. Forst. & G. Forst." "J.R. Forst. & G. Forst." "J.R. Forst. & G. Forst." ...
- $ countryCode                     : chr  "MY" "MY" "MY" "MY" ...
- $ locality                        : chr  "Malay Peninsula, Pasir Mas" "Borneo; Kota Kinabalu District: Bukit Padang, eroded hills and gullies by UKMS temporary campus." "Taiton Gold Mine, Bau, 1st Division." "Borneo; Lahad Datu District: Gunung Silam, just below Telecom tower." ...
- $ stateProvince                   : chr  "Kelantan" "Sabah" "" "Sabah" ...
- $ occurrenceStatus                : chr  "PRESENT" "PRESENT" "PRESENT" "PRESENT" ...
- $ individualCount                 : int  NA NA NA NA NA NA NA NA NA NA ...
- $ publishingOrgKey                : chr  "90fd6680-349f-11d8-aa2d-b8a03c50a862" "90fd6680-349f-11d8-aa2d-b8a03c50a862" "90fd6680-349f-11d8-aa2d-b8a03c50a862" "90fd6680-349f-11d8-aa2d-b8a03c50a862" ...
- $ decimalLatitude                 : num  6 5.97 NA 4.97 6.05 ...
- $ decimalLongitude                : num  101 116 NA 118 117 ...
- $ coordinateUncertaintyInMeters   : num  NA NA NA NA NA NA NA NA NA NA ...
- $ coordinatePrecision             : num  NA NA NA NA NA NA NA NA NA NA ...
- $ elevation                       : num  75 25 NA 575 2025 ...
- $ elevationAccuracy               : num  NA 5 NA 75 75 ...
- $ depth                           : logi  NA NA NA NA NA NA ...
- $ depthAccuracy                   : logi  NA NA NA NA NA NA ...
- $ eventDate                       : chr  "1990-03-01" "1984-08-04" "1976-05-25" "1984-06-10" ...
- $ day                             : int  1 4 25 10 30 12 15 15 8 29 ...
- $ month                           : int  3 8 5 6 12 11 11 11 5 6 ...
- $ year                            : int  1990 1984 1976 1984 1983 1975 1974 1975 1975 1975 ...
- $ taxonKey                        : chr  "6CFN2" "6CFN2" "6CFN2" "6CFN2" ...
- $ speciesKey                      : chr  "6CFN2" "6CFN2" "6CFN2" "6CFN2" ...
- $ basisOfRecord                   : chr  "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" ...
- $ institutionCode                 : chr  "MO" "MO" "MO" "MO" ...
- $ collectionCode                  : chr  "Tropicos" "Tropicos" "Tropicos" "Tropicos" ...
- $ catalogNumber                   : chr  "105482819" "105427229" "105414318" "105642053" ...
- $ recordNumber                    : chr  "s136" "10824" "S37197" "10029" ...
- $ identifiedBy                    : chr  "" "" "" "" ...
- $ dateIdentified                  : chr  "" "1987-01-01T00:00:00" "1977-01-01T00:00:00" "1987-01-01T00:00:00" ...
- $ license                         : chr  "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" ...
- $ rightsHolder                    : chr  "Missouri Botanical Garden" "Missouri Botanical Garden" "Missouri Botanical Garden" "Missouri Botanical Garden" ...
- $ recordedBy                      : chr  "Engkik Soepadmo;M. Suhaimi" "John H. Beaman;Teofila E. Beaman" "James D. Mamit;et al." "John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker" ...
- $ typeStatus                      : chr  "" "" "" "" ...
- $ establishmentMeans              : chr  "" "" "" "" ...
- $ lastInterpreted                 : chr  "2026-10-14T03:16:39.777Z" "2026-10-14T03:16:04.863Z" "2026-10-14T03:16:04.955Z" "2026-10-14T03:15:22.202Z" ...
- $ mediaType                       : chr  "StillImage" "StillImage" "StillImage" "StillImage" ...
- $ issue                           : chr  "COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COUNTRY_COORDINATE_MISMATCH;ELEVATION_NON_NUMERIC;COLLECTION_MA"| __truncated__ "COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND" "COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND" "COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;COLLECTION_MATCH_NONE;INSTITUTION_MATCH_FUZZY;TAXON_ID_NOT_FOUND" ...
+tibble [964 × 13] (S3: tbl_df/tbl/data.frame)
+ $ gbifID          : num [1:964] 6.56e+09 6.56e+09 6.56e+09 6.56e+09 6.56e+09 ...
+ $ species         : chr [1:964] "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" ...
+ $ family          : chr [1:964] "Myrtaceae" "Myrtaceae" "Myrtaceae" "Myrtaceae" ...
+ $ stateProvince   : chr [1:964] "Kelantan" "Sabah" "" "Sabah" ...
+ $ decimalLatitude : num [1:964] 6 5.97 NA 4.97 6.05 ...
+ $ decimalLongitude: num [1:964] 101 116 NA 118 117 ...
+ $ elevation       : num [1:964] 75 25 NA 575 2025 ...
+ $ year            : int [1:964] 1990 1984 1976 1984 1983 1975 1974 1975 1975 1975 ...
+ $ month           : int [1:964] 3 8 5 6 12 11 11 11 5 6 ...
+ $ basisOfRecord   : chr [1:964] "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" ...
+ $ institutionCode : chr [1:964] "MO" "MO" "MO" "MO" ...
+ $ recordedBy      : chr [1:964] "Engkik Soepadmo;M. Suhaimi" "John H. Beaman;Teofila E. Beaman" "James D. Mamit;et al." "John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker" ...
+ $ license         : chr [1:964] "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" ...
 ```
 
-We get quite a bit of useful information here. First, we are told that we have a data.frame of 964 observations, or rows, and 50 variables, or columns.
+We get quite a bit of useful information here. First, we are told that we have a data.frame of 964 observations, or rows, and 13 variables, or columns.
 
 Next, we get a bit of information on each variable, including its type (`int` or `chr`) and a quick peek at the first 10 values. You might ask why there is a `$` in front of each variable. This is because the `$` is an operator that allows us to select individual columns from a data.frame.
 
-The `$` operator also allows you to use tab-completion to quickly select which variable you want from a given data.frame. For example, to get the `year` variable, we can type `decaspermum$` and then hit <kbd>Tab</kbd>. We get a list of the variables that we can move through with up and down arrow keys. Hit <kbd>Enter</kbd> when you reach `year`, which should finish this code:
+The `$` operator also allows you to use tab-completion to quickly select which variable you want from a given data.frame. For example, to get the `year` variable, we can type `decaspermum_thin$` and then hit <kbd>Tab</kbd>. We get a list of the variables that we can move through with up and down arrow keys. Hit <kbd>Enter</kbd> when you reach `year`, which should finish this code:
 
 
 ``` r
-decaspermum$year
+decaspermum_thin$year
 ```
 
 ``` output
@@ -490,7 +323,7 @@ What we get back is a whole bunch of numbers, the entries in the `year` column p
 
 ## Vectors: the building block of data
 
-You might have noticed that our last result looked different from when we printed out the `decaspermum` data.frame itself. That's because it is not a data.frame, it is a **vector**. A vector is a 1-dimensional series of values, in this case a vector of numbers representing years.
+You might have noticed that our last result looked different from when we printed out the `decaspermum_thin` data.frame itself. That's because it is not a data.frame, it is a **vector**. A vector is a 1-dimensional series of values, in this case a vector of numbers representing years.
 
 Data.frames are made up of vectors; each column in a data.frame is a vector. Vectors are the basic building blocks of all data in R. Basically, everything in R is a vector, a bunch of vectors stitched together in some way, or a function. Understanding how vectors work is crucial to understanding how R treats data, so we will spend some time learning about them.
 
@@ -498,7 +331,7 @@ There are 4 main types of vectors (also known as *atomic vectors*):
 
 1. `"character"` for strings of characters, like our `genus` or `taxonRank` columns. Each entry in a character vector is wrapped in quotes. In other programming languages, this type of data may be referred to as "strings".
 
-2. `"integer"` for integers. All the numeric values in `decaspermum` are integers. You may sometimes see integers represented like `2L` or `20L`. The `L` indicates to R that it is an integer, instead of the next data type, `"numeric"`.
+2. `"integer"` for integers. All the numeric values in `decaspermum_thin` are integers. You may sometimes see integers represented like `2L` or `20L`. The `L` indicates to R that it is an integer, instead of the next data type, `"numeric"`.
 
 3. `"numeric"`, aka `"double"`, vectors can contain numbers including decimals. Other languages may refer to these as "float" or "floating point" numbers.
 
@@ -517,7 +350,7 @@ c(1, 2, 5, 12, 4)
 [1]  1  2  5 12  4
 ```
 
-As you can see, those values get printed out in the console, just like with `decaspermum$year`. To store this vector so we can continue to work with it, we need to assign it to an object.
+As you can see, those values get printed out in the console, just like with `decaspermum_thin$year`. To store this vector so we can continue to work with it, we need to assign it to an object.
 
 
 ``` r
@@ -700,7 +533,7 @@ A common reason to create a vector from scratch is to use in a function argument
 
 
 ``` r
-quantile(decaspermum$elevation, probs = 0.25, na.rm = TRUE)
+quantile(decaspermum_thin$elevation, probs = 0.25, na.rm = TRUE)
 ```
 
 ``` output
@@ -712,7 +545,7 @@ Now we get back the 25% quantile value for weights. However, we often want to kn
 
 
 ``` r
-quantile(decaspermum$elevation, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+quantile(decaspermum_thin$elevation, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
 ```
 
 ``` output
