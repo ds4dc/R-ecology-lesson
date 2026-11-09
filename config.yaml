@@ -63,6 +63,7 @@ episodes:
 - visualizing-ggplot.Rmd
 - how-r-thinks-about-data.Rmd
 - working-with-data.Rmd
+- mapping.Rmd
 
 # Information for Learners
 learners:

@@ -189,7 +189,7 @@ This time we have an extra closing `)`, which R doesn't know what to do with. It
 
 ### Adding another variable
 
-Let's try coloring our points according to the sampling plot type (plot here refers to the physical area where rodents were sampled and has nothing to do with making graphs). Since we're now mapping a variable (`elevation`) to a component of the ggplot2 plot (`color`), we need to put the argument inside `aes()`:
+Let's try coloring our points according `elevation`. Since we're now mapping a variable (`elevation`) to a component of the ggplot2 plot (`color`), we need to put the argument inside `aes()`:
 
 ```{r color-plot-type, warning=FALSE}
 ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude, color = elevation)) +
