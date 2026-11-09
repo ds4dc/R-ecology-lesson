@@ -280,6 +280,18 @@
 </div>
 <!--/div.accordion-flush-->
 
+<div class="accordion accordion-flush" id="accordionFlush6">
+  <div class="accordion-item">
+    <div class="accordion-header" id="flush-heading6">
+        <a href="mapping.html">5. Mapping species occurrences</a>
+    </div>
+<!--/div.accordion-header-->
+
+  </div>
+<!--/div.accordion-item-->
+</div>
+<!--/div.accordion-flush-->
+
                 </div>
               </div>
             </div>
@@ -402,6 +414,24 @@ rows</li>
 <code>pivot_wider()</code> and <code>pivot_longer()</code> are
 powerful for reshaping data, but you should plan out how to use them
 thoughtfully</li>
+</ul></section><section id="mapping"><h2 class="section-heading"><a href="mapping.html">Mapping species occurrences</a></h2>
+<hr class="half-width">
+<ul>
+<li>Use <code>st_as_sf()</code> to convert a data frame with coordinates
+into an <code>sf</code> object, giving the coordinate columns (longitude
+first) and the CRS.</li>
+<li>Remove records with missing coordinates before converting.</li>
+<li>
+<code>geom_sf()</code> draws spatial data in <code>ggplot2</code>,
+and each layer can use its own data. Use <code>coord_sf()</code> to zoom
+to an area.</li>
+<li>Natural Earth, accessed through <code>rnaturalearth</code>, provides
+free country and province boundaries for background maps.</li>
+<li>Save a map with <code>ggsave()</code>, and use a <code>for</code>
+loop to repeat the same steps for each species.</li>
+<li>
+<code>leaflet</code> makes interactive maps that can be customised
+with labels, popups, colours and legends, and saved as HTML files.</li>
 </ul></section>
 </div>
     </main>
@@ -452,8 +482,8 @@ thoughtfully</li>
   "url": "https://datacarpentry.org/R-ecology-lesson/key-points.html",
   "identifier": "https://datacarpentry.org/R-ecology-lesson/key-points.html",
   "dateCreated": "2015-04-02",
-  "dateModified": "2026-11-05",
-  "datePublished": "2026-11-05"
+  "dateModified": "2026-11-09",
+  "datePublished": "2026-11-09"
 }
 
   </script><script>

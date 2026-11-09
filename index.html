@@ -240,6 +240,15 @@
   </div><!--/div.accordion-item-->
 </div><!--/div.accordion-flush-->
 
+<div class="accordion accordion-flush" id="accordionFlush6">
+  <div class="accordion-item">
+    <div class="accordion-header" id="flush-heading6">
+        <a href="mapping.html">5. Mapping species occurrences</a>
+    </div><!--/div.accordion-header-->
+
+  </div><!--/div.accordion-item-->
+</div><!--/div.accordion-flush-->
+
                 </div>
               </div>
             </div>
@@ -370,7 +379,7 @@ before you install RStudio.</p>
   For Windows
   </h3>
 </button>
-<div id="collapseSpoiler1" class="accordion-collapse collapse" data-bs-parent="#accordionSpoiler1" aria-labelledby="headingSpoiler1">
+<div id="collapseSpoiler1" class="accordion-collapse collapse" aria-labelledby="headingSpoiler1" data-bs-parent="#accordionSpoiler1">
 <div class="accordion-body">
 <ul><li>Download R from the <a href="https://cran.r-project.org/bin/windows/base/release.htm" class="external-link">CRAN
 website</a>.</li>
@@ -395,7 +404,7 @@ don’t get any error messages.</li>
   For MacOS
   </h3>
 </button>
-<div id="collapseSpoiler2" class="accordion-collapse collapse" data-bs-parent="#accordionSpoiler2" aria-labelledby="headingSpoiler2">
+<div id="collapseSpoiler2" class="accordion-collapse collapse" aria-labelledby="headingSpoiler2" data-bs-parent="#accordionSpoiler2">
 <div class="accordion-body">
 <ul><li>Download R from the <a href="https://cran.r-project.org/bin/macosx/" class="external-link">CRAN website</a>.</li>
 <li>Select the <code>.pkg</code> file for the latest R version</li>
@@ -422,7 +431,7 @@ don’t get any error messages.</li>
   For Linux
   </h3>
 </button>
-<div id="collapseSpoiler3" class="accordion-collapse collapse" data-bs-parent="#accordionSpoiler3" aria-labelledby="headingSpoiler3">
+<div id="collapseSpoiler3" class="accordion-collapse collapse" aria-labelledby="headingSpoiler3" data-bs-parent="#accordionSpoiler3">
 <div class="accordion-body">
 <ul><li>Click on your distribution in the <a href="https://cran.r-project.org/bin/linux/" class="external-link">Linux folder of the CRAN
 website</a>. Linux Mint users should follow instructions for
@@ -499,7 +508,8 @@ the bottom left), then press the <kbd>Enter</kbd> (Windows and Linux) or
 </h3>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">install.packages</span><span class="op">(</span><span class="st">"tidyverse"</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pak</span><span class="op">(</span><span class="st">"ds4dc/plantdat"</span><span class="op">)</span></span></code></pre>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pak</span><span class="op">(</span><span class="st">"ds4dc/plantdat"</span><span class="op">)</span></span>
+<span><span class="fu">install.packages</span><span class="op">(</span><span class="fu">c</span><span class="op">(</span><span class="st">"sf"</span>, <span class="st">"rnaturalearth"</span>, <span class="st">"rnaturalearthdata"</span>, <span class="st">"leaflet"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
 </div>
 <p>Alternatively, you can install the packages using RStudio’s graphical
 user interface by going to <code>Tools &gt; Install Packages</code> and
@@ -512,7 +522,11 @@ by pasting the following code into the console:</p>
 </h3>
 <pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">library</span><span class="op">(</span><span class="va">tidyverse</span><span class="op">)</span></span>
-<span><span class="kw">library</span><span class="op">(</span><span class="va">plantdat</span><span class="op">)</span></span></code></pre>
+<span><span class="kw">library</span><span class="op">(</span><span class="va">plantdat</span><span class="op">)</span></span>
+<span><span class="kw">library</span><span class="op">(</span><span class="va">sf</span><span class="op">)</span></span>
+<span><span class="kw">library</span><span class="op">(</span><span class="va">rnaturalearthdata</span><span class="op">)</span></span>
+<span><span class="kw">library</span><span class="op">(</span><span class="va">leaflet</span><span class="op">)</span></span>
+<span><span class="kw">library</span><span class="op">(</span><span class="va">rnaturalearth</span><span class="op">)</span></span></code></pre>
 </div>
 <p>If you do not see an error like
 <code>there is no package called ‘...’</code> you are good to go!</p>
@@ -595,8 +609,8 @@ data</a></li>
   "url": "https://datacarpentry.org/R-ecology-lesson/index.html",
   "identifier": "https://datacarpentry.org/R-ecology-lesson/index.html",
   "dateCreated": "2015-04-02",
-  "dateModified": "2026-11-05",
-  "datePublished": "2026-11-05"
+  "dateModified": "2026-11-09",
+  "datePublished": "2026-11-09"
 }
 
   </script><script>

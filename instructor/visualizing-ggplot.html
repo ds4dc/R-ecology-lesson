@@ -114,7 +114,7 @@
     <a id="search-button-nav" class="btn btn-primary" href="../instructor/aio.html" role="button" aria-label="Search the All In One page">Search the All In One page</a>
   </div><!--/div.container-fluid -->
 </nav><aside class="col-md-12 lesson-progress"><div class="progress data">
-    <div class="progress-bar data" role="progressbar" style="width: 14%" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100" aria-label="Lesson Progress">14%</div>
+    <div class="progress-bar data" role="progressbar" style="width: 11%" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" aria-label="Lesson Progress">11%</div>
   </div>
 </aside><div class="container">
       <div class="row">
@@ -252,6 +252,15 @@
   </div><!--/div.accordion-item-->
 </div><!--/div.accordion-flush-->
 
+<div class="accordion accordion-flush" id="accordionFlush6">
+  <div class="accordion-item">
+    <div class="accordion-header" id="flush-heading6">
+        <a href="mapping.html">5. Mapping species occurrences</a>
+    </div><!--/div.accordion-header-->
+
+  </div><!--/div.accordion-item-->
+</div><!--/div.accordion-flush-->
+
                 </div>
               </div>
             </div>
@@ -324,7 +333,7 @@
       </div>
     </nav><main id="main-content" class="main-content"><div class="container lesson-content">
         <h1>Data visualization with ggplot2</h1>
-        <p>Last updated on 2026-11-05 |
+        <p>Last updated on 2026-11-09 |
 
         <a href="https://github.com/datacarpentry/R-ecology-lesson/edit/main/episodes/visualizing-ggplot.Rmd" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
 
@@ -467,19 +476,20 @@ the data.</p>
 <div class="codewrapper">
 <h3 class="code-label">OUTPUT<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
-<pre class="output" tabindex="0"><code>'data.frame':	964 obs. of  12 variables:
- $ gbifID          : num  6.56e+09 6.56e+09 6.56e+09 6.56e+09 6.56e+09 ...
- $ species         : chr  "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" ...
- $ family          : chr  "Myrtaceae" "Myrtaceae" "Myrtaceae" "Myrtaceae" ...
- $ stateProvince   : chr  "Kelantan" "Sabah" "" "Sabah" ...
- $ decimalLatitude : num  6 5.97 NA 4.97 6.05 ...
- $ decimalLongitude: num  101 116 NA 118 117 ...
- $ elevation       : num  75 25 NA 575 2025 ...
- $ year            : int  1990 1984 1976 1984 1983 1975 1974 1975 1975 1975 ...
- $ month           : int  3 8 5 6 12 11 11 11 5 6 ...
- $ basisOfRecord   : chr  "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" ...
- $ institutionCode : chr  "MO" "MO" "MO" "MO" ...
- $ recordedBy      : chr  "Engkik Soepadmo;M. Suhaimi" "John H. Beaman;Teofila E. Beaman" "James D. Mamit;et al." "John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker" ...</code></pre>
+<pre class="output" tabindex="0"><code>tibble [964 × 13] (S3: tbl_df/tbl/data.frame)
+ $ gbifID          : num [1:964] 6.56e+09 6.56e+09 6.56e+09 6.56e+09 6.56e+09 ...
+ $ species         : chr [1:964] "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" "Decaspermum fruticosum" ...
+ $ family          : chr [1:964] "Myrtaceae" "Myrtaceae" "Myrtaceae" "Myrtaceae" ...
+ $ stateProvince   : chr [1:964] "Kelantan" "Sabah" "" "Sabah" ...
+ $ decimalLatitude : num [1:964] 6 5.97 NA 4.97 6.05 ...
+ $ decimalLongitude: num [1:964] 101 116 NA 118 117 ...
+ $ elevation       : num [1:964] 75 25 NA 575 2025 ...
+ $ year            : int [1:964] 1990 1984 1976 1984 1983 1975 1974 1975 1975 1975 ...
+ $ month           : int [1:964] 3 8 5 6 12 11 11 11 5 6 ...
+ $ basisOfRecord   : chr [1:964] "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" "PRESERVED_SPECIMEN" ...
+ $ institutionCode : chr [1:964] "MO" "MO" "MO" "MO" ...
+ $ recordedBy      : chr [1:964] "Engkik Soepadmo;M. Suhaimi" "John H. Beaman;Teofila E. Beaman" "James D. Mamit;et al." "John H. Beaman;Reed S. Beaman;Teofila E. Beaman;Pamla Decker" ...
+ $ license         : chr [1:964] "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" "CC_BY_4_0" ...</code></pre>
 </div>
 <p><code>str()</code> will tell us how many observations/rows (obs) and
 variables/columns we have, as well as some information about each of the
@@ -495,7 +505,7 @@ later on.</p>
 <button class="accordion-button instructor-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstructor1" aria-expanded="false" aria-controls="collapseInstructor1">
   <h3 class="accordion-header" id="headingInstructor1">  <div class="note-square"><i aria-hidden="true" class="callout-icon" data-feather="edit-2"></i></div> Instructor Note </h3>
 </button>
-<div id="collapseInstructor1" class="accordion-collapse collapse" data-bs-parent="#accordionInstructor1" aria-labelledby="headingInstructor1">
+<div id="collapseInstructor1" class="accordion-collapse collapse" aria-labelledby="headingInstructor1" data-bs-parent="#accordionInstructor1">
 <div class="accordion-body">
 <p>Probably worth mentioning that people often just say
 <strong>ggplot</strong> when referring to the package
@@ -702,12 +712,10 @@ working in R, you will get better at spotting mismatched brackets.</p>
 </div>
 <div class="section level3">
 <h3 id="adding-another-variable">Adding another variable<a class="anchor" aria-label="anchor" href="#adding-another-variable"></a></h3>
-<p>Let’s try coloring our points according to the sampling plot type
-(plot here refers to the physical area where rodents were sampled and
-has nothing to do with making graphs). Since we’re now mapping a
-variable (<code>elevation</code>) to a component of the ggplot2 plot
-(<code>color</code>), we need to put the argument inside
-<code>aes()</code>:</p>
+<p>Let’s try coloring our points according <code>elevation</code>. Since
+we’re now mapping a variable (<code>elevation</code>) to a component of
+the ggplot2 plot (<code>color</code>), we need to put the argument
+inside <code>aes()</code>:</p>
 <div class="codewrapper sourceCode" id="cb20">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
@@ -735,7 +743,7 @@ varies by <code>stateProvince</code>.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb21">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -770,7 +778,7 @@ this happened?</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb22">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -994,7 +1002,7 @@ example we might search for <code>R ggplot2 violin plot</code>.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb38">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1217,7 +1225,7 @@ the font size of the plot title and make it bold.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
 <div class="accordion-body">
 <div class="codewrapper sourceCode" id="cb47">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
@@ -1267,16 +1275,7 @@ to specify that we want them arranged in a single column:</p>
 <span>       color <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">facet_wrap</span><span class="op">(</span><span class="fu">vars</span><span class="op">(</span><span class="va">license</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre>
 </div>
-<div class="codewrapper">
-<h3 class="code-label">ERROR<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
-</h3>
-<pre class="error" tabindex="0"><code>Error in `combine_vars()` at ggplot2/R/facet-wrap.R:246:5:
-! At least one layer must contain all faceting variables: `license`
-✖ Plot is missing `license`
-✖ Layer 1 is missing `license`
-✖ Layer 2 is missing `license`</code></pre>
-</div>
-<div id="callout7" class="callout">
+<figure><img src="../fig/visualizing-ggplot-rendered-facet-wrap-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" class="figure mx-auto d-block"></figure><div id="callout7" class="callout">
 <div class="callout-square">
 <i class="callout-icon" data-feather="bell"></i>
 </div>
@@ -1296,7 +1295,7 @@ general comparisons between categories</li>
 </section><section><h2 class="section-heading" id="exporting-plots">Exporting plots<a class="anchor" aria-label="anchor" href="#exporting-plots"></a></h2>
 <hr class="half-width"><p>Once we are happy with our final plot, we can assign the whole thing
 to a new object, which we can call <code>finalplot</code>.</p>
-<div class="codewrapper sourceCode" id="cb50">
+<div class="codewrapper sourceCode" id="cb49">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1322,7 +1321,7 @@ you can save <code>.pdf</code>, <code>.tiff</code>, and other file
 formats. Next, we tell it the name of the plot object we want to save.
 We can also specify things like the width and height of the plot in
 inches.</p>
-<div class="codewrapper sourceCode" id="cb51">
+<div class="codewrapper sourceCode" id="cb50">
 <h3 class="code-label">R<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
 </h3>
 <pre class="downlit sourceCode r">
@@ -1430,8 +1429,8 @@ appearance, and the <code>theme()</code> function to fine-tune</li>
   "url": "https://datacarpentry.org/R-ecology-lesson/instructor/visualizing-ggplot.html",
   "identifier": "https://datacarpentry.org/R-ecology-lesson/instructor/visualizing-ggplot.html",
   "dateCreated": "2015-04-02",
-  "dateModified": "2026-11-05",
-  "datePublished": "2026-11-05"
+  "dateModified": "2026-11-09",
+  "datePublished": "2026-11-09"
 }
 
   </script><script>

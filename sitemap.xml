@@ -16,6 +16,21 @@
     <loc>https://datacarpentry.org/R-ecology-lesson/aio.html</loc>
   </url>
   <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/fig_output/decaspermum_map.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/files/leaflet-basic.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/files/leaflet_colour.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/files/leaflet_labels.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/files/leaflet_points.html</loc>
+  </url>
+  <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/how-r-thinks-about-data.html</loc>
   </url>
   <url>
@@ -58,6 +73,9 @@
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/key-points.html</loc>
   </url>
   <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/instructor/mapping.html</loc>
+  </url>
+  <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/instructor/profiles.html</loc>
   </url>
   <url>
@@ -77,6 +95,9 @@
   </url>
   <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/key-points.html</loc>
+  </url>
+  <url>
+    <loc>https://datacarpentry.org/R-ecology-lesson/mapping.html</loc>
   </url>
   <url>
     <loc>https://datacarpentry.org/R-ecology-lesson/profiles.html</loc>
