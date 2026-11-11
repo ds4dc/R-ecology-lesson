@@ -89,11 +89,11 @@ surveys <- read_csv("data/cleaned/Decaspermum_Malaysia.csv")
 ```
 
 ``` output
-Rows: 964 Columns: 13
+Rows: 964 Columns: 15
 ── Column specification ────────────────────────────────────────────────────────
 Delimiter: ","
 chr (7): species, family, stateProvince, basisOfRecord, institutionCode, rec...
-dbl (6): gbifID, decimalLatitude, decimalLongitude, elevation, year, month
+dbl (8): gbifID, day, month, year, decimalLatitude, decimalLongitude, coordi...
 
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -156,13 +156,24 @@ To use the `select()` function, the first argument is the name of the data.frame
 
 
 ``` r
-select(surveys, genus, species, year, elevation)
+select(surveys, species, year, elevation)
 ```
 
-``` error
-Error in `select()`:
-! Can't select columns that don't exist.
-✖ Column `genus` doesn't exist.
+``` output
+# A tibble: 964 × 3
+   species                  year elevation
+   <chr>                   <dbl>     <dbl>
+ 1 Decaspermum fruticosum   1990       75 
+ 2 Decaspermum fruticosum   1984       25 
+ 3 Decaspermum fruticosum   1976       NA 
+ 4 Decaspermum fruticosum   1984      575 
+ 5 Decaspermum vitis-idaea  1983     2025 
+ 6 Decaspermum montanum     1975      945.
+ 7 Decaspermum fruticosum   1974     1180 
+ 8 Decaspermum fruticosum   1975      732.
+ 9 Decaspermum fruticosum   1975      410 
+10 Decaspermum fruticosum   1975      400 
+# ℹ 954 more rows
 ```
 
 The columns are arranged in the order we specified inside `select()`.
@@ -175,22 +186,23 @@ select(surveys, -elevation, -year)
 ```
 
 ``` output
-# A tibble: 964 × 11
-      gbifID species family stateProvince decimalLatitude decimalLongitude month
-       <dbl> <chr>   <chr>  <chr>                   <dbl>            <dbl> <dbl>
- 1    6.56e9 Decasp… Myrta… Kelantan                 6                101.     3
- 2    6.56e9 Decasp… Myrta… Sabah                    5.97             116.     8
- 3    6.56e9 Decasp… Myrta… <NA>                    NA                 NA      5
- 4    6.56e9 Decasp… Myrta… Sabah                    4.97             118.     6
- 5    6.56e9 Decasp… Myrta… Sabah                    6.05             117.    12
- 6    6.56e9 Decasp… Myrta… Kedah                   NA                 NA     11
- 7    6.56e9 Decasp… Myrta… <NA>                    NA                 NA     11
- 8    6.56e9 Decasp… Myrta… Penang                  NA                 NA     11
- 9    6.56e9 Decasp… Myrta… <NA>                    NA                 NA      5
-10    6.56e9 Decasp… Myrta… Selangor                NA                 NA      6
+# A tibble: 964 × 13
+       gbifID   day month species           family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <chr>             <chr>  <chr>                   <dbl>
+ 1 6561832516     1     3 Decaspermum frut… Myrta… Kelantan                 6   
+ 2 6561807785     4     8 Decaspermum frut… Myrta… Sabah                    5.97
+ 3 6561784372    25     5 Decaspermum frut… Myrta… <NA>                    NA   
+ 4 6561766817    10     6 Decaspermum frut… Myrta… Sabah                    4.97
+ 5 6561753311    30    12 Decaspermum viti… Myrta… Sabah                    6.05
+ 6 6561730396    12    11 Decaspermum mont… Myrta… Kedah                   NA   
+ 7 6561650622    15    11 Decaspermum frut… Myrta… <NA>                    NA   
+ 8 6561612723    15    11 Decaspermum frut… Myrta… Penang                  NA   
+ 9 6561592184     8     5 Decaspermum frut… Myrta… <NA>                    NA   
+10 6561592042    29     6 Decaspermum frut… Myrta… Selangor                NA   
 # ℹ 954 more rows
-# ℹ 4 more variables: basisOfRecord <chr>, institutionCode <chr>,
-#   recordedBy <chr>, license <chr>
+# ℹ 6 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 `select()` also works with numeric vectors for the order of the columns. To select the 3rd, 4th, 5th, and 10th columns, we could run the following code:
@@ -202,18 +214,18 @@ select(surveys, c(3:5, 10))
 
 ``` output
 # A tibble: 964 × 4
-   family    stateProvince decimalLatitude basisOfRecord     
-   <chr>     <chr>                   <dbl> <chr>             
- 1 Myrtaceae Kelantan                 6    PRESERVED_SPECIMEN
- 2 Myrtaceae Sabah                    5.97 PRESERVED_SPECIMEN
- 3 Myrtaceae <NA>                    NA    PRESERVED_SPECIMEN
- 4 Myrtaceae Sabah                    4.97 PRESERVED_SPECIMEN
- 5 Myrtaceae Sabah                    6.05 PRESERVED_SPECIMEN
- 6 Myrtaceae Kedah                   NA    PRESERVED_SPECIMEN
- 7 Myrtaceae <NA>                    NA    PRESERVED_SPECIMEN
- 8 Myrtaceae Penang                  NA    PRESERVED_SPECIMEN
- 9 Myrtaceae <NA>                    NA    PRESERVED_SPECIMEN
-10 Myrtaceae Selangor                NA    PRESERVED_SPECIMEN
+   month  year species                 coordinateUncertaintyInMeters
+   <dbl> <dbl> <chr>                                           <dbl>
+ 1     3  1990 Decaspermum fruticosum                             NA
+ 2     8  1984 Decaspermum fruticosum                             NA
+ 3     5  1976 Decaspermum fruticosum                             NA
+ 4     6  1984 Decaspermum fruticosum                             NA
+ 5    12  1983 Decaspermum vitis-idaea                            NA
+ 6    11  1975 Decaspermum montanum                               NA
+ 7    11  1974 Decaspermum fruticosum                             NA
+ 8    11  1975 Decaspermum fruticosum                             NA
+ 9     5  1975 Decaspermum fruticosum                             NA
+10     6  1975 Decaspermum fruticosum                             NA
 # ℹ 954 more rows
 ```
 
@@ -227,20 +239,21 @@ select(surveys, where(is.numeric))
 ```
 
 ``` output
-# A tibble: 964 × 6
-       gbifID decimalLatitude decimalLongitude elevation  year month
-        <dbl>           <dbl>            <dbl>     <dbl> <dbl> <dbl>
- 1 6561832516            6                101.       75   1990     3
- 2 6561807785            5.97             116.       25   1984     8
- 3 6561784372           NA                 NA        NA   1976     5
- 4 6561766817            4.97             118.      575   1984     6
- 5 6561753311            6.05             117.     2025   1983    12
- 6 6561730396           NA                 NA       945.  1975    11
- 7 6561650622           NA                 NA      1180   1974    11
- 8 6561612723           NA                 NA       732.  1975    11
- 9 6561592184           NA                 NA       410   1975     5
-10 6561592042           NA                 NA       400   1975     6
+# A tibble: 964 × 8
+       gbifID   day month  year decimalLatitude decimalLongitude
+        <dbl> <dbl> <dbl> <dbl>           <dbl>            <dbl>
+ 1 6561832516     1     3  1990            6                101.
+ 2 6561807785     4     8  1984            5.97             116.
+ 3 6561784372    25     5  1976           NA                 NA 
+ 4 6561766817    10     6  1984            4.97             118.
+ 5 6561753311    30    12  1983            6.05             117.
+ 6 6561730396    12    11  1975           NA                 NA 
+ 7 6561650622    15    11  1974           NA                 NA 
+ 8 6561612723    15    11  1975           NA                 NA 
+ 9 6561592184     8     5  1975           NA                 NA 
+10 6561592042    29     6  1975           NA                 NA 
 # ℹ 954 more rows
+# ℹ 2 more variables: coordinateUncertaintyInMeters <dbl>, elevation <dbl>
 ```
 
 Instead of giving names or positions of columns, we instead pass the `where()` function with the name of another function inside it, in this case `is.numeric()`, and we get all the columns for which that function returns `TRUE`.
@@ -253,21 +266,22 @@ select(surveys, where(anyNA))
 ```
 
 ``` output
-# A tibble: 964 × 9
-   species  stateProvince decimalLatitude decimalLongitude elevation  year month
-   <chr>    <chr>                   <dbl>            <dbl>     <dbl> <dbl> <dbl>
- 1 Decaspe… Kelantan                 6                101.       75   1990     3
- 2 Decaspe… Sabah                    5.97             116.       25   1984     8
- 3 Decaspe… <NA>                    NA                 NA        NA   1976     5
- 4 Decaspe… Sabah                    4.97             118.      575   1984     6
- 5 Decaspe… Sabah                    6.05             117.     2025   1983    12
- 6 Decaspe… Kedah                   NA                 NA       945.  1975    11
- 7 Decaspe… <NA>                    NA                 NA      1180   1974    11
- 8 Decaspe… Penang                  NA                 NA       732.  1975    11
- 9 Decaspe… <NA>                    NA                 NA       410   1975     5
-10 Decaspe… Selangor                NA                 NA       400   1975     6
+# A tibble: 964 × 11
+     day month  year species      stateProvince decimalLatitude decimalLongitude
+   <dbl> <dbl> <dbl> <chr>        <chr>                   <dbl>            <dbl>
+ 1     1     3  1990 Decaspermum… Kelantan                 6                101.
+ 2     4     8  1984 Decaspermum… Sabah                    5.97             116.
+ 3    25     5  1976 Decaspermum… <NA>                    NA                 NA 
+ 4    10     6  1984 Decaspermum… Sabah                    4.97             118.
+ 5    30    12  1983 Decaspermum… Sabah                    6.05             117.
+ 6    12    11  1975 Decaspermum… Kedah                   NA                 NA 
+ 7    15    11  1974 Decaspermum… <NA>                    NA                 NA 
+ 8    15    11  1975 Decaspermum… Penang                  NA                 NA 
+ 9     8     5  1975 Decaspermum… <NA>                    NA                 NA 
+10    29     6  1975 Decaspermum… Selangor                NA                 NA 
 # ℹ 954 more rows
-# ℹ 2 more variables: institutionCode <chr>, recordedBy <chr>
+# ℹ 4 more variables: coordinateUncertaintyInMeters <dbl>, elevation <dbl>,
+#   institutionCode <chr>, recordedBy <chr>
 ```
 
 #### `filter()`
@@ -280,33 +294,34 @@ filter(surveys, year == 1985)
 ```
 
 ``` output
-# A tibble: 19 × 13
-       gbifID species      family stateProvince decimalLatitude decimalLongitude
-        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
- 1 6561429663 Decaspermum… Myrta… <NA>                    NA                 NA 
- 2 4977561075 Decaspermum… Myrta… <NA>                    NA                 NA 
- 3 4858989387 Decaspermum… Myrta… <NA>                    NA                 NA 
- 4 4858973318 Decaspermum… Myrta… <NA>                    NA                 NA 
- 5 4858973304 Decaspermum… Myrta… <NA>                    NA                 NA 
- 6 4858968916 Decaspermum… Myrta… <NA>                    NA                 NA 
- 7 4850462398 Decaspermum… Myrta… <NA>                    NA                 NA 
- 8 4850461090 Decaspermum… Myrta… <NA>                    NA                 NA 
- 9 4401127340 Decaspermum… Myrta… Sabah                   NA                 NA 
-10 4401121355 Decaspermum… Myrta… Sabah                   NA                 NA 
-11 2516699077 Decaspermum… Myrta… <NA>                    NA                 NA 
-12 2516291363 Decaspermum… Myrta… Borneo                   3.75             115.
-13 2516291190 Decaspermum… Myrta… Borneo                   5.57             116.
-14 2516276207 Decaspermum… Myrta… Borneo                   1.42             110.
-15 2516213427 Decaspermum… Myrta… Borneo                   6.23             117.
-16 2515066186 Decaspermum… Myrta… <NA>                    NA                 NA 
-17 2514464455 Decaspermum… Myrta… Borneo                   5.53             117.
-18 2514427660 Decaspermum… Myrta… Borneo                   1.4              110.
-19 2514412446 Decaspermum… Myrta… Borneo                   5.9              116.
-# ℹ 7 more variables: elevation <dbl>, year <dbl>, month <dbl>,
-#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
+# A tibble: 19 × 15
+       gbifID   day month  year species     family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <dbl> <chr>       <chr>  <chr>                   <dbl>
+ 1 6561429663     2     9  1985 Decaspermu… Myrta… <NA>                    NA   
+ 2 4977561075    11    12  1985 Decaspermu… Myrta… <NA>                    NA   
+ 3 4858989387     5     9  1985 Decaspermu… Myrta… <NA>                    NA   
+ 4 4858973318     9     9  1985 Decaspermu… Myrta… <NA>                    NA   
+ 5 4858973304     7     5  1985 Decaspermu… Myrta… <NA>                    NA   
+ 6 4858968916     2     9  1985 Decaspermu… Myrta… <NA>                    NA   
+ 7 4850462398    18    11  1985 Decaspermu… Myrta… <NA>                    NA   
+ 8 4850461090    13    11  1985 Decaspermu… Myrta… <NA>                    NA   
+ 9 4401127340    17    10  1985 Decaspermu… Myrta… Sabah                   NA   
+10 4401121355    19     3  1985 Decaspermu… Myrta… Sabah                   NA   
+11 2516699077    11     9  1985 Decaspermu… Myrta… <NA>                    NA   
+12 2516291363     2     9  1985 Decaspermu… Myrta… Borneo                   3.75
+13 2516291190     9     9  1985 Decaspermu… Myrta… Borneo                   5.57
+14 2516276207    13    11  1985 Decaspermu… Myrta… Borneo                   1.42
+15 2516213427    17     6  1985 Decaspermu… Myrta… Borneo                   6.23
+16 2515066186    19     3  1985 Decaspermu… Myrta… <NA>                    NA   
+17 2514464455    14     3  1985 Decaspermu… Myrta… Borneo                   5.53
+18 2514427660    18    11  1985 Decaspermu… Myrta… Borneo                   1.4 
+19 2514412446     5     9  1985 Decaspermu… Myrta… Borneo                   5.9 
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
-The `==` sign means "is equal to". There are several other operators we can use: >, >=, <, <=, and != (not equal to). Another useful operator is `%in%`, which asks if the value on the lefthand side is found anywhere in the vector on the righthand side. For example, to get rows with specific `species_id` values, we could run:
+The `==` sign means "is equal to". There are several other operators we can use: >, >=, <, <=, and != (not equal to). Another useful operator is `%in%`, which asks if the value on the lefthand side is found anywhere in the vector on the righthand side. For example, to get rows with specific `stateProvince` values, we could run:
 
 
 ``` r
@@ -314,22 +329,23 @@ filter(surveys, stateProvince %in% c("Borneo", "Sarawak"))
 ```
 
 ``` output
-# A tibble: 193 × 13
-       gbifID species      family stateProvince decimalLatitude decimalLongitude
-        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
- 1 6561379339 Decaspermum… Myrta… Sarawak                  3.67             116.
- 2 5956592965 Decaspermum… Myrta… Sarawak                 NA                 NA 
- 3 5956549004 Decaspermum… Myrta… Sarawak                 NA                 NA 
- 4 4906914238 <NA>         Myrta… Borneo                   1.4              110.
- 5 4404057434 Decaspermum… Myrta… Sarawak                 NA                 NA 
- 6 4404051550 Decaspermum… Myrta… Sarawak                 NA                 NA 
- 7 4404050440 Decaspermum… Myrta… Sarawak                 NA                 NA 
- 8 4401132420 Decaspermum… Myrta… Sarawak                 NA                 NA 
- 9 4401132331 Decaspermum… Myrta… Sarawak                 NA                 NA 
-10 4401132320 Decaspermum… Myrta… Sarawak                 NA                 NA 
+# A tibble: 193 × 15
+       gbifID   day month  year species     family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <dbl> <chr>       <chr>  <chr>                   <dbl>
+ 1 6561379339    28    11  1992 Decaspermu… Myrta… Sarawak                  3.67
+ 2 5956592965    14     7  1963 Decaspermu… Myrta… Sarawak                 NA   
+ 3 5956549004     1     1  1929 Decaspermu… Myrta… Sarawak                 NA   
+ 4 4906914238    28     8  1999 <NA>        Myrta… Borneo                   1.4 
+ 5 4404057434    15    11  1974 Decaspermu… Myrta… Sarawak                 NA   
+ 6 4404051550    10     1  1996 Decaspermu… Myrta… Sarawak                 NA   
+ 7 4404050440    19     3  1967 Decaspermu… Myrta… Sarawak                 NA   
+ 8 4401132420    NA    NA  1929 Decaspermu… Myrta… Sarawak                 NA   
+ 9 4401132331    NA    NA  1929 Decaspermu… Myrta… Sarawak                 NA   
+10 4401132320    15     9  1955 Decaspermu… Myrta… Sarawak                 NA   
 # ℹ 183 more rows
-# ℹ 7 more variables: elevation <dbl>, year <dbl>, month <dbl>,
-#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 We can also use multiple conditions in one `filter()` statement. Here we will get rows with a year less than or equal to 1988 and whose elevation values are not `NA`. The `!` before the `is.na()` function means "not".
@@ -340,22 +356,23 @@ filter(surveys, year <= 1988 & !is.na(elevation))
 ```
 
 ``` output
-# A tibble: 94 × 13
-       gbifID species      family stateProvince decimalLatitude decimalLongitude
-        <dbl> <chr>        <chr>  <chr>                   <dbl>            <dbl>
- 1 6561807785 Decaspermum… Myrta… Sabah                    5.97             116.
- 2 6561766817 Decaspermum… Myrta… Sabah                    4.97             118.
- 3 6561753311 Decaspermum… Myrta… Sabah                    6.05             117.
- 4 6561730396 Decaspermum… Myrta… Kedah                   NA                 NA 
- 5 6561650622 Decaspermum… Myrta… <NA>                    NA                 NA 
- 6 6561612723 Decaspermum… Myrta… Penang                  NA                 NA 
- 7 6561592184 Decaspermum… Myrta… <NA>                    NA                 NA 
- 8 6561592042 Decaspermum… Myrta… Selangor                NA                 NA 
- 9 6561582852 Decaspermum… Myrta… Sabah                   NA                 NA 
-10 6561508200 Decaspermum… Myrta… Sabah                    6.05             117.
+# A tibble: 94 × 15
+       gbifID   day month  year species     family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <dbl> <chr>       <chr>  <chr>                   <dbl>
+ 1 6561807785     4     8  1984 Decaspermu… Myrta… Sabah                    5.97
+ 2 6561766817    10     6  1984 Decaspermu… Myrta… Sabah                    4.97
+ 3 6561753311    30    12  1983 Decaspermu… Myrta… Sabah                    6.05
+ 4 6561730396    12    11  1975 Decaspermu… Myrta… Kedah                   NA   
+ 5 6561650622    15    11  1974 Decaspermu… Myrta… <NA>                    NA   
+ 6 6561612723    15    11  1975 Decaspermu… Myrta… Penang                  NA   
+ 7 6561592184     8     5  1975 Decaspermu… Myrta… <NA>                    NA   
+ 8 6561592042    29     6  1975 Decaspermu… Myrta… Selangor                NA   
+ 9 6561582852     5    10  1987 Decaspermu… Myrta… Sabah                   NA   
+10 6561508200    26     3  1984 Decaspermu… Myrta… Sabah                    6.05
 # ℹ 84 more rows
-# ℹ 7 more variables: elevation <dbl>, year <dbl>, month <dbl>,
-#   basisOfRecord <chr>, institutionCode <chr>, recordedBy <chr>, license <chr>
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 
@@ -374,13 +391,16 @@ surveys_filtered <- filter(surveys, year >= 1980 & year <= 1985)
 
 ::::::::::::::::::::::::
 
-2. Use the surveys data to make a data.frame that has only the following columns, in order: `year`, `month`, `speciesKey`, `coordinateUncertaintyInMeters`.
+2. Use the surveys data to make a data.frame that has only the following columns, in order: `year`, `month`, `gbifID`.
 
 :::::::::::::::::::::::: solution
 
 
 ``` r
-surveys_selected <- select(surveys, year, month, speciesKey, coordinateUncertaintyInMeters)
+surveys_selected <- select(surveys,
+                           year,
+                           month,
+                           speciesKey)
 ```
 
 ``` error
@@ -399,37 +419,57 @@ What happens if we want to both `select()` and `filter()` our data? We have a co
 
 
 ``` r
-filter(select(surveys, -day), month >= 7)
+filter(select(surveys, -month), year >= 1990)
 ```
 
-``` error
-Error in `select()` at dplyr/R/filter.R:219:3:
-! Can't select columns that don't exist.
-✖ Column `day` doesn't exist.
+``` output
+# A tibble: 151 × 14
+       gbifID   day  year species           family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <chr>             <chr>  <chr>                   <dbl>
+ 1 6561832516     1  1990 Decaspermum frut… Myrta… Kelantan                 6   
+ 2 6561379339    28  1992 Decaspermum frut… Myrta… Sarawak                  3.67
+ 3 6245398301     9  1996 Decaspermum parv… Myrta… <NA>                    NA   
+ 4 6245298302    28  1999 Decaspermum parv… Myrta… <NA>                    NA   
+ 5 5858798061    25  1996 Decaspermum parv… Myrta… <NA>                    NA   
+ 6 5836639606    23  2015 Decaspermum parv… Myrta… <NA>                    NA   
+ 7 5285073455    15  2015 Decaspermum frut… Myrta… Johor                   NA   
+ 8 4986793890    26  1995 Decaspermum viti… Myrta… <NA>                     6.05
+ 9 4977594985     6  2003 Decaspermum frut… Myrta… <NA>                    NA   
+10 4977591208     8  1993 Decaspermum frut… Myrta… <NA>                    NA   
+# ℹ 141 more rows
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
-R will evaluate statements from the inside out. First, `select()` will operate on the `surveys` data.frame, removing the column `day`. The resulting data.frame is then used as the first argument for `filter()`, which selects rows with a month greater than or equal to 7.
+R will evaluate statements from the inside out. First, `select()` will operate on the `surveys` data.frame, removing the column `month`. The resulting data.frame is then used as the first argument for `filter()`, which selects rows with a year greater than or equal to 1990.
 
 Nested functions can be very difficult to read with only a few functions, and nearly impossible when many functions are done at once. An alternative approach is to create **intermediate** objects:
 
 
 ``` r
-surveys_noday <- select(surveys, -day)
+surveys_nomonth <- select(surveys, -month)
+filter(surveys_nomonth, year >= 1990)
 ```
 
-``` error
-Error in `select()`:
-! Can't select columns that don't exist.
-✖ Column `day` doesn't exist.
-```
-
-``` r
-filter(surveys_noday, month >= 7)
-```
-
-``` error
-Error:
-! object 'surveys_noday' not found
+``` output
+# A tibble: 151 × 14
+       gbifID   day  year species           family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <chr>             <chr>  <chr>                   <dbl>
+ 1 6561832516     1  1990 Decaspermum frut… Myrta… Kelantan                 6   
+ 2 6561379339    28  1992 Decaspermum frut… Myrta… Sarawak                  3.67
+ 3 6245398301     9  1996 Decaspermum parv… Myrta… <NA>                    NA   
+ 4 6245298302    28  1999 Decaspermum parv… Myrta… <NA>                    NA   
+ 5 5858798061    25  1996 Decaspermum parv… Myrta… <NA>                    NA   
+ 6 5836639606    23  2015 Decaspermum parv… Myrta… <NA>                    NA   
+ 7 5285073455    15  2015 Decaspermum frut… Myrta… Johor                   NA   
+ 8 4986793890    26  1995 Decaspermum viti… Myrta… <NA>                     6.05
+ 9 4977594985     6  2003 Decaspermum frut… Myrta… <NA>                    NA   
+10 4977591208     8  1993 Decaspermum frut… Myrta… <NA>                    NA   
+# ℹ 141 more rows
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 This approach is easier to read, since we can see the steps in order, but after enough steps, we are left with a cluttered mess of intermediate objects, often with confusing names.
@@ -439,14 +479,28 @@ An elegant solution to this problem is an operator called the **pipe**, which lo
 
 ``` r
 surveys %>% 
-  select(-day) %>% 
-  filter(month >= 7)
+  select(-month) %>% 
+  filter(year >= 1990)
 ```
 
-``` error
-Error in `select()` at dplyr/R/filter.R:219:3:
-! Can't select columns that don't exist.
-✖ Column `day` doesn't exist.
+``` output
+# A tibble: 151 × 14
+       gbifID   day  year species           family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <chr>             <chr>  <chr>                   <dbl>
+ 1 6561832516     1  1990 Decaspermum frut… Myrta… Kelantan                 6   
+ 2 6561379339    28  1992 Decaspermum frut… Myrta… Sarawak                  3.67
+ 3 6245398301     9  1996 Decaspermum parv… Myrta… <NA>                    NA   
+ 4 6245298302    28  1999 Decaspermum parv… Myrta… <NA>                    NA   
+ 5 5858798061    25  1996 Decaspermum parv… Myrta… <NA>                    NA   
+ 6 5836639606    23  2015 Decaspermum parv… Myrta… <NA>                    NA   
+ 7 5285073455    15  2015 Decaspermum frut… Myrta… Johor                   NA   
+ 8 4986793890    26  1995 Decaspermum viti… Myrta… <NA>                     6.05
+ 9 4977594985     6  2003 Decaspermum frut… Myrta… <NA>                    NA   
+10 4977591208     8  1993 Decaspermum frut… Myrta… <NA>                    NA   
+# ℹ 141 more rows
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 What it does is take the thing on the lefthand side and insert it as the first argument of the function on the righthand side. By putting each of our functions onto a new line, we can build a nice, readable **pipeline**. It can be useful to think of this as a little assembly line for our data. It starts at the top and gets piped into a `select()` function, and it comes out modified somewhat. It then gets sent into the `filter()` function, where it is further modified, and then the final product gets printed out to our console. It can also be helpful to think of `%>%` as meaning "and then". Since many `tidyverse` functions have verbs for names, a pipeline can be read like a sentence.
@@ -463,14 +517,8 @@ If we want to store this final product as an object, we use an assignment arrow 
 
 ``` r
 surveys_sub <- surveys %>% 
-  select(-day) %>% 
-  filter(month >= 7)
-```
-
-``` error
-Error in `select()` at dplyr/R/filter.R:219:3:
-! Can't select columns that don't exist.
-✖ Column `day` doesn't exist.
+  select(-month) %>% 
+  filter(year >= 1990)
 ```
 
 A good approach is to build a pipeline step by step prior to assignment. You add functions to the pipeline as you go, with the results printing in the console for you to view. Once you're satisfied with your final result, go back and add the assignment arrow statement at the start. This approach is very interactive, allowing you to see the results of each step as you build the pipeline, and produces nicely readable code.
@@ -479,7 +527,7 @@ A good approach is to build a pipeline step by step prior to assignment. You add
 
 ## Challenge 2: Using pipes
 
-Use the surveys data to make a data.frame that has the columns `speciesKey`, `month`, and `coordinateUncertaintyInMeters`, with data from the year 1988. Use a pipe between the function calls.
+Use the surveys data to make a data.frame that has the columns `gbifID`,`month`and `year`, with data from the year 1988. Use a pipe between the function calls.
 
 :::::::::::::::::::::::: solution
 
@@ -487,13 +535,7 @@ Use the surveys data to make a data.frame that has the columns `speciesKey`, `mo
 ``` r
 surveys_1988 <- surveys %>%
   filter(year == 1988) %>%
-  select(speciesKey, month, coordinateUncertaintyInMeters)
-```
-
-``` error
-Error in `select()` at magrittr/R/pipe.R:136:3:
-! Can't select columns that don't exist.
-✖ Column `speciesKey` doesn't exist.
+  select(gbifID, month, year)
 ```
 
 Make sure to `filter()` before you `select()`. You need to use the `year` column for filtering rows, but it is discarded in the `select()` step. You also need to make sure to use `==` instead of `=` when you are filtering rows where `year` is equal to 1988.
@@ -508,17 +550,27 @@ Another common task is creating a new column based on values in existing columns
 
 
 ``` r
-surveys %>% 
+surveys %>%
   mutate(uncertainty_km = coordinateUncertaintyInMeters / 1000) %>%
   select(uncertainty_km) %>%
- arrange(desc(uncertainty_km))
+  arrange(desc(uncertainty_km))
 ```
 
-``` error
-Error in `mutate()` at dplyr/R/select.R:54:3:
-ℹ In argument: `uncertainty_km = coordinateUncertaintyInMeters/1000`.
-Caused by error:
-! object 'coordinateUncertaintyInMeters' not found
+``` output
+# A tibble: 964 × 1
+   uncertainty_km
+            <dbl>
+ 1            100
+ 2             50
+ 3             25
+ 4             25
+ 5             25
+ 6             25
+ 7             10
+ 8             10
+ 9             10
+10              2
+# ℹ 954 more rows
 ```
 
 You can create multiple columns in one `mutate()` call, and they will get created in the order you write them. You can use `arrange` and `desc` to sort them as well.
@@ -533,14 +585,27 @@ To put together the columns into something that looks like a date, we can use th
 
 ``` r
 surveys %>% 
-  mutate(date = paste(year, month, day, sep = "-"))
+  mutate(date = paste(year, month, day, sep = "-")) 
 ```
 
-``` error
-Error in `mutate()` at magrittr/R/pipe.R:136:3:
-ℹ In argument: `date = paste(year, month, day, sep = "-")`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+``` output
+# A tibble: 964 × 16
+       gbifID   day month  year species     family stateProvince decimalLatitude
+        <dbl> <dbl> <dbl> <dbl> <chr>       <chr>  <chr>                   <dbl>
+ 1 6561832516     1     3  1990 Decaspermu… Myrta… Kelantan                 6   
+ 2 6561807785     4     8  1984 Decaspermu… Myrta… Sabah                    5.97
+ 3 6561784372    25     5  1976 Decaspermu… Myrta… <NA>                    NA   
+ 4 6561766817    10     6  1984 Decaspermu… Myrta… Sabah                    4.97
+ 5 6561753311    30    12  1983 Decaspermu… Myrta… Sabah                    6.05
+ 6 6561730396    12    11  1975 Decaspermu… Myrta… Kedah                   NA   
+ 7 6561650622    15    11  1974 Decaspermu… Myrta… <NA>                    NA   
+ 8 6561612723    15    11  1975 Decaspermu… Myrta… Penang                  NA   
+ 9 6561592184     8     5  1975 Decaspermu… Myrta… <NA>                    NA   
+10 6561592042    29     6  1975 Decaspermu… Myrta… Selangor                NA   
+# ℹ 954 more rows
+# ℹ 8 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>, date <chr>
 ```
 
 Since our new column gets moved all the way to the end, it doesn't end up printing out. We can use the `relocate()` function to put it after our `year` column:
@@ -552,11 +617,24 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` error
-Error in `mutate()` at dplyr/R/relocate.R:50:3:
-ℹ In argument: `date = paste(year, month, day, sep = "-")`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+``` output
+# A tibble: 964 × 16
+     gbifID   day month  year date  species family stateProvince decimalLatitude
+      <dbl> <dbl> <dbl> <dbl> <chr> <chr>   <chr>  <chr>                   <dbl>
+ 1   6.56e9     1     3  1990 1990… Decasp… Myrta… Kelantan                 6   
+ 2   6.56e9     4     8  1984 1984… Decasp… Myrta… Sabah                    5.97
+ 3   6.56e9    25     5  1976 1976… Decasp… Myrta… <NA>                    NA   
+ 4   6.56e9    10     6  1984 1984… Decasp… Myrta… Sabah                    4.97
+ 5   6.56e9    30    12  1983 1983… Decasp… Myrta… Sabah                    6.05
+ 6   6.56e9    12    11  1975 1975… Decasp… Myrta… Kedah                   NA   
+ 7   6.56e9    15    11  1974 1974… Decasp… Myrta… <NA>                    NA   
+ 8   6.56e9    15    11  1975 1975… Decasp… Myrta… Penang                  NA   
+ 9   6.56e9     8     5  1975 1975… Decasp… Myrta… <NA>                    NA   
+10   6.56e9    29     6  1975 1975… Decasp… Myrta… Selangor                NA   
+# ℹ 954 more rows
+# ℹ 7 more variables: decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 Now we can see that we have a character column that contains our date string. However, it's not truly a date column. Dates are a type of numeric variable with a defined, ordered scale. To turn this column into a proper date, we will use a function from the `tidyverse`'s `lubridate` package, which has lots of useful functions for working with dates. The function `ymd()` will parse a date string that has the order year-month-day. Let's load the package and use `ymd()`.
@@ -571,11 +649,31 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` error
-Error in `mutate()` at dplyr/R/relocate.R:50:3:
-ℹ In argument: `date = paste(year, month, day, sep = "-")`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+``` warning
+Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `date = ymd(date)`.
+Caused by warning:
+!  225 failed to parse.
+```
+
+``` output
+# A tibble: 964 × 16
+       gbifID   day month  year date       species          family stateProvince
+        <dbl> <dbl> <dbl> <dbl> <date>     <chr>            <chr>  <chr>        
+ 1 6561832516     1     3  1990 1990-03-01 Decaspermum fru… Myrta… Kelantan     
+ 2 6561807785     4     8  1984 1984-08-04 Decaspermum fru… Myrta… Sabah        
+ 3 6561784372    25     5  1976 1976-05-25 Decaspermum fru… Myrta… <NA>         
+ 4 6561766817    10     6  1984 1984-06-10 Decaspermum fru… Myrta… Sabah        
+ 5 6561753311    30    12  1983 1983-12-30 Decaspermum vit… Myrta… Sabah        
+ 6 6561730396    12    11  1975 1975-11-12 Decaspermum mon… Myrta… Kedah        
+ 7 6561650622    15    11  1974 1974-11-15 Decaspermum fru… Myrta… <NA>         
+ 8 6561612723    15    11  1975 1975-11-15 Decaspermum fru… Myrta… Penang       
+ 9 6561592184     8     5  1975 1975-05-08 Decaspermum fru… Myrta… <NA>         
+10 6561592042    29     6  1975 1975-06-29 Decaspermum fru… Myrta… Selangor     
+# ℹ 954 more rows
+# ℹ 8 more variables: decimalLatitude <dbl>, decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 ``` r
@@ -585,11 +683,24 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` error
-Error in `mutate()` at dplyr/R/relocate.R:50:3:
-ℹ In argument: `date = paste(year, month, day, sep = "-")`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+``` output
+# A tibble: 964 × 16
+       gbifID   day month  year date       species          family stateProvince
+        <dbl> <dbl> <dbl> <dbl> <date>     <chr>            <chr>  <chr>        
+ 1 6561832516     1     3  1990 1990-03-01 Decaspermum fru… Myrta… Kelantan     
+ 2 6561807785     4     8  1984 1984-08-04 Decaspermum fru… Myrta… Sabah        
+ 3 6561784372    25     5  1976 1976-05-25 Decaspermum fru… Myrta… <NA>         
+ 4 6561766817    10     6  1984 1984-06-10 Decaspermum fru… Myrta… Sabah        
+ 5 6561753311    30    12  1983 1983-12-30 Decaspermum vit… Myrta… Sabah        
+ 6 6561730396    12    11  1975 1975-11-12 Decaspermum mon… Myrta… Kedah        
+ 7 6561650622    15    11  1974 1974-11-15 Decaspermum fru… Myrta… <NA>         
+ 8 6561612723    15    11  1975 1975-11-15 Decaspermum fru… Myrta… Penang       
+ 9 6561592184     8     5  1975 1975-05-08 Decaspermum fru… Myrta… <NA>         
+10 6561592042    29     6  1975 1975-06-29 Decaspermum fru… Myrta… Selangor     
+# ℹ 954 more rows
+# ℹ 8 more variables: decimalLatitude <dbl>, decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 <!-- This isn't strictly necessary to show, but I think it's good to reenforce what a pipe is really doing, and it's actually a useful approach with more complex mutates -->
@@ -604,11 +715,31 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` error
-Error in `mutate()` at dplyr/R/relocate.R:50:3:
+``` warning
+Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `date = ymd(paste(year, month, day, sep = "-"))`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+Caused by warning:
+!  225 failed to parse.
+```
+
+``` output
+# A tibble: 964 × 16
+       gbifID   day month  year date       species          family stateProvince
+        <dbl> <dbl> <dbl> <dbl> <date>     <chr>            <chr>  <chr>        
+ 1 6561832516     1     3  1990 1990-03-01 Decaspermum fru… Myrta… Kelantan     
+ 2 6561807785     4     8  1984 1984-08-04 Decaspermum fru… Myrta… Sabah        
+ 3 6561784372    25     5  1976 1976-05-25 Decaspermum fru… Myrta… <NA>         
+ 4 6561766817    10     6  1984 1984-06-10 Decaspermum fru… Myrta… Sabah        
+ 5 6561753311    30    12  1983 1983-12-30 Decaspermum vit… Myrta… Sabah        
+ 6 6561730396    12    11  1975 1975-11-12 Decaspermum mon… Myrta… Kedah        
+ 7 6561650622    15    11  1974 1974-11-15 Decaspermum fru… Myrta… <NA>         
+ 8 6561612723    15    11  1975 1975-11-15 Decaspermum fru… Myrta… Penang       
+ 9 6561592184     8     5  1975 1975-05-08 Decaspermum fru… Myrta… <NA>         
+10 6561592042    29     6  1975 1975-06-29 Decaspermum fru… Myrta… Selangor     
+# ℹ 954 more rows
+# ℹ 8 more variables: decimalLatitude <dbl>, decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 ``` r
@@ -619,11 +750,31 @@ surveys %>%
   relocate(date, .after = year)
 ```
 
-``` error
-Error in `mutate()` at dplyr/R/relocate.R:50:3:
+``` warning
+Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `date = paste(year, month, day, sep = "-") %>% ymd()`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+Caused by warning:
+!  225 failed to parse.
+```
+
+``` output
+# A tibble: 964 × 16
+       gbifID   day month  year date       species          family stateProvince
+        <dbl> <dbl> <dbl> <dbl> <date>     <chr>            <chr>  <chr>        
+ 1 6561832516     1     3  1990 1990-03-01 Decaspermum fru… Myrta… Kelantan     
+ 2 6561807785     4     8  1984 1984-08-04 Decaspermum fru… Myrta… Sabah        
+ 3 6561784372    25     5  1976 1976-05-25 Decaspermum fru… Myrta… <NA>         
+ 4 6561766817    10     6  1984 1984-06-10 Decaspermum fru… Myrta… Sabah        
+ 5 6561753311    30    12  1983 1983-12-30 Decaspermum vit… Myrta… Sabah        
+ 6 6561730396    12    11  1975 1975-11-12 Decaspermum mon… Myrta… Kedah        
+ 7 6561650622    15    11  1974 1974-11-15 Decaspermum fru… Myrta… <NA>         
+ 8 6561612723    15    11  1975 1975-11-15 Decaspermum fru… Myrta… Penang       
+ 9 6561592184     8     5  1975 1975-05-08 Decaspermum fru… Myrta… <NA>         
+10 6561592042    29     6  1975 1975-06-29 Decaspermum fru… Myrta… Selangor     
+# ℹ 954 more rows
+# ℹ 8 more variables: decimalLatitude <dbl>, decimalLongitude <dbl>,
+#   coordinateUncertaintyInMeters <dbl>, elevation <dbl>, basisOfRecord <chr>,
+#   institutionCode <chr>, recordedBy <chr>, license <chr>
 ```
 
 ::::::::::::::::::::::::::::::::::::: challenge 
@@ -642,14 +793,19 @@ surveys %>%
   geom_jitter(alpha = 0.1)
 ```
 
-``` error
-Error in `mutate()` at ggplot2/R/plot.R:112:3:
+``` warning
+Warning: There was 1 warning in `mutate()`.
 ℹ In argument: `date = ymd(paste(year, month, day, sep = "-"))`.
-Caused by error in `paste()`:
-! cannot coerce type 'closure' to vector of type 'character'
+Caused by warning:
+!  225 failed to parse.
 ```
 
-This isn't necessarily the most useful plot, but we will learn some techniques that will help produce nice time series plots
+``` warning
+Warning: Removed 852 rows containing missing values or values outside the scale range
+(`geom_point()`).
+```
+
+<img src="fig/working-with-data-rendered-date-plot-challenge-answer-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
 
 ::::::::::::::::::::::::
 
@@ -665,11 +821,6 @@ Now we can save this data.frame to a CSV using the `write_csv()` function from t
 
 ``` r
 write_csv(surveys_1988, "data/cleaned/surveys_1988.csv")
-```
-
-``` error
-Error:
-! object 'surveys_1988' not found
 ```
 
 If we go look into our `data/cleaned_data` folder, we will see this new CSV file.

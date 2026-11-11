@@ -140,7 +140,8 @@ We get a blank plot because we haven't told `ggplot()` which variables we want t
 
 ``` r
 # adding a mapping to x and y axes
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude))
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude))
 ```
 
 <img src="fig/visualizing-ggplot-rendered-plot-with-axes-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
@@ -149,7 +150,8 @@ Now we've got a plot with x and y axes corresponding to variables from `Decasper
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_point()
 ```
 
@@ -169,7 +171,8 @@ A more serious type of message is an **error**. Here's an example:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_poit()
 ```
 
@@ -187,7 +190,8 @@ Building **`ggplot`** plots is often an iterative process, so we'll continue dev
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_point(alpha = 0.2)
 ```
 
@@ -197,7 +201,8 @@ We can also change the color of the points:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_point(alpha = 0.2, color = "blue")
 ```
 
@@ -210,7 +215,8 @@ Try running the following code:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_point(color = "blue", alpha = 0.2
 ```
 
@@ -220,7 +226,8 @@ Something similar will happen if you run the following code:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_point(color = "blue, alpha = 0.2)
 ```
 
@@ -230,7 +237,8 @@ You will get a different error message if you run the following code:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = decimalLongitude, y = decimalLatitude)) +
   geom_point(color = "blue", alpha = 0.2))
 ```
 
@@ -239,11 +247,14 @@ This time we have an extra closing `)`, which R doesn't know what to do with. It
 
 ### Adding another variable
 
-Let's try coloring our points according `elevation`. Since we're now mapping a variable (`elevation`) to a component of the ggplot2 plot (`color`), we need to put the argument inside `aes()`:
+Let's try coloring our points according to `elevation`. Since we're now mapping a variable (`elevation`) to a component of the ggplot2 plot (`color`), we need to put the argument inside `aes()`:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude, color = elevation)) +
+ggplot(
+  data = decaspermum_thin,
+  mapping = aes(x = decimalLongitude, y = decimalLatitude, color = elevation)
+) +
   geom_point(alpha = 0.2)
 ```
 
@@ -259,19 +270,25 @@ Do you think this is a good way to represent `stateProvince` with these data?
 ::: solution
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude, shape = stateProvince)) +
+ggplot(
+  data = decaspermum_thin,
+  mapping = aes(x = decimalLongitude, y = decimalLatitude, shape = stateProvince)
+) +
   geom_point(alpha = 0.2)
 ```
 
 <img src="fig/visualizing-ggplot-rendered-modify-points-challenge-answer-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
 :::
 
-2.  Now try changing the plot so that the `color` of the points vary by `year`. Do you notice a difference in the color scale compared to changing color by plot type? Why do you think this happened?
+2.  Now try changing the plot so that the `color` of the points vary by `year`. Do you notice a difference in the color scale compared to changing color by `stateProvince`? Why do you think this happened?
 
 ::: solution
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude, color = year)) +
+ggplot(
+  data = decaspermum_thin,
+  mapping = aes(x = decimalLongitude, y = decimalLatitude, color = year)
+) +
   geom_point(alpha = 0.2)
 ```
 
@@ -287,7 +304,10 @@ The default discrete color scale isn't always ideal: it isn't friendly to viewer
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = decimalLongitude, y = decimalLatitude, color = elevation)) +
+ggplot(
+  data = decaspermum_thin,
+  mapping = aes(x = decimalLongitude, y = decimalLatitude, color = elevation)
+) +
   geom_point(alpha = 0.2) +
   scale_color_viridis_c()
 ```
@@ -300,7 +320,9 @@ Let's try making a different type of plot altogether. We'll start off with our s
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = species, y = elevation))
+ggplot(
+  data = decaspermum_thin, 
+  mapping = aes(x = species, y = elevation))
 ```
 
 <img src="fig/visualizing-ggplot-rendered-blank-boxplot-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
@@ -320,7 +342,7 @@ Warning: Removed 825 rows containing non-finite outside the scale range
 
 <img src="fig/visualizing-ggplot-rendered-boxplot-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
 
-Not bad, but the species labels at the bottom are overlapping. Let's try switching the x and y so the species labels have more space.
+Not bad, but the species labels at the bottom are overlapping. Let's try switching the x and y so the species labels have more space. 
 
 
 ``` r
@@ -335,11 +357,14 @@ Warning: Removed 825 rows containing non-finite outside the scale range
 
 <img src="fig/visualizing-ggplot-rendered-boxplot-flip-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
 
-Just as we colored the points before, we can color our boxplot by `species` as well:
+Great, we can see the species labels now. Note that some species are blank, can you think why? We simply don't have elevation data for these species. Depending on the purpose of your chart you may want to keep or remove these species. For now, let's leave it as it is and We will learn later on how to handle variables with empty or null values. 
+
+Let's carry on with the customisation. Just as we colored the points before, we can color our boxplot by `species` as well:
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species, color = species)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = elevation, y = species, color = species)) +
   geom_boxplot()
 ```
 
@@ -349,7 +374,8 @@ It looks like `color` has only affected the outlines of the boxplot, not the rec
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species, fill = species)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = elevation, y = species, fill = species)) +
   geom_boxplot()
 ```
 
@@ -396,7 +422,8 @@ Just as before, we can map `species` to `color` by putting it inside `aes()`.
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species, color = species)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = elevation, y = species, color = species)) +
   geom_boxplot(outliers = FALSE) +
   geom_jitter(alpha = 0.2)
 ```
@@ -409,7 +436,7 @@ If we want to limit the mapping to a single `geom`, we can put the mapping into 
 
 
 ``` r
-ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species, color = species)) +
+ggplot(data = decaspermum_thin, mapping = aes(x = elevation, y = species)) +
   geom_boxplot(outliers = FALSE) +
   geom_jitter(aes(color = species), alpha = 0.2)
 ```
@@ -450,10 +477,8 @@ This might also be a place to test your search engine skills. It is often useful
 ::: solution
 
 ``` r
-ggplot(data = decaspermum_thin, 
-       mapping = aes(x = elevation, 
-                     y = species,
-                     color = species)) +
+ggplot(data = decaspermum_thin,
+       mapping = aes(x = elevation, y = species, color = species)) +
   geom_jitter(alpha = 0.2) +
   geom_violin(fill = "white")
 ```
@@ -520,7 +545,7 @@ Another change we might want to make is to remove the vertical grid lines. Since
 ``` r
 myplot +
   theme_bw() +
-  theme(axis.title = element_text(size = 14), 
+  theme(axis.title = element_text(size = 14),
         panel.grid.major.x = element_blank())
 ```
 
@@ -532,9 +557,11 @@ Another useful change might be to remove the color legend, since that informatio
 ``` r
 myplot +
   theme_bw() +
-  theme(axis.title = element_text(size = 14), 
-        panel.grid.major.x = element_blank(), 
-        legend.position = "none")
+  theme(
+    axis.title = element_text(size = 14),
+    panel.grid.major.x = element_blank(),
+    legend.position = "none"
+  )
 ```
 
 <img src="fig/visualizing-ggplot-rendered-legend-remove-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
@@ -576,11 +603,9 @@ Our plot is really shaping up now. However, we probably want to make our axis ti
 ``` r
 myplot +
   theme_bw() +
-  theme(axis.title = element_text(size = 14), 
-        legend.position = "none") +
-  labs(title = "Decaspermum species by elevation",
-       x = "Elevation (m)",
-       y = "Species")
+  theme(axis.title = element_text(size = 14), legend.position = "none") +
+  labs(title = "Decaspermum species by elevation", 
+       x = "Elevation (m)", y = "Species")
 ```
 
 <img src="fig/visualizing-ggplot-rendered-labels-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
@@ -599,12 +624,17 @@ Modify the previous plot by adding a descriptive subtitle. Increase the font siz
 ``` r
 myplot +
   theme_bw() +
-  theme(axis.title = element_text(size = 14), legend.position = "none",
-        plot.title = element_text(face = "bold", size = 20)) +
-  labs(title = "Decaspermum species by elevation",
-       subtitle = "Data restricted to Malaysia",
-       x = "Elevation (m)",
-       y = "Species")
+  theme(
+    axis.title = element_text(size = 14),
+    legend.position = "none",
+    plot.title = element_text(face = "bold", size = 20)
+  ) +
+  labs(
+    title = "Decaspermum species by elevation",
+    subtitle = "Data restricted to Malaysia",
+    x = "Elevation (m)",
+    y = "Species"
+  )
 ```
 
 <img src="fig/visualizing-ggplot-rendered-customizing-challenge-answer-1.png" alt="" width="600" height="600" style="display: block; margin: auto;" />
@@ -623,15 +653,19 @@ Instead of cramming one more variable into a single plot, we will use the `facet
 ``` r
 myplot +
   theme_bw() +
-  theme(axis.title = element_text(size = 14), 
-        panel.grid.major.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()) +
-  labs(title = "Decaspermum species by elevation",
-              subtitle = "Grouped by license type",
-       x = "Elevation",
-       y = "Species",
-       color = "Species") +
+  theme(
+    axis.title = element_text(size = 14),
+    panel.grid.major.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  labs(
+    title = "Decaspermum species by elevation",
+    subtitle = "Grouped by license type",
+    x = "Elevation",
+    y = "Species",
+    color = "Species"
+  ) +
   facet_wrap(vars(license), ncol = 1)
 ```
 
@@ -654,15 +688,19 @@ Once we are happy with our final plot, we can assign the whole thing to a new ob
 ``` r
 finalplot <- myplot +
   theme_bw() +
-  theme(axis.title = element_text(size = 14), 
-        panel.grid.major.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()) +
-  labs(title = "Decaspermum species by elevation",
-              subtitle = "Grouped by license type",
-       x = "Elevation",
-       y = "Species",
-       color = "Species") +
+  theme(
+    axis.title = element_text(size = 14),
+    panel.grid.major.x = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  labs(
+    title = "Decaspermum species by elevation",
+    subtitle = "Grouped by license type",
+    x = "Elevation",
+    y = "Species",
+    color = "Species"
+  ) +
   facet_wrap(vars(license), ncol = 1)
 ```
 
@@ -670,8 +708,12 @@ After this, we can run `ggsave()` to save our plot. The first argument we give i
 
 
 ``` r
-ggsave(filename = "images/decaspermum_plot.jpg", plot = finalplot,
-       height = 6, width = 8)
+ggsave(
+  filename = "images/decaspermum_plot.jpg",
+  plot = finalplot,
+  height = 6,
+  width = 8
+)
 ```
 
 ::: challenge
