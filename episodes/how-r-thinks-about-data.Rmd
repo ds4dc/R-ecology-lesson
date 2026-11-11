@@ -55,7 +55,7 @@ head(decaspermum_thin)
 tail(decaspermum_thin)
 ```
 
-We used these functions with just one argument, the object `decaspermum`, and we didn't give the argument a name, like we often did with `ggplot2`. In R, a function's arguments come in a particular order, and if you put them in the correct order, you don't need to name them. In this case, the name of the argument is `x`, so we can name it if we want, but since we know it's the first argument, we don't need to.
+We used these functions with just one argument, the object `decaspermum_thin`, and we didn't give the argument a name, like we often did with `ggplot2`. In R, a function's arguments come in a particular order, and if you put them in the correct order, you don't need to name them. In this case, the name of the argument is `x`, so we can name it if we want, but since we know it's the first argument, we don't need to.
 
 Some arguments are optional. For example, the `n` argument in `head()` specifies the number of rows to print. It defaults to 6, but we can override that by specifying a different number:
 
@@ -300,13 +300,17 @@ min(weights, na.rm = TRUE)
 A common reason to create a vector from scratch is to use in a function argument. The `quantile()` function will calculate a quantile for a given vector of numeric values. We set the quantile using the `probs` argument. We also need to set `na.rm = TRUE`, since there are `NA` values in the `weight` column.
 
 ```{r single-quantile}
-quantile(decaspermum_thin$elevation, probs = 0.25, na.rm = TRUE)
+quantile(decaspermum_thin$elevation,
+         probs = 0.25,
+         na.rm = TRUE)
 ```
 
-Now we get back the 25% quantile value for weights. However, we often want to know more than one quantile. Luckily, the `probs` argument is **vectorized**, meaning it can take a whole vector of values. Let's try getting the 25%, 50% (median), and 75% quantiles all at once.
+Now we get back the 25% quantile value for elevation. However, we often want to know more than one quantile. Luckily, the `probs` argument is **vectorized**, meaning it can take a whole vector of values. Let's try getting the 25%, 50% (median), and 75% quantiles all at once.
 
 ```{r multi-quantile}
-quantile(decaspermum_thin$elevation, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+quantile(decaspermum_thin$elevation,
+         probs = c(0.25, 0.5, 0.75),
+         na.rm = TRUE)
 ```
 
 While the `c()` function is very flexible, it doesn't necessarily scale well. If you want to generate a long vector from scratch, you probably don't want to type everything out manually. There are a few functions that can help generate vectors.
@@ -506,9 +510,9 @@ x
 You will be naming a lot of objects in R, and there are a few common naming rules and conventions:
 
 - make names clear without being too long
-  - `wkg` is probably too short
-  - `weight_in_kilograms` is probably too long
-  - `weight_kg` is good
+  - `elv` is probably too short
+  - `elevation_in_metres` is probably too long
+  - `elevation_m` is good
 - names cannot start with a number
 - names are case sensitive
 - you cannot use the names of fundamental functions in R, like `if`, `else`, or `for`

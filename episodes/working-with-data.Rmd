@@ -139,7 +139,7 @@ Between `select()` and `filter()`, it can be hard to remember which operates on 
 To use the `select()` function, the first argument is the name of the data.frame, and the rest of the arguments are *unquoted* names of the columns you want:
 
 ```{r select}
-select(surveys, genus, species, year, elevation)
+select(surveys, species, year, elevation)
 ```
 
 The columns are arranged in the order we specified inside `select()`.
@@ -180,7 +180,7 @@ The `filter()` function is used to select rows that meet certain criteria. To ge
 filter(surveys, year == 1985)
 ```
 
-The `==` sign means "is equal to". There are several other operators we can use: >, >=, <, <=, and != (not equal to). Another useful operator is `%in%`, which asks if the value on the lefthand side is found anywhere in the vector on the righthand side. For example, to get rows with specific `species_id` values, we could run:
+The `==` sign means "is equal to". There are several other operators we can use: >, >=, <, <=, and != (not equal to). Another useful operator is `%in%`, which asks if the value on the lefthand side is found anywhere in the vector on the righthand side. For example, to get rows with specific `stateProvince` values, we could run:
 
 ```{r filter-in}
 filter(surveys, stateProvince %in% c("Borneo", "Sarawak"))
@@ -207,12 +207,15 @@ surveys_filtered <- filter(surveys, year >= 1980 & year <= 1985)
 
 ::::::::::::::::::::::::
 
-2. Use the surveys data to make a data.frame that has only the following columns, in order: `year`, `month`, `speciesKey`, `coordinateUncertaintyInMeters`.
+2. Use the surveys data to make a data.frame that has only the following columns, in order: `year`, `month`, `gbifID`.
 
 :::::::::::::::::::::::: solution
 
 ```{r selectfilter-challenge-answer}
-surveys_selected <- select(surveys, year, month, speciesKey, coordinateUncertaintyInMeters)
+surveys_selected <- select(surveys,
+                           year,
+                           month,
+                           speciesKey)
 ```
 
 ::::::::::::::::::::::::
@@ -224,16 +227,16 @@ surveys_selected <- select(surveys, year, month, speciesKey, coordinateUncertain
 What happens if we want to both `select()` and `filter()` our data? We have a couple options. First, we could use **nested** functions:
 
 ```{r filter-select-nested}
-filter(select(surveys, -day), month >= 7)
+filter(select(surveys, -month), year >= 1990)
 ```
 
-R will evaluate statements from the inside out. First, `select()` will operate on the `surveys` data.frame, removing the column `day`. The resulting data.frame is then used as the first argument for `filter()`, which selects rows with a month greater than or equal to 7.
+R will evaluate statements from the inside out. First, `select()` will operate on the `surveys` data.frame, removing the column `month`. The resulting data.frame is then used as the first argument for `filter()`, which selects rows with a year greater than or equal to 1990.
 
 Nested functions can be very difficult to read with only a few functions, and nearly impossible when many functions are done at once. An alternative approach is to create **intermediate** objects:
 
 ```{r filter-select-intermediate}
-surveys_noday <- select(surveys, -day)
-filter(surveys_noday, month >= 7)
+surveys_nomonth <- select(surveys, -month)
+filter(surveys_nomonth, year >= 1990)
 ```
 
 This approach is easier to read, since we can see the steps in order, but after enough steps, we are left with a cluttered mess of intermediate objects, often with confusing names.
@@ -242,8 +245,8 @@ An elegant solution to this problem is an operator called the **pipe**, which lo
 
 ```{r filter-select-pipe}
 surveys %>% 
-  select(-day) %>% 
-  filter(month >= 7)
+  select(-month) %>% 
+  filter(year >= 1990)
 ```
 
 What it does is take the thing on the lefthand side and insert it as the first argument of the function on the righthand side. By putting each of our functions onto a new line, we can build a nice, readable **pipeline**. It can be useful to think of this as a little assembly line for our data. It starts at the top and gets piped into a `select()` function, and it comes out modified somewhat. It then gets sent into the `filter()` function, where it is further modified, and then the final product gets printed out to our console. It can also be helpful to think of `%>%` as meaning "and then". Since many `tidyverse` functions have verbs for names, a pipeline can be read like a sentence.
@@ -259,8 +262,8 @@ If we want to store this final product as an object, we use an assignment arrow 
 
 ```{r pipeline-assignment}
 surveys_sub <- surveys %>% 
-  select(-day) %>% 
-  filter(month >= 7)
+  select(-month) %>% 
+  filter(year >= 1990)
 ```
 
 A good approach is to build a pipeline step by step prior to assignment. You add functions to the pipeline as you go, with the results printing in the console for you to view. Once you're satisfied with your final result, go back and add the assignment arrow statement at the start. This approach is very interactive, allowing you to see the results of each step as you build the pipeline, and produces nicely readable code.
@@ -269,14 +272,14 @@ A good approach is to build a pipeline step by step prior to assignment. You add
 
 ## Challenge 2: Using pipes
 
-Use the surveys data to make a data.frame that has the columns `speciesKey`, `month`, and `coordinateUncertaintyInMeters`, with data from the year 1988. Use a pipe between the function calls.
+Use the surveys data to make a data.frame that has the columns `gbifID`,`month`and `year`, with data from the year 1988. Use a pipe between the function calls.
 
 :::::::::::::::::::::::: solution
 
 ```{r filter-select-challenge-answer}
 surveys_1988 <- surveys %>%
   filter(year == 1988) %>%
-  select(speciesKey, month, coordinateUncertaintyInMeters)
+  select(gbifID, month, year)
 ```
 
 Make sure to `filter()` before you `select()`. You need to use the `year` column for filtering rows, but it is discarded in the `select()` step. You also need to make sure to use `==` instead of `=` when you are filtering rows where `year` is equal to 1988.
@@ -290,10 +293,10 @@ Make sure to `filter()` before you `select()`. You need to use the `year` column
 Another common task is creating a new column based on values in existing columns. For example, we could add a new column that has the weight in kilograms instead of grams:
 
 ```{r mutate}
-surveys %>% 
+surveys %>%
   mutate(uncertainty_km = coordinateUncertaintyInMeters / 1000) %>%
   select(uncertainty_km) %>%
- arrange(desc(uncertainty_km))
+  arrange(desc(uncertainty_km))
 ```
 
 You can create multiple columns in one `mutate()` call, and they will get created in the order you write them. You can use `arrange` and `desc` to sort them as well.
@@ -307,7 +310,7 @@ To put together the columns into something that looks like a date, we can use th
 
 ```{r paste-date}
 surveys %>% 
-  mutate(date = paste(year, month, day, sep = "-"))
+  mutate(date = paste(year, month, day, sep = "-")) 
 ```
 
 Since our new column gets moved all the way to the end, it doesn't end up printing out. We can use the `relocate()` function to put it after our `year` column:
@@ -365,8 +368,6 @@ surveys %>%
   ggplot(aes(x = date, y = elevation)) +
   geom_jitter(alpha = 0.1)
 ```
-
-This isn't necessarily the most useful plot, but we will learn some techniques that will help produce nice time series plots
 
 ::::::::::::::::::::::::
 

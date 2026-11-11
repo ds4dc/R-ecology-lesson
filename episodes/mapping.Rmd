@@ -22,13 +22,21 @@ source: Rmd
 - Save a map with `ggsave()`
 - Use a `for` loop to make and save one map per species
 - Build and customise an interactive map with `leaflet`
+- Download and map data from GBIF using `rgbif` package
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::
 
 ## Setting up
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(dpi = 200, out.height = 600, out.width = 600, R.options = list(max.print = 100))
+#knitr::opts_chunk$set(dpi = 200, out.height = 600, out.width = 600, R.options #= list(max.print = 100))
+knitr::opts_chunk$set(
+  dpi = 200,
+  fig.width = 8,
+  fig.height = 4,
+  out.width = "100%",
+  R.options = list(max.print = 100)
+)
 ```
 
 So far we have plotted our data as graphs of one variable against another. Our
@@ -41,7 +49,7 @@ We need a few packages that we haven't used before. If you haven't already
 installed them, run this once in the console:
 
 ```{r install-packages, eval=FALSE}
-install.packages(c("sf", "rnaturalearth", "rnaturalearthdata", "leaflet"))
+install.packages(c("sf", "rnaturalearth", "rnaturalearthdata", "leaflet", "rgbif"))
 ```
 
 Then load the packages we need. We also load `tidyverse` and `plantdat` again,
@@ -53,16 +61,8 @@ library(plantdat)
 library(sf)
 library(rnaturalearth)
 library(leaflet)
+library(rgbif)
 ```
-
-::: instructor
-
-The leaflet section at the end produces interactive maps, which appear in the
-RStudio Viewer pane when learners run the code. They are not shown in the
-website version of this lesson, so the code in that section is displayed but not
-run. Consider demonstrating it live.
-
-:::
 
 ## From coordinates to geometry
 
@@ -92,10 +92,9 @@ check how many there are:
 
 ```{r missing-coords}
 decaspermum_sp |>
-  summarise(
-    records = n(),
-    missing_coords = sum(is.na(decimalLatitude) | is.na(decimalLongitude))
-  )
+  summarise(records = n(),
+            missing_coords = sum(is.na(decimalLatitude) |
+                                   is.na(decimalLongitude)))
 ```
 
 We can't put a record on a map without coordinates, so we remove those rows with
@@ -104,9 +103,11 @@ We can't put a record on a map without coordinates, so we remove those rows with
 ```{r make-sf}
 decaspermum_sf <- decaspermum_sp |>
   drop_na(decimalLatitude, decimalLongitude) |>
-  st_as_sf(coords = c("decimalLongitude", "decimalLatitude"),
-           crs = 4326,
-           remove = FALSE)
+  st_as_sf(
+    coords = c("decimalLongitude", "decimalLatitude"),
+    crs = 4326,
+    remove = FALSE
+  )
 
 decaspermum_sf
 ```
@@ -199,8 +200,7 @@ ggplot() +
   geom_sf(data = decaspermum_sf)
 ```
 
-Now we can see where our points are, but the whole world is shown and our
-records are tiny. We want to zoom in. `coord_sf()` controls the area shown by
+Now we can see where our points are, but because we loaded the `countries`  data, which is global, we see the whole world and our records are tiny. We want to zoom in. `coord_sf()` controls the area shown by
 the map. We can get the extent of our points with `st_bbox()`. bb is short for bounding box and it creates four points that represent a rectangle, in this case that encloses all points in `decaspermum_thin`:
 
 ```{r get-bbox}
@@ -211,13 +211,12 @@ bbox
 We can now use it to set the limits of the map. We will make a new object called `map_limits` and use the bbox coordinates with a function called `coord_sf`: 
 
 ```{r zoomed-map, fig.alt="Map zoomed to Malaysia and neighbouring countries with Decaspermum records shown as points."}
-map_limits <- coord_sf(xlim = c(bbox[["xmin"]], bbox[["xmax"]]),
-                       ylim = c(bbox[["ymin"]], bbox[["ymax"]]))
+map_limits <- coord_sf(xlim = c(bbox[["xmin"]], bbox[["xmax"]]), ylim = c(bbox[["ymin"]], bbox[["ymax"]]))
 
 ggplot() +
   geom_sf(data = countries) +
   geom_sf(data = decaspermum_sf) +
-map_limits
+  map_limits
 ```
 
 ### Adding province boundaries
@@ -227,10 +226,12 @@ first-level administrative boundaries (states and provinces). We download these
 with `ne_download()` and keep only Malaysia:
 
 ```{r get-states, message=FALSE}
-states <- ne_download(scale = 10,
-                      type = "admin_1_states_provinces",
-                      category = "cultural",
-                      returnclass = "sf")
+states <- ne_download(
+  scale = 10,
+  type = "admin_1_states_provinces",
+  category = "cultural",
+  returnclass = "sf"
+)
 
 malaysia_states <- filter(states, admin == "Malaysia")
 ```
@@ -251,8 +252,15 @@ with `theme_bw()`, and a pale grey fill so the points stand out. DOn't forget we
 
 ```{r base-map, fig.alt="Background map of Malaysia and neighbouring countries with state boundaries and no points."}
 base_map <- ggplot() +
-  geom_sf(data = countries, fill = "grey95", colour = "grey60") +
-  geom_sf(data = malaysia_states, fill = NA, colour = "grey70", linewidth = 0.2) +
+  geom_sf(data = countries,
+          fill = "grey95",
+          colour = "grey60") +
+  geom_sf(
+    data = malaysia_states,
+    fill = NA,
+    colour = "grey70",
+    linewidth = 0.2
+  ) +
   theme_bw()
 
 base_map  + map_limits
@@ -263,7 +271,7 @@ way:
 
 ```{r map-with-points, fig.alt="Map of Malaysia with state boundaries and Decaspermum records shown as points coloured by species."}
 base_map +
-  geom_sf(data = decaspermum_sf, aes(colour = species), alpha = 0.7) + 
+  geom_sf(data = decaspermum_sf, aes(colour = species), alpha = 0.7) +
   map_limits
 ```
 
@@ -279,7 +287,7 @@ Why do you think some of the points are grey?
 ```{r elevation-map-challenge-answer, fig.alt="Map of Malaysia with Decaspermum records coloured by elevation using a continuous colour scale."}
 base_map +
   geom_sf(data = decaspermum_sf, aes(colour = elevation), alpha = 0.8) +
-  scale_colour_viridis_c() + 
+  scale_colour_viridis_c() +
   map_limits
 ```
 
@@ -298,11 +306,13 @@ scientific names. We store the result in an object so we can save it.
 ```{r species-map, fig.alt="Map of Malaysia with titled axes showing Decaspermum records coloured by species, with an italic legend."}
 species_map <- base_map +
   geom_sf(data = decaspermum_sf, aes(colour = species), alpha = 0.7) +
-  labs(title = "Decaspermum records in Malaysia",
-       x = "Longitude",
-       y = "Latitude",
-       colour = "Species",
-       caption = "Records: GBIF. Boundaries: Natural Earth.") +
+  labs(
+    title = "Decaspermum records in Malaysia",
+    x = "Longitude",
+    y = "Latitude",
+    colour = "Species",
+    caption = "Records: GBIF. Boundaries: Natural Earth."
+  ) +
   theme(legend.text = element_text(face = "italic"))
 
 species_map + map_limits
@@ -316,9 +326,13 @@ maps in:
 ```{r save-map}
 dir.create("fig_output", showWarnings = FALSE)
 
-ggsave(filename = "fig_output/decaspermum_map.png",
-       plot = species_map,
-       width = 8, height = 6, dpi = 300)
+ggsave(
+  filename = "fig_output/decaspermum_map.png",
+  plot = species_map,
+  width = 8,
+  height = 6,
+  dpi = 300
+)
 ```
 
 ::: callout
@@ -364,10 +378,9 @@ sp_data <- decaspermum_sf |>
   filter(species == sp)
 
 sp_map <- base_map +
-  geom_sf(data = sp_data, colour = "darkgreen", alpha = 0.7) +
-  labs(title = sp,
-       x = "Longitude",
-       y = "Latitude") +
+  geom_sf(data = sp_data,
+          alpha = 0.7) +
+  labs(title = sp, x = "Longitude", y = "Latitude") +
   theme(plot.title = element_text(face = "italic"))
 
 sp_map + map_limits
@@ -377,17 +390,17 @@ That is not bad, but as we are working in `ggplot` we have a lot of options that
 
 ```{r one-species-map-custom, fig.alt="Map of Malaysia showing the records for a single Decaspermum species with customised points."}
 sp_map <- base_map +
-geom_sf(data = sp_data,
-        shape = 21,
-        fill = "darkgreen",
-        colour = "white",
-        size = 3,
-        stroke = 0.4,
-        alpha = 0.8) +
-  labs(title = sp,
-       x = "Longitude",
-       y = "Latitude") +
-  theme(plot.title = element_text(face = "italic")) + 
+  geom_sf(
+    data = sp_data,
+    shape = 21,
+    fill = "darkgreen",
+    colour = "white",
+    size = 3,
+    stroke = 0.4,
+    alpha = 0.8
+  ) +
+  labs(title = sp, x = "Longitude", y = "Latitude") +
+  theme(plot.title = element_text(face = "italic")) +
   map_limits
 
 sp_map
@@ -405,28 +418,32 @@ species name and save the map:
 
 ```{r species-loop}
 for (sp in species_list) {
-
   sp_data <- decaspermum_sf |>
     filter(species == sp)
-
+  
   sp_map <- base_map +
-    geom_sf(data = sp_data,
-            shape = 21,
-            fill = "darkgreen",
-            colour = "white",
-            size = 3,
-            stroke = 0.4,
-            alpha = 0.8) +
-    labs(title = sp,
-         x = "Longitude",
-         y = "Latitude") +
+    geom_sf(
+      data = sp_data,
+      shape = 21,
+      fill = "darkgreen",
+      colour = "white",
+      size = 3,
+      stroke = 0.4,
+      alpha = 0.8
+    ) +
+    labs(title = sp, x = "Longitude", y = "Latitude") +
     theme(plot.title = element_text(face = "italic")) +
     map_limits
-
+  
   file_name <- paste0("fig_output/", sp, ".png")
-
-  ggsave(filename = file_name, plot = sp_map,
-         width = 8, height = 6, dpi = 150)
+  
+  ggsave(
+    filename = file_name,
+    plot = sp_map,
+    width = 8,
+    height = 6,
+    dpi = 150
+  )
 }
 ```
 
@@ -486,13 +503,13 @@ A leaflet map is built up in the same way as a `ggplot`, but with the pipe (`|>`
 rather than `+`. We give `leaflet()` our data, add a background map with
 `addTiles()`, and then add our points with `addCircleMarkers()`:
 
-```{r leaflet-basic}
+```{r leaflet-basic, eval=FALSE}
 leaflet(decaspermum_sf) |>
   addTiles() |>
   addCircleMarkers()
 ```
 
-<iframe src="files/leaflet-basic.html" width="100%" height="500"
+<iframe src="files/leaflet_basic.html" width="100%" height="500"
         style="border: 0;" title="Interactive map of Decaspermum records"></iframe>
 
 Cool, your first interactive map!
@@ -508,14 +525,16 @@ Many of the arguments of `addCircleMarkers()` will look familiar. Let's make som
 ```{r leaflet-points, eval=FALSE}
 leaflet(decaspermum_sf) |>
   addTiles() |>
-  addCircleMarkers(radius = 5,
-                   stroke = TRUE,
-                   color = "white",
-                   weight = 1,
-                   opacity = 1,
-                   fill = TRUE,
-                   fillColor = "blue",
-                   fillOpacity = 0.8)
+  addCircleMarkers(
+    radius = 5,
+    stroke = TRUE,
+    color = "white",
+    weight = 1,
+    opacity = 1,
+    fill = TRUE,
+    fillColor = "blue",
+    fillOpacity = 0.8
+  )
 ```
 
 <iframe src="files/leaflet_points.html" width="100%" height="500"
@@ -528,26 +547,39 @@ click on it. To use data from a column, we put a `~` (tilde) in front of the
 column name. For a popup, we can build a longer message by using `paste0()` and
 some HTML tags (`<b>` for bold and `<br>` for a new line):
 
-```{r leaflet-labels}
+```{r leaflet-labels, eval=FALSE}
 leaflet(decaspermum_sf) |>
   addTiles() |>
-  addCircleMarkers(radius = 5,
-                   stroke = TRUE,
-                   color = "white",
-                   weight = 1,
-                   opacity = 1,
-                   fill = TRUE,
-                   fillColor = "blue",
-                   fillOpacity = 0.8,
-                   label = ~species,
-                   popup = ~paste0("<b>", species, "</b><br>",
-                                   "Elevation: ", elevation, " m<br>",
-                                   "Year: ", year, "<br>",
-                                   "Collector: ", recordedBy))
+  addCircleMarkers(
+    radius = 5,
+    stroke = TRUE,
+    color = "white",
+    weight = 1,
+    opacity = 1,
+    fill = TRUE,
+    fillColor = "blue",
+    fillOpacity = 0.8,
+    label = ~ species,
+    popup = ~ paste0(
+      "<b>",
+      species,
+      "</b><br>",
+      "Elevation: ",
+      elevation,
+      " m<br>",
+      "Year: ",
+      year,
+      "<br>",
+      "Collector: ",
+      recordedBy
+    )
+  )
 ```
 
 <iframe src="files/leaflet_labels.html" width="100%" height="500"
         style="border: 0;" title="Interactive map of Decaspermum records"></iframe>
+
+Try hovering over a point to see the label and then try clicking a point to see the popup.
 
 ### Colouring by species and adding a legend
 
@@ -559,33 +591,45 @@ We also change the background map with `addProviderTiles()`, which often makes t
 
 
 ```{r leaflet-colour}
-species_palette <- colorFactor(palette = "viridis",
-                               domain = decaspermum_sf$species)
+species_palette <- colorFactor(palette = "viridis", domain = decaspermum_sf$species)
 
 final_map <- leaflet(decaspermum_sf) |>
-  addProviderTiles("OpenStreetMap", group = "OpenStreetMap") |> 
-  addProviderTiles("Esri.WorldImagery", group = "Satellite") |> 
-  addCircleMarkers(radius = 5,
-                   stroke = TRUE,
-                   color = "white",
-                   weight = 1,
-                   opacity = 1,
-                   fill = TRUE,
-                   fillColor = ~species_palette(species),
-                   fillOpacity = 0.8,
-                   label = ~species,
-                   popup = ~paste0("<b>", species, "</b><br>",
-                                   "Elevation: ", elevation, " m<br>",
-                                   "Year: ", year)) |>
-  addLegend(position = "bottomright",
-            pal = species_palette,
-            values = ~species,
-            title = "Species") |> 
+  addProviderTiles("OpenStreetMap", group = "OpenStreetMap") |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite") |>
+  addCircleMarkers(
+    radius = 5,
+    stroke = TRUE,
+    color = "white",
+    weight = 1,
+    opacity = 1,
+    fill = TRUE,
+    fillColor = ~ species_palette(species),
+    fillOpacity = 0.8,
+    label = ~ species,
+    popup = ~ paste0(
+      "<b>",
+      species,
+      "</b><br>",
+      "Elevation: ",
+      elevation,
+      " m<br>",
+      "Year: ",
+      year
+    )
+  ) |>
+  addLegend(
+    position = "bottomright",
+    pal = species_palette,
+    values = ~ species,
+    title = "Species"
+  ) |>
   addLayersControl(
-        baseGroups = c("Satellite", "OpenStreetMap"),
-        options = layersControlOptions(collapsed = FALSE)
-      )
+    baseGroups = c("Satellite", "OpenStreetMap"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+```
 
+```{r leaflet-final, eval=FALSE}
 final_map
 ```
 
@@ -600,8 +644,54 @@ web browser without needing R. To save a map, store it in an object and use
 `leaflet`):
 
 ```{r leaflet-save}
-htmlwidgets::saveWidget(final_map,
-                        file = "fig_output/decaspermum_map.html")
+htmlwidgets::saveWidget(final_map, file = "fig_output/decaspermum_map.html")
+```
+
+### Downloading data from GBIF
+
+So far we have worked with the `decaspermum` data, but you can also gather data directly from a data aggregator like the Global Biodiversity Information Facilty (GBIF). We can use the `rgbif` package to query GBIF and download data.
+
+```{r gbif-name}
+name_backbone(name = "Musa borneensis", rank = "species")
+```
+
+We searched the GBIF Taxonomy Backbone for the name 'Musa borneensis' and found a match. The results include a `usageKey` which is a unique identifier. 
+
+```{r gbif-key}
+usageKey <- 2762899
+```
+
+Now we can use the usageKey as a parameter to search for occurrences in GBIF.
+
+```{r gbif-search}
+m_borneensis_sp <- occ_search(taxonKey = usageKey)
+class(m_borneensis_sp)
+```
+
+Note that when we run the `class` function we see this is a 'gbif' object. This is a custom object created as part of this package. If we use `m_borneensis_sp$`we can see this object has a structure with different sub-objects. In this case we want to create a new object called `m_borneensis_occs` based on `data`, which is the occurrence data.
+
+```{r gbif-occs}
+m_borneensis_occs <- m_borneensis_sp$data
+```
+
+
+### Mapping data from GBIF
+
+We can now make a map with this data using the basemap we created earlier. 
+
+```{r}
+base_map +
+    geom_point(data = m_borneensis_occs,
+             aes(x = decimalLongitude,
+                 y = decimalLatitude),
+      shape = 21,
+      fill = "darkgreen",
+      colour = "white",
+      size = 3,
+      stroke = 0.4,
+      alpha = 0.8
+             ) +
+  map_limits
 ```
 
 ::::::::::::::::::::::::::::::::::::: keypoints
@@ -617,5 +707,7 @@ htmlwidgets::saveWidget(final_map,
   each species.
 - `leaflet` makes interactive maps that can be customised with labels, popups,
   colours and legends, and saved as HTML files.
+- `rgbif`` package can be used to download data from GBIF.
+  
 
 ::::::::::::::::::::::::::::::::::::::::::::::::
